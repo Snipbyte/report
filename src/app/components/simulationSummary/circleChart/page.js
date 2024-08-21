@@ -1,10 +1,9 @@
-"use client";
 import React, { useEffect } from 'react';
 import ApexCharts from 'apexcharts';
 
 const CircleChart = () => {
     useEffect(() => {
-        if (typeof window !== 'undefined') { // Ensuring that window is accessible
+        if (typeof window !== 'undefined') {
             var options = {
                 series: [81, 18],
                 chart: {
@@ -38,11 +37,7 @@ const CircleChart = () => {
         }
     }, []);
 
-    return (
-        <div>
-            <div className='w-full' id='donut-chart'></div>
-        </div>
-    );
-}
+    return <div className='w-full' id='donut-chart'></div>;
+};
 
 export default CircleChart;
