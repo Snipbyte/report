@@ -2,47 +2,47 @@
 import React, { useEffect } from 'react';
 import ApexCharts from 'apexcharts';
 
-
 const CircleChart = () => {
     useEffect(() => {
-        var options = {
-            series: [81, 18],
-            chart: {
-                type: 'donut',
-                width: 400,
-                height: 200,
-            },
-            colors: ['#172554', '#3b82f6'],
-            responsive: [
-                {
-                    breakpoint: 480,
-                    options: {
-                        chart: {
-                            width: 400,
-                            height: 200,
-                        },
-                        legend: {
-                            position: 'bottom',
+        if (typeof window !== 'undefined') { // Ensuring that window is accessible
+            var options = {
+                series: [81, 18],
+                chart: {
+                    type: 'donut',
+                    width: 400,
+                    height: 200,
+                },
+                colors: ['#172554', '#3b82f6'],
+                responsive: [
+                    {
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 400,
+                                height: 200,
+                            },
+                            legend: {
+                                position: 'bottom',
+                            },
                         },
                     },
-                },
-            ],
-        };
+                ],
+            };
 
-        var chart = new ApexCharts(document.querySelector('#donut-chart'), options);
-        chart.render();
+            var chart = new ApexCharts(document.querySelector('#donut-chart'), options);
+            chart.render();
 
-        return () => {
-            chart.destroy();
-        };
+            return () => {
+                chart.destroy();
+            };
+        }
     }, []);
+
     return (
         <div>
-            <div>
-                <div className='w-full' id='donut-chart'></div>
-            </div>
+            <div className='w-full' id='donut-chart'></div>
         </div>
-    )
+    );
 }
 
-export default CircleChart
+export default CircleChart;
