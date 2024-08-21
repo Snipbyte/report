@@ -3,7 +3,6 @@ import HeroSection from '../components/simulationSummary/heroSection/page'
 import AnalysisCard from '../components/simulationSummary/analysisCard/page'
 import CircleChart from '../components/simulationSummary/circleChart/page'
 import InvestmentCard from '../components/simulationSummary/investmentCard/page'
-import SummaryChart from '../components/simulationSummary/summaryChart/page'
 import Footer from '../components/common/footer/page'
 import Header from '../components/common/header/page'
 
@@ -26,7 +25,6 @@ const SimulationSummary = () => {
                     <button className='text-headingColor text-sm w-full text-end my-2'>Learm more about the use of my personal data</button>
                 </div>
             </div>
-            <SummaryChart />
             <Footer/>
         </div>
     )
