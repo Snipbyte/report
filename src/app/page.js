@@ -1,5 +1,6 @@
 import Image from "next/image";
 import HeroSection from "./components/landingpage/heroSection/page";
+import CircleChartCard from "./components/landingpage/circleChartCard/page";
 import TrackerCard from "./components/landingpage/trackerCard/page";
 import ImageCard from "./components/landingpage/imageCard/page";
 import Header from "./components/common/header/page";
@@ -13,7 +14,7 @@ export default function Home() {
       <HeroSection />
       <div className='mt-48'>
         <p className='text-2xl my-4 font-bold text-headingColor text-center'>The Rise of the Deskless WorkForce</p>
-        <Image className='w-[450px]' src="/images/graph.jpeg" width={1000} height={1000} />
+        <CircleChartCard />
       </div>
       <TrackerCard />
       <div>
