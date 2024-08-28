@@ -1,8 +1,8 @@
 import React from 'react'
 import CircleChart from '../../common/Charts/circleChart/page'
-import { IoPersonOutline } from "react-icons/io5";
-import { BiTargetLock } from "react-icons/bi";
-import { RiTeamLine } from "react-icons/ri";
+import { GrOptimize } from "react-icons/gr";
+import { RiAiGenerate } from "react-icons/ri";
+import { MdOutlineAssessment } from 'react-icons/md';
 
 
 
@@ -14,29 +14,29 @@ const CircleChartCard = () => {
                 <CircleChart />
             </div>
             <div className='lg:w-1/2 w-full p-7'>
-                <p className='text-sm text-paraColor'>Without access to corporate emails or computers, these employees heavily on direct manager to relay information</p>
+                <p className='text-sm text-paraColor'>At IziKemp, we understand the needs of entrepreneurs and project leaders. Our suite of innovative simulators provides you with the necessary tools to</p>
                 <div className='flex items-center gap-5 my-4'>
-                    <IoPersonOutline className='w-10 h-10 bg-lightCard p-3 text-desColor rounded-full items-center justify-center flex ' />
+                    <MdOutlineAssessment className='w-10 h-10 bg-lightCard p-3 text-desColor rounded-full items-center justify-center flex ' />
                     <div>
-                        <p className='font-bold'>Employees</p>
-                        <p className='text-paraColor text-sm my-1'>Disengaged - Disconected from peers and organization goals</p>
+                        <p className='font-bold'>Scoring</p>
+                        <p className='text-paraColor text-sm my-1'>Assess your funding eligibility with precises coring based on bank and investment fund criteria.</p>
                     </div>
                 </div>
                 <div className='flex items-center gap-5 my-4'>
-                    <RiTeamLine className='w-10 h-10 bg-lightCard p-3 text-desColor rounded-full items-center justify-center flex ' />
+                    <GrOptimize className='w-10 h-10 bg-lightCard p-3 text-desColor rounded-full items-center justify-center flex ' />
                     <div>
-                        <p className='font-bold'>Organization</p>
-                        <p className='text-paraColor text-sm my-1'>No visibility into operations</p>
+                        <p className='font-bold'>Investments</p>
+                        <p className='text-paraColor text-sm my-1'>Explore various investment options to optimize your project.</p>
                     </div>
                 </div>
                 <div className='flex items-center gap-5 my-4'>
-                    <BiTargetLock className='w-10 h-10 bg-lightCard p-3 text-desColor rounded-full items-center justify-center flex ' />
+                    <RiAiGenerate className='w-10 h-10 bg-lightCard p-3 text-desColor rounded-full items-center justify-center flex ' />
                     <div>
-                        <p className='font-bold'>Overall Impact</p>
-                        <p className='text-paraColor text-sm my-1'>Low productivity, low compliance, high employe turnover, poor customer experience</p>
+                        <p className='font-bold'>Forecasting</p>
+                        <p className='text-paraColor text-sm my-1'>Easily and instantly generate the financial elements of your business plan.</p>
                     </div>
                 </div>
-                <p className='text-sm font-bold text-paraColor my-6'>Slate bridges this gap by providing a mobile platformto train, engage, manage and communication with deskless employess.</p>
+                
             </div>
         </div>
     )
