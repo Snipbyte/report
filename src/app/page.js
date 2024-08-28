@@ -13,7 +13,7 @@ export default function Home() {
       <Header/>
       <HeroSection />
       <div className='mt-48'>
-        <p className='text-2xl my-4 font-bold text-headingColor text-center'>The Rise of the Deskless WorkForce</p>
+         <p className='text-2xl my-4 font-bold text-headingColor text-center'>The Rise of the Deskless WorkForce</p>
          <CircleChartCard />
       </div>
       <TrackerCard />
