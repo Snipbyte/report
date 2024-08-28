@@ -14,7 +14,7 @@ export default function Home() {
       <HeroSection />
       <div className='mt-48'>
         <p className='text-5xl my-4 font-bold text-headingColor text-center'>OfferOverview</p>
-         <CircleChartCard />
+        <CircleChartCard />
       </div>
       <TrackerCard />
       <div>
