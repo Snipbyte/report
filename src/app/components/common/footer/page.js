@@ -14,7 +14,7 @@ const Footer = () => {
                 </Link>
                 </div>
                 <div className='w-full md:w-[45%] my-2'>
-                    <p className='text-5xl font-bold'>Gather your reports for our website</p>
+                    <p className='text-2xl font-bold'>For any inquiries, contact us at [email/contact]. Follow us on [social media]. Join our community of successfu lentrepreneurs!</p>
                 </div>
             </div>
             <div className='flex flex-wrap gap-[100px]'>
