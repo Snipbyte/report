@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <main className="">
       <Header/>
-      {/* <HeroSection />
+      <HeroSection />
       <div className='mt-48'>
         <p className='text-2xl my-4 font-bold text-headingColor text-center'>The Rise of the Deskless WorkForce</p>
          <CircleChartCard />
@@ -28,7 +28,7 @@ export default function Home() {
       </div>
       <div className="">
         <ContentSection />
-      </div> */}
+      </div>
       
       <Footer/>
     </main>
