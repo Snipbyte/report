@@ -12,8 +12,8 @@ const CardSection = () => {
         
         <StatsCard/>
     <StatsCard2/>
-    <StatsCard3/>
-    <StatsCard4/>
+    {/* <StatsCard3/>
+    <StatsCard4/> */}
         
     
     </div>
