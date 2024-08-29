@@ -6,7 +6,7 @@ import StatCard from '../statCard/page';
 const ContentSection = () => {
     return (
         <div>
-            <div className='flex  items-center justify-between my-5'>
+            <div className='flex flex-wrap  items-center justify-between my-5'>
                 <p className='text-headingColor text-2xl font-bold'>Dashboard</p>
                 <div className='text-sm flex items-center gap-3 justify-end'>
                     <div>

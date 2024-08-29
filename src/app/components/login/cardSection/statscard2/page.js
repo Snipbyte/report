@@ -4,7 +4,7 @@ import React from 'react'
 const StatsCard2 = () => {
   return (
     <div className='flex justify-center'>
-           <div className="mt-32  absolute md:w-[300px] w-full bg-white p-6 rounded-lg  ">
+           <div className="h-[400px] w-[300px] bg-white p-6 rounded-lg  ">
         <p className="text-sm">ENGAGEMENT</p>
         <p className="text-4xl font-bold">
           +78,12% <span className="text-sm text-paraColor">last month</span>

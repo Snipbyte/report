@@ -4,21 +4,37 @@ import React from 'react'
 const TrackerCard = () => {
     return (
         <div>
-            <div className='lg:flex block items-center justify-between px-20'>
-                <div className='lg:w/1/2 w-full '>
-                    <p className='text-4xl font-bold text-headingColor'>Call to Action (CTA)</p>
-                    <p className='text-2xl font-bold my-2 text-btnColor'>IziKemp</p>
-                </div>
-                <div className='lg:w/1/2 w-full'>
-                    <p>Don’t let financing hold back your ambitions. Try IziKemp, generate your report instantly, and discuss with an expert today!</p>
-                    <div className='flex lg:flex-nowrap flex-wrap my-4 items-center gap-2'>
-                        <input className='outline-none border text-paraColor p-2 w-full lg:w-[70%]' type='text' placeholder='Enter Your Email' />
-                        <button className='bg-btnColor text-white hover:bg-hoverBtnColor p-2 text-clip lg:w-[30%] w-full'>Get Started</button>
-                    </div>
+        <div className='lg:flex block items-center justify-between px-4 lg:px-20'>
+            <div className='lg:w-1/2 w-full mb-4 lg:mb-0'>
+                <p className='text-3xl lg:text-4xl font-bold text-headingColor'>Call to Action (CTA)</p>
+                <p className='text-xl lg:text-2xl font-bold my-2 text-btnColor'>IziKemp</p>
+            </div>
+            <div className='lg:w-1/2 w-full'>
+                <p className='text-sm lg:text-base mb-4 lg:mb-0'>
+                    Don’t let financing hold back your ambitions. Try IziKemp, generate your report instantly, and discuss with an expert today!
+                </p>
+                <div className='flex lg:flex-nowrap flex-wrap my-4 items-center gap-2'>
+                    <input 
+                        className='outline-none border text-paraColor p-2 w-full lg:w-[70%]' 
+                        type='text' 
+                        placeholder='Enter Your Email' 
+                    />
+                    <button 
+                        className='bg-btnColor text-white hover:bg-hoverBtnColor p-2 lg:w-[30%] w-full'>
+                        Get Started
+                    </button>
                 </div>
             </div>
-            <Image className='w-full p-5 lg:p-[40px] h-[600px]' src="/images/manimage.jpg" width={1000} height={1000} />
         </div>
+        <Image 
+            className='w-full p-4 lg:p-[40px] lg:h-[600px] h-auto' 
+            src="/images/manimage.jpg" 
+            width={1000} 
+            height={1000} 
+            alt="Man Image" 
+        />
+    </div>
+    
     )
 }
 

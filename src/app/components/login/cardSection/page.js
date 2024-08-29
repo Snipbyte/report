@@ -8,14 +8,16 @@ import StatsCard4 from "./statscard4/page";
 
 const CardSection = () => {
   return (
-    <div className=" relative bg-gradient-to-tr from-btnColor via-hoverBtnColor to-headingColor md:w-1/2 p-20 w-full">
-        
-        <StatsCard/>
-    <StatsCard2/>
-    <StatsCard3/>
-    <StatsCard4/>
-        
-    
+    <div className="m-2 bg-gradient-to-tr from-btnColor via-hoverBtnColor to-headingColor w-full">
+      <div className="flex m-1 items-center justify-between p-2">
+        <StatsCard />
+        <StatsCard2 />
+      </div>
+      <div className="flex m-1 items-center justify-between p-2">
+        <StatsCard3 />
+        <StatsCard4 />
+      </div>
+
     </div>
   );
 };

@@ -5,7 +5,7 @@ const StatsCard4 = () => {
   return (
     <div>
         <div className='flex justify-center'>
-        <div className=" md:mt-[800px]    absolute md:w-[300px] w-full bg-white p-6 rounded-lg  ">
+        <div className="h-[400px] w-[300px] bg-white p-6 rounded-lg  ">
         <p className="text-sm">GROWTH</p>
         <p className="text-4xl font-bold">
           +21,35% <span className="text-sm text-paraColor">last month</span>

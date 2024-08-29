@@ -5,7 +5,7 @@ const StatsCard3 = () => {
   return (
     
          <div className='flex justify-center'>
-           <div className="  bottom-[-160px]  absolute md:w-[300px] w-full bg-white p-6 rounded-lg  ">
+           <div className="h-[400px] w-[300px] bg-white p-6 rounded-lg  ">
         <h2 className='text-2xl font-bold text-btnColor'>"Basement is Supringly hand for keeping my buisness stuff in one place</h2>
         <div className='flex items-center gap-2 mt-6'>
         <div>
