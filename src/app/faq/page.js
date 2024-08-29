@@ -10,7 +10,7 @@ const Faq = () => {
       <Header />
       {/* <Breadcrumb pageName="FAQ" pageLink="/faq" /> */}
 
-      <FaqCard />
+       <FaqCard />
       <Footer />
     </div>
   );

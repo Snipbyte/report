@@ -6,7 +6,9 @@ const Signup = () => {
   return (
     <div className='md:flex md:p-20'>
         <FormSection/>
+        <div  className="hidden lg:flex">
         <CardSection/>
+        </div>
     </div>
   )
 }
