@@ -9,7 +9,7 @@ const CardSection = () => {
     
       <div className=" relative bg-gradient-to-tr from-btnColor via-hoverBtnColor to-headingColor md:w-1/2 p-20 w-full">
         <StatsCard />
-        <StatsCard2 />
+         <StatsCard2 />
         {/* <StatsCard3 />
         <StatsCard4 /> */}
       </div>
