@@ -10,7 +10,7 @@ const Blogs = () => {
   return (
     <div className='p-5 bg-lightCard'>
       <Header/>
-       <HeroSection />
+      <HeroSection />
       <HorizontalCard />
       <div className='md:flex block items-center justify-between my-8'>
         <p className='text-3xl font-bold text-headingColor'>All Post</p>
