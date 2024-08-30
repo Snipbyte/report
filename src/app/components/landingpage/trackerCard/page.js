@@ -3,36 +3,17 @@ import React from 'react'
 
 const TrackerCard = () => {
     return (
-        <div>
-        <div className='lg:flex block items-center justify-between px-4 lg:px-20'>
-            <div className='lg:w-1/2 w-full mb-4 lg:mb-0'>
-                <p className='text-3xl lg:text-5xl font-bold text-headingColor'>Call to Action (CTA)</p>
-                <p className='text-xl lg:text-3xl font-bold my-2 text-btnColor'>IziKemp</p>
-            </div>
-            <div className='lg:w-1/2 w-full'>
-                <p className='text-sm lg:text-lg mb-4 lg:mb-0'>
-                    Don’t let financing hold back your ambitions. Try IziKemp, generate your report instantly, and discuss with an expert today!
-                </p>
-                <div className='flex lg:flex-nowrap flex-wrap my-4 items-center gap-2'>
-                    <input 
-                        className='outline-none border text-paraColor p-2 w-full lg:w-[70%]' 
-                        type='text' 
-                        placeholder='Enter Your Email' 
-                    />
-                    <button 
-                        className='bg-btnColor text-white hover:duration-700 hover:bg-hoverBtnColor p-2 lg:w-[30%] w-full'>
-                        Get Started
-                    </button>
-                </div>
-            </div>
+        <div class="gap-8 items-center py-8 px-4 mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 sm:py-16 lg:px-6">
+        <img class="w-full " src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/cta/cta-dashboard-mockup.svg" alt="dashboard image"/>
+      
+        <div class="mt-4 md:mt-0">
+            <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 ">Let's grow togeather.</h2>
+            <p class="mb-6 font-light text-gray-500 md:text-lg ">Don’t let financing hold back your ambitions. Try IziKemp, generate your report instantly, and discuss with an expert today!</p>
+            <a href="#" class="inline-flex items-center text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
+                Get started
+                <svg class="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            </a>
         </div>
-        {/* <Image 
-            className='w-full p-4 lg:p-[40px] lg:h-[600px] h-auto' 
-            src="/images/manimage.jpg" 
-            width={1000} 
-            height={1000} 
-            alt="Man Image" 
-        /> */}
     </div>
     
     )

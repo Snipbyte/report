@@ -3,7 +3,7 @@ import React from 'react'
 
 const HeroSection = () => {
     return (
-        <div className='relative bg-desColor p-4 h-[500px] lg:rounded-b-[150px]'>
+        <div className='relative bg-desColor p-4 h-[580px] lg:rounded-b-[150px]'>
             <p className='lg:text-6xl text-2xl font-bold text-center text-white max-w-[90%] lg:max-w-[800px] mx-auto'>
                 Ignite Your Entrepreneurial Ambition with <span className='text-btnColor'> IziKemp!</span>
             </p>
