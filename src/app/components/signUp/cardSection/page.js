@@ -8,11 +8,11 @@ const CardSection = () => {
   return (
     
       <div className="m-2 relative bg-gradient-to-tr from-btnColor via-hoverBtnColor to-headingColor w-full">
-          <div className="flex m-1 items-center justify-between p-2">
+          <div className="flex gap-3 m-1 items-center justify-between p-2">
         <StatsCard />
         <StatsCard2 />
       </div>
-      <div className="flex m-1 items-center justify-between p-2">
+      <div className="flex gap-3 m-1 items-center justify-between p-2">
         <StatsCard3 />
         <StatsCard4 />
       </div>

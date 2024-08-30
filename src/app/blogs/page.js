@@ -15,7 +15,7 @@ const Blogs = () => {
 
   <section className='my-8 px-4'>
     <div className='md:flex block items-center justify-between'>
-      <p className='text-3xl font-bold text-headingColor'>All Posts</p>
+      <p className='lg:text-5xl text-2xl font-bold text-headingColor'>All Posts</p>
       <div className='flex items-center bg-white rounded-md p-3 w-full md:w-72 border shadow-2xl text-sm'>
         <input className='outline-none w-full' placeholder='Search what you want' type='text' />
         <FaSearch className='text-hoverBtnColor ml-2' />

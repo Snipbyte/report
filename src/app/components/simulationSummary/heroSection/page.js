@@ -10,7 +10,7 @@ const HeroSection = () => {
                 <Image className='w-32 h-24' src="/images/handlogo.png" width={1000} height={1000} />
                 <div>
                     <h1 className='lg:text-5xl text-xl font-bold text-btnColor '>Simulate your financial investments</h1>
-                    <p className='text-white my-3'>Free and anonymous, this simulator allows you to simulate the evolution of a financial investment and calculate the capital available at the end of your investment.</p>
+                    <p className='text-white text-lg w-[800px] my-3'>Free and anonymous, this simulator allows you to simulate the evolution of a financial investment and calculate the capital available at the end of your investment.</p>
                 </div>
                 <Image className='w-14 h-14' src="/images/icon.png" width={1000} height={1000} />
             </div>
@@ -18,7 +18,7 @@ const HeroSection = () => {
                 <div className='lg:w-1/2 w-full'>
                     <div className='bg-btnColor flex items-center justify-between px-3'>
                         <div></div>
-                        <p className='text-white text-center text-sm flex justify-center'>1 - YOUR INVESTMENT</p>
+                        <p className='text-white text-center text-lg flex justify-center'>1 - YOUR INVESTMENT</p>
                         <Image className='w-10 h-10 flex justify-end' src="/images/icon.png" width={1000} height={1000} />
                     </div>
                     <div className='bg-lightCard p-4'>
@@ -51,7 +51,7 @@ const HeroSection = () => {
                 <div className='lg:w-1/2 w-full'>
                     <div className='bg-btnColor flex items-center justify-between px-3'>
                         <div></div>
-                        <p className='text-white text-center text-sm p-2 flex justify-center'>2 - PLACEMENT CHARACTERISTIC</p>
+                        <p className='text-white text-center text-lg p-2 flex justify-center'>2 - PLACEMENT CHARACTERISTIC</p>
                         <Image className='w-10 h-10 flex justify-end' src="/images/icon.png" width={1000} height={1000} />
                     </div>
                     <div className='bg-lightCard p-4'>
@@ -98,7 +98,7 @@ const HeroSection = () => {
                 </div>
             </div>
             <div className='flex justify-end'>
-                <button className='w-40 p-2 rounded-md bg-btnColor text-white hover:bg-hoverBtnColor'>Start the Simulation</button>
+                <button className='w-48 p-2 rounded-md duration-700 text-lg bg-btnColor text-white hover:bg-hoverBtnColor'>Start the Simulation</button>
             </div>
         </div>
 

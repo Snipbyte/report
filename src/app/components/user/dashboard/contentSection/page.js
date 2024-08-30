@@ -7,8 +7,8 @@ const ContentSection = () => {
     return (
         <div>
             <div className='flex flex-wrap  items-center justify-between my-5'>
-                <p className='text-headingColor text-2xl font-bold'>Dashboard</p>
-                <div className='text-sm flex items-center gap-3 justify-end'>
+                <p className='text-headingColor text-5xl font-bold'>Dashboard</p>
+                <div className='text-md flex items-center gap-3 justify-end'>
                     <div>
                         <input className='outline-none border text-paraColor p-1' type='date' />
                         <select className="text-paraColor border outline-none p-1.5">
@@ -18,7 +18,7 @@ const ContentSection = () => {
                             <option value="Y">Yearly</option>
                         </select>
                     </div>
-                    <div className='flex items-center gap-1 p-2 w-28 text-center text-white rounded-md bg-btnColor hover:bg-hoverBtnColor'>
+                    <div className='flex items-center gap-1 p-2 w-32 text-center text-white rounded-md bg-btnColor hover:bg-hoverBtnColor'>
                         <CiExport className='w-4 h-4' />
                         <button className='text-white'>Export CSV</button>
                     </div>

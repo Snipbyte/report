@@ -16,7 +16,7 @@ const BlogDetail = () => {
                     <BlogSidebar />
                 </div>
             </div>
-            <p className='text-headingColor text-3xl font-bold my-4'>Latest Blog</p>
+            <p className='text-headingColor text-4xl font-bold my-4'>Latest Blog</p>
             <div className='flex flex-wrap my-5 items-center  justify-around'>
                 <VerticalCard img="/images/blog1.jpg" heading="UI DESIGN" des="Compelling Design Takes More Than ''Making It Like Stripe''" />
                 <VerticalCard img="/images/blog2.jpg" heading="DESIGN PROCESS" des="What is Design Thinking and How It Hacks the Way" />

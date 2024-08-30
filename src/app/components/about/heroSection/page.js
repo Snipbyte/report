@@ -5,15 +5,12 @@ const HeroSection = () => {
   return (
     <div className="bg-lightCard p-5">
         
-      <h3 className="text-5xl font-bold text-center ">
+      <h3 className="lg:text-6xl text-3xl font-bold text-center ">
         Collaborative solution <br />
         <span className="text-hoverBtnColor">for large teams</span>{" "}
       </h3>
-      <p className="text-xs text-paraColor text-center mt-4">
-        lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-        lorem ipsum lorem ipsum
-        <br /> lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
-        ipsum
+      <p className="text-lg text-paraColor text-center mt-4 w-[900px] mx-auto">
+      Our team is committed to delivering accurate and insightful reports, combining data-driven analysis with expert perspectives to provide clear, actionable information. We strive to maintain the highest standards of integrity and transparency in all our reporting.
       </p>
       <div className="p-10">
         <Image

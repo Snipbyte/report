@@ -93,7 +93,7 @@ const BarChart = (props) => {
 
   return (
     <div>
-      <p className='text-headingColor text-2xl my-4 font-bold'>{props.heading}</p>
+      <p className='text-headingColor text-4xl my-4 font-bold'>{props.heading}</p>
       <div className='border w-full bg-white shadow-2xl'>
         <div className='border p-2 rounded-md'>
           <ApexCharts
