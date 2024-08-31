@@ -3,22 +3,46 @@ import React from 'react'
 
 const EntrepreneursCard = () => {
     return (
-        <div className='lg:flex block items-center justify-center p-10 shadow-2xl'>
-            <div className='lg:w-1/2 w-full '>
-                <p className='text-headingColor text-4xl  p-10'>
-                    More than <span className='text-btnColor font-bold'> 530,000 entrepreneurs</span> supported by our teams for last 07 years
-                </p>
-            </div>
-
-            <div className='lg:w-1/2 w-full h-[405px]'>
-                <div class="grid grid-rows-3 grid-flow-col gap-2 ">
-                    <div class="row-span-3"> <Image className=' rounded-md w-full h-[405px]' src="/images/worker3.jpg" width={1000} height={1000} /></div>
-                    <div class="col-span-2"> <Image className=' rounded-md w-full h-[200px]' src="/images/worker1.jpg" width={1000} height={1000} /></div>
-                    <div class="row-span-2 col-span-2"><Image className=' rounded-md w-full h-[200px]' src="/images/worker2.jpg" width={1000} height={1000} /></div>
-                </div>
-
-            </div>
+        <div className="lg:flex block items-center justify-center p-10 shadow-2xl">
+        <div className="lg:w-1/2 w-full mb-6 lg:mb-0">
+          <p className="text-headingColor text-2xl lg:text-4xl p-6 lg:p-10 text-left">
+            More than <span className="text-btnColor font-bold">530,000 entrepreneurs</span> supported by our teams over the last 7 years
+          </p>
         </div>
+      
+        <div className="lg:w-1/2 w-full lg:h-[420px] h-full">
+          <div className="grid grid-rows-3 grid-cols-2 gap-2">
+            <div className="row-span-3 col-span-2 lg:col-span-1">
+              <Image
+                className="rounded-md w-full h-[410px] object-cover"
+                src="/images/worker3.jpg"
+                width={1000}
+                height={1000}
+                alt="Worker 3"
+              />
+            </div>
+            <div className="col-span-2 lg:col-span-1">
+              <Image
+                className="rounded-md w-full h-[200px]  object-cover"
+                src="/images/worker1.jpg"
+                width={1000}
+                height={1000}
+                alt="Worker 1"
+              />
+            </div>
+            <div className="row-span-2 col-span-2 lg:col-span-1">
+              <Image
+                className="rounded-md w-full h-[200px]  object-cover"
+                src="/images/worker2.jpg"
+                width={1000}
+                height={1000}
+                alt="Worker 2"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      
     )
 }
 
