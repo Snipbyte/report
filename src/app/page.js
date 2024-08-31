@@ -60,7 +60,7 @@ export default function Home() {
           </button>
         </div>
       </section>
-      <div className="p-3 border hidden lg:block ">
+      <div className="p-3">
         <EntrepreneursCard />
       </div>
       <section className=" px-4">
