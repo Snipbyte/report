@@ -51,8 +51,9 @@ const Header = () => {
                 </Link>
                 <div className='hidden md:flex gap-4 items-center'>
                     <Link href="/" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300'>Home</Link>
-                    <Link href="/aboutus" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300'>About Us</Link>
+                    <Link href="/about" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300'>About Us</Link>
                     <Link href="/contact" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300'>Contact Us</Link>
+                    <Link href="/blogs" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300'>Blogs</Link>
                 </div>
                 <div className='hidden md:flex gap-2 items-center'>
                     <FaFacebook className='w-5 h-5 hover:text-blue-700 hover:scale-125 transition ease-out hover:ease-in-out duration-300' />
