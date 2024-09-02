@@ -40,7 +40,7 @@ const FormSection = () => {
       <div className="mt-3">
         <label className="text-sm">Password</label>
         <br />
-         <input
+          <input
           type="password"
           placeholder="Enter your Password"
           className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
