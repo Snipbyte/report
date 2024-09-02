@@ -5,7 +5,7 @@ const SimulationCard = () => {
     return (
         <div className='my-10 relative'>
             <div className='lg:flex block '>
-                <div className='w-full  lg:w-[50%] bg-black shadow-2xl p-10'>
+                <div className='w-full  lg:w-[50%] bg-desColor shadow-2xl p-10'>
                     <div className='w-14 h-1.5 bg-btnColor mt-10 mb-20'></div>
                     <div className='w-80 h-0.5 bg-white'></div>
                     <p className='text-white lg:w-96 w-full text-lg mt-20'>Instantly access personalized reports and tailored recommendations with IziKemp. Save time, cut costs, and maximize your funding opportunities in just a few clicks!</p>

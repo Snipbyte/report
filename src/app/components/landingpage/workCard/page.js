@@ -13,7 +13,7 @@ const WorkCard = () => {
         <div className='lg:flex items-center block my-10'>
             <div className='w-full lg:w-[50%]'>
                 <p className='text-4xl font-bold text-headingColor text-center my-6'>How It Works:</p>
-                <Image className='w-full h-full  lg:h-[580px]' src="/images/howitworks.jpg" width={1000} height={1000} />
+                <Image className='w-full h-full  lg:h-[580px] ' src="/images/howitworks.jpg" width={1000} height={1000} />
             </div>
             <div className='w-full  lg:w-[50%]  bg-white shadow-2xl p-10'>
                 <div className='flex items-center gap-6 bg-blue-200 p-3 rounded-md my-4'>

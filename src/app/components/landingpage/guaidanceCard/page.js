@@ -4,8 +4,8 @@ import React from 'react'
 const GuaidanceCard = () => {
     return (
         <div className='lg:flex block '>
-            <div className='w-full  lg:w-[40%] bg-white shadow-2xl p-10'>
-                <p className='text-4xl font-bold text-headingColor my-6'>Expert Guidance:</p>
+            <div className='w-full lg:h-[500px] h-full lg:w-[50%] bg-white shadow-2xl p-10'>
+                <p className='text-4xl font-bold text-headingColor my-2'>Expert Guidance:</p>
                 <div className='w-full h-1.5 bg-btnColor my-10'></div>
                 <p className='text-headingColor  text-md my-4'>In addition to our advanced technological tools, benefit from our team’s expertise:</p>
                 <p className='text-headingColor  text-md my-4'>-Banking Experts: Gain insights on best practices for presenting your project to banks. </p>
@@ -13,8 +13,8 @@ const GuaidanceCard = () => {
                 <p className='text-headingColor  text-md my-4'>- Insurance Professionals: Ensure your project is secured and compliant with investor requirements. </p>
                 <p className='text-headingColor  text-md my-4'>Each user receives a complimentary consultation with one of our experts to better steer their project.</p>
             </div>
-            <div className='w-full lg:w-[60%]'>
-                <Image className='w-full lg:h-full h-[300px]' src="/images/expertguidance.jpg" width={1000} height={1000} />
+            <div className='w-full lg:w-[50%]'>
+                <Image className='w-fulllg:w-[500px] lg:h-[500px] h-[300px]' src="/images/expertguidance.jpg" width={1000} height={1000} />
             </div>
         </div>
     )
