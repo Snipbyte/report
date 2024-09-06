@@ -1,25 +1,34 @@
 import { NextResponse } from "next/server";
 import connectDb from "../../../../backend/middleware/db";
-import BreakEven from "../../../../backend/models/GrossMargin";
-
+import GrossMargin from "../../../../backend/models/GrossMargin";
 
 const calculateGrossMargin = async (request) => {
   try {
-    const { sellingPricePerUnit, costOfProductionPerUnit } = await request.json();
+    const { product, sellingPrice, productionCost } = await request.json();
 
-    if (sellingPricePerUnit === undefined || costOfProductionPerUnit === undefined) {
+    if (!product || sellingPrice === undefined || productionCost === undefined) {
       return NextResponse.json(
-        { message: "Both selling price and cost of production are required" },
+        { message: "All inputs (product name, selling price, and production cost) are required" },
         { status: 400 }
       );
     }
 
-    // Gross margin calculations
-    const grossMarginPerUnit = sellingPricePerUnit - costOfProductionPerUnit;
-    const grossMarginPercentage = (grossMarginPerUnit / sellingPricePerUnit) * 100;
+    const grossMarginPerUnit = sellingPrice - productionCost;
+    const grossMarginPercentage = (grossMarginPerUnit / sellingPrice) * 100;
+
+    const grossMargin = new GrossMargin({
+      product,
+      sellingPrice,
+      productionCost,
+      grossMargin: grossMarginPerUnit,
+      grossMarginPercentage: grossMarginPercentage.toFixed(2),
+    });
+
+    await grossMargin.save();
 
     return NextResponse.json(
       {
+        product,
         grossMarginPerUnit: grossMarginPerUnit.toFixed(2),
         grossMarginPercentage: grossMarginPercentage.toFixed(2)
       },
