@@ -1,66 +1,259 @@
-import Link from 'next/link'
-import React from 'react'
-import { FaDollarSign, FaPercent } from 'react-icons/fa'
+"use client";
+import Link from "next/link";
+import React, { useState } from "react";
+import { FaDollarSign, FaPercent } from "react-icons/fa";
+
+const calculators = {
+  breakeven: {
+    label: "Break-Even Calculator",
+    fields: [
+      {
+        id: "fixedCosts",
+        label: "Fixed Costs",
+        type: "number",
+        placeholder: "1000",
+      },
+      {
+        id: "variableCostPerUnit",
+        label: "Variable Cost Per Unit",
+        type: "number",
+        placeholder: "5",
+      },
+      {
+        id: "sellingPricePerUnit",
+        label: "Selling Price Per Unit",
+        type: "number",
+        placeholder: "10",
+      },
+    ],
+    api: "/api/breakeven",
+  },
+  businessValuation: {
+    label: "Business Valuation Calculator",
+    fields: [
+      {
+        id: "netProfit",
+        label: "Net Profit",
+        type: "number",
+        placeholder: "50000",
+      },
+      {
+        id: "growthRate",
+        label: "Growth Rate (%)",
+        type: "number",
+        placeholder: "5",
+      },
+      {
+        id: "discountRate",
+        label: "Discount Rate (%)",
+        type: "number",
+        placeholder: "10",
+      },
+    ],
+    api: "/api/businessvaluation",
+  },
+  cashflow: {
+    label: "Cash Flow Calculator",
+    fields: [
+      { id: "month", label: "Month", type: "text", placeholder: "January" },
+      {
+        id: "cashInflows",
+        label: "Cash Inflows",
+        type: "number",
+        placeholder: "10000",
+      },
+      {
+        id: "cashOutflows",
+        label: "Cash Outflows",
+        type: "number",
+        placeholder: "5000",
+      },
+      {
+        id: "initialCashBalance",
+        label: "Initial Cash Balance",
+        type: "number",
+        placeholder: "5000",
+      },
+    ],
+    api: "/api/cashflow",
+  },
+  financialForecast: {
+    label: "Financial Forecast Calculator",
+    fields: [
+      {
+        id: "revenues",
+        label: "Revenues",
+        type: "number",
+        placeholder: "20000",
+      },
+      {
+        id: "fixedExpenses",
+        label: "Fixed Expenses",
+        type: "number",
+        placeholder: "8000",
+      },
+      {
+        id: "variableExpenses",
+        label: "Variable Expenses",
+        type: "number",
+        placeholder: "5000",
+      },
+    ],
+    api: "/api/financialforecast",
+  },
+  grossmargin: {
+    label: "Gross Margin Calculator",
+    fields: [
+      {
+        id: "product",
+        label: "Product",
+        type: "text",
+        placeholder: "Product Name",
+      },
+      {
+        id: "sellingPrice",
+        label: "Selling Price",
+        type: "number",
+        placeholder: "15",
+      },
+      {
+        id: "productionCost",
+        label: "Production Cost",
+        type: "number",
+        placeholder: "8",
+      },
+    ],
+    api: "/api/grossmargin",
+  },
+  roi: {
+    label: "ROI Calculator",
+    fields: [
+      {
+        id: "initialCost",
+        label: "Initial Cost",
+        type: "number",
+        placeholder: "5000",
+      },
+      {
+        id: "netGains",
+        label: "Net Gains",
+        type: "number",
+        placeholder: "7000",
+      },
+    ],
+    api: "/api/roi",
+  },
+};
 
 const FormDetail = () => {
-    return (
-        <div className='bg-white border rounded-md shadow-md p-7 border-t-4 border-t-hoverBtnColor'>
-            <div className='lg:flex block justify-center border border-desColor w-full'>
-                <div className='w-full lg:w-1/2 p-3 bg-lightCard'>
-                    <form className="">
-                        <div>
-                            <label for="loanamount" className="mb-3  text-headingColor">Loan amount</label>
-                            <div className="relative">
-                                <div className='flex  gap-3 items-center bg-white border border-desColor text-headingColor  rounded-md  w-full p-3 mt-2 mb-3'>
-                                    <FaDollarSign className='text-paraColor' />
-                                    <input type="text" id="loanamount" className=" outline-none " placeholder="5,000" />
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <label for="loanyear" className="mb-3  text-headingColor">Loan term in years</label>
-                            <input type="text" id="loanyear" className="bg-white  border border-desColor text-headingColor outline-none  rounded-md  w-full p-3 mt-2 mb-3" placeholder="5" />
-                        </div>
-                        <div>
-                            <label for="loanmonth" className="mb-3 text-sm text-headingColor">Or</label><br />
-                            <label for="loanmonth" className="mb-3  text-headingColor">Loan term in years</label>
-                            <input type="text" id="loanmonth" className="bg-white outline-none border border-desColor text-headingColor  rounded-md  w-full p-3 mt-2 mb-3" placeholder="20" />
-                        </div>
+  const [selectedCalculator, setSelectedCalculator] = useState("breakeven");
+  const [formData, setFormData] = useState({});
+  const [result, setResult] = useState(null);
 
+  const handleCalculatorChange = (e) => {
+    setSelectedCalculator(e.target.value);
+    setFormData({});
+    setResult(null);
+  };
 
-                        <label for="interest" className="mb-3  text-headingColor">Interest Rate Per Year</label>
-                        <div>
-                            <div className='lg:flex block items-center  gap-5'>
-                                <div className='flex justify-between items-center bg-white border border-desColor text-headingColor  rounded-md  w-full p-3'>
-                                    <input type="text" id="interest" className=" outline-none" placeholder="6" />
-                                    <FaPercent className='text-paraColor' />
-                                </div>
-                                <button className="w-full text-lg text-white bg-btnColor hover:bg-hoverBtnColor duration-700  rounded-md p-3 lg:mt-0 mt-4">
-                                    Calculate
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
 
-                </div>
-                <div className='w-full lg:w-1/2 p-3 mt-4 lg:mt-0'>
-                    <p className='text-center text-headingColor text-sm'>Monthly payments</p>
-                    <p className='text-center text-headingColor font-bold text-4xl mb-5'>$ 99.99</p>
-                    <div className='text-headingColor flex items-center justify-between border-b pb-3 border-desColor'>
-                        <p>Total principal paid</p>
-                        <p>$5,000</p>
-                    </div>
-                    <div className='text-headingColor flex items-center justify-between mt-3 border-desColor'>
-                        <p>Total interest paid</p>
-                        <p>$799.84</p>
-                    </div>
-                    <div className='flex justify-center'>
-                        <Link className='text-btnColor hover:text-hoverBtnColor mt-48' href=''>Show amortization schedule</Link>
-                    </div>
-                </div>
-            </div >
-        </div >
-    )
-}
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const calculator = calculators[selectedCalculator];
 
-export default FormDetail
+    try {
+      const response = await fetch(calculator.api, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setResult(data);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Failed to calculate.");
+    }
+  };
+
+  const currentCalculator = calculators[selectedCalculator];
+
+  return (
+    <div className="bg-white border rounded-md shadow-md p-7 border-t-4 border-t-hoverBtnColor">
+      <div className="lg:flex block justify-center border border-desColor w-full">
+        <div className="w-full lg:w-1/2 p-3 bg-lightCard">
+          <form onSubmit={handleSubmit}>
+            {/* Calculator Selection Dropdown */}
+            <div>
+              <label htmlFor="calculator" className="mb-3 text-headingColor">
+                Select Calculator
+              </label>
+              <select
+                id="calculator"
+                value={selectedCalculator}
+                onChange={handleCalculatorChange}
+                className="bg-white border border-desColor text-headingColor outline-none rounded-md w-full p-3 mt-2 mb-3"
+              >
+                {Object.entries(calculators).map(([key, calc]) => (
+                  <option key={key} value={key}>
+                    {calc.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Dynamic Form Fields */}
+            {currentCalculator.fields.map((field) => (
+              <div key={field.id}>
+                <label htmlFor={field.id} className="mb-3 text-headingColor">
+                  {field.label}
+                </label>
+                <input
+                  type={field.type}
+                  id={field.id}
+                  value={formData[field.id] || ""}
+                  onChange={handleInputChange}
+                  className="bg-white border border-desColor text-headingColor outline-none rounded-md w-full p-3 mt-2 mb-3"
+                  placeholder={field.placeholder}
+                />
+              </div>
+            ))}
+
+            {/* Submit Button */}
+            <button className="w-full text-lg text-white bg-btnColor hover:bg-hoverBtnColor duration-700 rounded-md p-3 lg:mt-0 mt-4">
+              Calculate
+            </button>
+          </form>
+        </div>
+
+        {/* Result Section */}
+        <div className="w-full lg:w-1/2 p-3 mt-4 lg:mt-0">
+          {result && (
+            <>
+              <p className="text-center text-headingColor text-sm">
+                Calculation Result
+              </p>
+              <pre className="text-headingColor bg-gray-100 p-3 rounded-md">
+                {JSON.stringify(result, null, 2)}
+              </pre>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FormDetail;
