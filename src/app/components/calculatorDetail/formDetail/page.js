@@ -315,9 +315,11 @@ const FormDetail = () => {
               <p className="text-center text-headingColor text-sm">
                 Calculation Result
               </p>
-              <pre className="text-headingColor bg-gray-100 p-3 rounded-md">
-                {JSON.stringify(result, null, 2)}
-              </pre>
+              <div>
+                <pre className="text-headingColor bg-gray-100 p-3 rounded-md">
+                  {JSON.stringify(result, null, 2)}
+                </pre>
+              </div>
             </>
           )}
         </div>
