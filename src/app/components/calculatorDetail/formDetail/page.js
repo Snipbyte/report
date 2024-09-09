@@ -1,7 +1,5 @@
 "use client";
-import Link from "next/link";
 import React, { useState } from "react";
-import { FaDollarSign, FaPercent } from "react-icons/fa";
 
 const calculators = {
   breakeven: {
