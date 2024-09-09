@@ -12,7 +12,7 @@ const ChooseCard = () => {
                 <p className='text-headingColor  text-lg my-4'>- Dedicated Support: Our team is here to support you every step of the way.</p>
             </div>
             <div className='w-full lg:w-[50%]'>
-                <Image className='w-full lg:h-full h-[300px]' src="/images/financingsimulators.jpg" width={1000} height={1000} />
+                <Image className='w-full lg:h-full h-[300px]' src="/images/lp4.jpg" width={1000} height={1000} />
             </div>
         </div>
     )

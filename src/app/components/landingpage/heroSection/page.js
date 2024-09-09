@@ -5,7 +5,7 @@ const HeroSection = () => {
     return (
         <div className='lg:flex block my-10'>
             <div className='w-full lg:w-[50%]'>
-                <Image className='w-[300px]  lg:w-[500px] lg:h-[500px] h-[300px]' src="/images/landingpage.png" width={1000} height={1000} />
+                <Image className='w-full lg:h-[500px] h-[300px]' src="/images/lp1.jpg" width={1000} height={1000} />
             </div>
             <div className='w-full  lg:w-[50%] bg-white shadow-2xl p-10'>
                 <p className='text-4xl font-bold text-headingColor my-6'>Boost Your Funding Prospects with IziKemp!</p>
