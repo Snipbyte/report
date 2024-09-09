@@ -6,6 +6,14 @@ const financialForecastHandler = async (request) => {
   try {
     const { revenues, fixedExpenses, variableExpenses } = await request.json();
 
+    // Ensure revenues, fixedExpenses, and variableExpenses are arrays
+    if (!Array.isArray(revenues) || !Array.isArray(fixedExpenses) || !Array.isArray(variableExpenses)) {
+      return NextResponse.json(
+        { message: 'All inputs (revenues, fixed expenses, and variable expenses) must be arrays' },
+        { status: 400 }
+      );
+    }
+
     // Calculate totals
     const totalRevenue = revenues.reduce((acc, revenue) => acc + revenue.amount, 0);
     const totalFixedExpenses = fixedExpenses.reduce((acc, expense) => acc + expense.amount, 0);
