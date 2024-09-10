@@ -46,7 +46,7 @@ const Footer = () => {
             </div>
             <div className="w-full lg:w-auto mb-6">
                 <p className="font-bold text-xl">Menu</p>
-                <Link className="text-gray-300 my-4 lg:my-6 block" href="/aboutus">About Us</Link>
+                <Link className="text-gray-300 my-4 lg:my-6 block" href="/about">About Us</Link>
                 <Link className="text-gray-300 my-4 lg:my-6 block" href="/contact">Contact</Link>
                 <Link className="text-gray-300 my-4 lg:my-6 block" href="/registration-form">Register</Link>
             </div>

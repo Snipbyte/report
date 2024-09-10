@@ -1,10 +1,11 @@
+import Link from 'next/link'
 import React from 'react'
 import { FaGoogle } from 'react-icons/fa'
 
 const FormSection = () => {
   return (
-    
-          <div className="md:w-1/2 w-full bg-lightCard  md:p-20 p-10">
+
+    <div className="md:w-1/2 w-full h-full bg-lightCard  md:p-20 p-10">
       <h2 className="text-3xl font-bold">
         Keep your online <br />
         buisness organized
@@ -49,11 +50,11 @@ const FormSection = () => {
         />
       </div>
       <div className="mt-5">
-        <button className="text-sm text-black border border-2 w-72 p-1.5 rounded-lg border-black hover:text-white hover:bg-black duration-700">Create Account</button>
+        <button className=" text-black border-2 w-72 my-8 p-2 rounded-lg border-black hover:text-white hover:bg-black duration-700">Sign up</button>
       </div>
-      <p className="text-sm mt-5 text-paraColor">Already have an account? <span className="text-btnColor">Login Here</span></p>
+      <Link href="login" className="text-sm my-2 text-paraColor">Already have an account? <span className="text-btnColor underline hover:text-hoverBtnColor">Login</span></Link>
     </div>
-    
+
   )
 }
 

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { FaGoogle } from "react-icons/fa";
 const FormSection = () => {
@@ -20,15 +21,6 @@ const FormSection = () => {
         <div className="border mt-8 w-32"></div>
       </div>
       <div className="mt-3">
-        <label className="text-sm">Name</label>
-        <br />
-        <input
-          type="text"
-          placeholder="Enter your name"
-          className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
-        />
-      </div>
-      <div className="mt-3">
         <label className="text-sm">Email</label>
         <br />
         <input
@@ -40,16 +32,16 @@ const FormSection = () => {
       <div className="mt-3">
         <label className="text-sm">Password</label>
         <br />
-          <input
+        <input
           type="password"
           placeholder="Enter your Password"
           className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
         />
       </div>
       <div className="mt-5">
-        <button className="text-sm text-black border border-2 w-72 p-1.5 rounded-lg border-black hover:text-white hover:bg-black duration-700">Create Account</button>
+        <button className="text-black border-2 w-72 p-2 my-8 rounded-lg border-black hover:text-white hover:bg-black duration-700">Login</button>
       </div>
-      <p className="text-sm mt-5 text-paraColor">Already have an account? <span className="text-btnColor">Login Here</span></p>
+      <Link href="signup" className="text-sm my-2 text-paraColor">Dont't have an account? <span className="text-btnColor underline hover:text-hoverBtnColor">Signup</span></Link>
     </div>
   );
 };
