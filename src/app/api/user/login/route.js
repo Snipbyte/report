@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server";
 import connectDb from "../../../../../backend/middleware/db";
 import User from "../../../../../backend/models/user";
@@ -10,6 +9,14 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 const loginUserHandler = async (request) => {
   try {
     const { email, password } = await request.json();
+
+    // Validate inputs
+    if (!email || !password) {
+      return NextResponse.json(
+        { message: "Email and password are required" },
+        { status: 400 }
+      );
+    }
 
     const user = await User.findOne({ email });
     if (!user) {

@@ -5,7 +5,7 @@ export async function GET(
     req,
 ){
     try{
-
+console.log();
   return new NextResponse("Db Connected", { status: 200 });
 
     }catch(error){

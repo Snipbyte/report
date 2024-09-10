@@ -1,4 +1,3 @@
-// backend/models/user.js
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -102,7 +101,7 @@ const userSchema = new mongoose.Schema({
   },
   subscriptionPlan: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'SubscriptionPlan',
+    ref: 'Subscription',
   }
 });
 
