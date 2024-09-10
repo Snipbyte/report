@@ -1,7 +1,5 @@
 "use client";
-import Link from "next/link";
 import React, { useState } from "react";
-import { FaDollarSign, FaPercent } from "react-icons/fa";
 
 const calculators = {
   breakeven: {
@@ -143,6 +141,78 @@ const calculators = {
     ],
     api: "/api/roi",
   },
+  investment: {
+    label: "Investment Calculator",
+    fields: [
+      {
+        id: "monthlyIncome",
+        label: "Monthly Income",
+        type: "number",
+        placeholder: "5000",
+      },
+      {
+        id: "monthlyExpenses",
+        label: "Monthly Expenses",
+        type: "number",
+        placeholder: "3000",
+      },
+      {
+        id: "emergencySavings",
+        label: "Emergency Savings",
+        type: "number",
+        placeholder: "1000",
+      },
+      {
+        id: "regularContributions",
+        label: "Regular Contributions",
+        type: "number",
+        placeholder: "200",
+      },
+    ],
+    api: "/api/investmentcapacity",
+  },
+  financingSimulation: {
+    label: "Financing Simulation Calculator",
+    fields: [
+      {
+        id: "currentRevenue",
+        label: "Current Revenue",
+        type: "number",
+        placeholder: "200000",
+      },
+      {
+        id: "netProfit",
+        label: "Net Profit",
+        type: "number",
+        placeholder: "50000",
+      },
+      {
+        id: "totalAssets",
+        label: "Total Assets",
+        type: "number",
+        placeholder: "300000",
+      },
+      {
+        id: "totalDebts",
+        label: "Total Debts",
+        type: "number",
+        placeholder: "100000",
+      },
+      {
+        id: "requestedAmount",
+        label: "Requested Amount",
+        type: "number",
+        placeholder: "50000",
+      },
+      {
+        id: "useOfFunds",
+        label: "Use of Funds",
+        type: "text",
+        placeholder: "Expansion, Marketing, etc.",
+      },
+    ],
+    api: "/api/financingsimulator",
+  },
 };
 
 const FormDetail = () => {
@@ -245,9 +315,11 @@ const FormDetail = () => {
               <p className="text-center text-headingColor text-sm">
                 Calculation Result
               </p>
-              <pre className="text-headingColor bg-gray-100 p-3 rounded-md">
-                {JSON.stringify(result, null, 2)}
-              </pre>
+              <div>
+                <pre className="text-headingColor bg-gray-100 p-3 rounded-md">
+                  {JSON.stringify(result, null, 2)}
+                </pre>
+              </div>
             </>
           )}
         </div>
