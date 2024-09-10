@@ -29,14 +29,14 @@ const Header = () => {
     useEffect(() => {
         // Add event listener to handle click outside
         document.addEventListener("click", handleClickOutside);
-        
+
         // Toggle body overflow when menu is open
         if (shownav) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'auto';
         }
-        
+
         return () => {
             document.removeEventListener("click", handleClickOutside);
             document.body.style.overflow = 'auto'; // Ensure overflow is reset on unmount
@@ -55,12 +55,11 @@ const Header = () => {
                     <Link href="/about" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300'>About Us</Link>
                     <Link href="/contact" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300'>Contact Us</Link>
                     <Link href="/blogs" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300'>Blogs</Link>
+                    <Link href="/pricingplan" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300'>Pricing</Link>
                 </div>
                 <div className='hidden md:flex gap-2 items-center'>
-                    <FaFacebook className='w-5 h-5 hover:text-blue-700 hover:scale-125 transition ease-out hover:ease-in-out duration-300' />
-                    <FaDribbble className='w-5 h-5 hover:text-pink-400 hover:scale-125 transition ease-out hover:ease-in-out duration-300' />
-                    <FaTwitter className='w-5 h-5 hover:text-blue-500 hover:scale-125 transition ease-out hover:ease-in-out duration-300' />
-                    <FaInstagram className='w-5 h-5 hover:text-pink-800 hover:scale-125 transition ease-out hover:ease-in-out duration-300' />
+                    <button className="text-center border-2 w-20 p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor">Login</button>
+                    <button className="text-center text-white border-2 w-20 p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700">Signup</button>
                 </div>
                 <button className="md:hidden" onClick={toggleNav}>
                     <CiMenuFries size={30} />
@@ -78,13 +77,12 @@ const Header = () => {
                 </button>
                 <div className="flex flex-col gap-5 mt-20">
                     <Link href="/" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white'>Home</Link>
-                    <Link href="/aboutus" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white'>About Us</Link>
+                    <Link href="/about" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white'>About Us</Link>
                     <Link href="/contact" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white'>Contact Us</Link>
+                    <Link href="/pricingplan" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white'>Pricing</Link>
                     <div className="flex gap-2 items-center">
-                        <FaFacebook className='w-5 h-5 text-white hover:text-blue-700 hover:scale-125 transition ease-out hover:ease-in-out duration-300' />
-                        <FaDribbble className='w-5 h-5 text-white hover:text-pink-400 hover:scale-125 transition ease-out hover:ease-in-out duration-300' />
-                        <FaTwitter className='w-5 h-5 text-white hover:text-blue-500 hover:scale-125 transition ease-out hover:ease-in-out duration-300' />
-                        <FaInstagram className='w-5 h-5 text-white hover:text-pink-800 hover:scale-125 transition ease-out hover:ease-in-out duration-300' />
+                        <Link href="login" className="text-center border-2 w-20 p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor">Login</Link>
+                        <Link href="signup" className="text-center text-white border-2 w-20 p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700">Signup</Link>
                     </div>
                 </div>
             </div>
