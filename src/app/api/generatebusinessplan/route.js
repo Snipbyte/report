@@ -126,7 +126,7 @@ const generateBusinessPlan = async (request) => {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error generating business plan:', error);
+     console.error('Error generating business plan:', error);
     return NextResponse.json(
       { message: 'Failed to generate business plan' },
       { status: 500 }
