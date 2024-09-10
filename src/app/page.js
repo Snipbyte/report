@@ -15,7 +15,7 @@ import Testimonials from "./components/landingpage/testimonials/page";
 export default function Home() {
   return (
     <main className="overflow-hidden">
-      {/* <Header />
+      <Header />
       <HeroSection />
       <SimulationCard />
       <SectionCard />
@@ -25,8 +25,8 @@ export default function Home() {
       <p className='text-4xl text-center font-bold text-headingColor my-6'>Don’t let financing hold back your Ambitions</p>
       <AmbitionCard />
       <Testimonials/>
-      <Footer /> */}
-      main page here
+      <Footer />
+   
     </main>
   );
 }

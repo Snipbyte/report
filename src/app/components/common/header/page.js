@@ -47,8 +47,7 @@ const Header = () => {
         <div ref={headerRef}>
             <div className='text-white flex items-center justify-between p-4 bg-desColor'>
                 <Link href="/">
-                    {/* <Image className='w-24 h-16' src="/images/logo.png" width={1000} height={1000} alt="Logo" /> */}
-                    logo here
+                    <Image className='w-24 h-16' src="/images/logo.png" width={1000} height={1000} alt="Logo" />
                 </Link>
                 <div className='hidden md:flex gap-4 items-center'>
                     <Link href="/" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300'>Home</Link>
