@@ -99,9 +99,10 @@ const userSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
-  subscriptionPlan: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Subscription',
+  currentPlan: {
+    type: String,
+    enum: ['intro', 'base', 'popular', 'enterprise', null],
+    default: null,
   }
 });
 
