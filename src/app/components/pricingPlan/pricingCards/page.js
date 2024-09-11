@@ -1,5 +1,6 @@
 import React from "react";
 import { IoIosCheckmarkCircle } from "react-icons/io";
+import Link from "next/link";
 const PricingCards = (props) => {
   return (
     <div
@@ -44,7 +45,7 @@ const PricingCards = (props) => {
         type="submit"
         class={` text-sm font-medium text-center rounded-lg focus:outline-none focus:ring-primary-300 outline-none  hover:text-white md:w-44 w-full p-2 hover:border-2 hover:border-white ${props.isPopular ? "bg-white text-btnColor hover:bg-hoverBtnColor" : "border-2  bg-transparent  hover:bg-hoverBtnColor text-btnColor border-btnColor "}`}
       >
-        Choose Plan
+       <Link href={props.productlink}>Choose Plan</Link>
       </button>
     </div>
   );
