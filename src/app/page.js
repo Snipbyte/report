@@ -17,7 +17,7 @@ export default function Home() {
       <Header />
       <div className="lg:mx-auto lg:px-[100px]">
         <HeroSection />
-        <SimulationCard />
+         <SimulationCard />
         <SectionCard />
         <GuaidanceCard />
         <WorkCard />
