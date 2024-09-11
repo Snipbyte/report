@@ -10,12 +10,12 @@ import { IoPersonSharp } from 'react-icons/io5';
 
 const WorkCard = () => {
     return (
-        <div className='lg:flex items-center block my-10'>
+        <div className='lg:flex bg-lightCard items-center block my-10'>
             <div className='w-full lg:w-[50%]'>
                 <p className='text-4xl font-bold text-headingColor text-center my-6'>How It Works:</p>
                 <Image className='w-full h-full  lg:h-[580px] ' src="/images/lp5.jpg" width={1000} height={1000} />
             </div>
-            <div className='w-full  lg:w-[50%]  bg-white shadow-2xl p-10'>
+            <div className='w-full  lg:w-[50%]  bg-lightCard  p-10'>
                 <div className='flex items-center gap-6 bg-blue-200 p-3 rounded-md my-4'>
                     <FaTools className='w-12 h-12 border border-white p-2' />
                     <p className='text-headingColor  text-md my-4'>Choose Your Simulator and Expert: Select the tool and guidance that suits your needs. </p>

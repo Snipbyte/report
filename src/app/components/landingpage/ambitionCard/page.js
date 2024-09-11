@@ -7,7 +7,7 @@ const AmbitionCard = () => {
             <div className='w-full lg:w-[50%]'>
                 <Image className='w-full lg:h-[400px] h-full' src="/images/lp7.jpg" width={1000} height={1000} />
             </div>
-            <div className='w-full   lg:w-[50%]  bg-white shadow-2xl p-10'>
+            <div className='w-full   lg:w-[50%]  bg-lightCard shadow-2xl p-10'>
                 <p className='text-headingColor  text-3xl my-4'>Try IziKemp, generate
                     your report instantly, and discuss with an expert today!</p>
                 <div className='flex justify-center'>
