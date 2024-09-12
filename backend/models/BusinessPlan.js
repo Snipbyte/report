@@ -9,13 +9,13 @@ const businessPlanSchema = new mongoose.Schema({
   revenues: {
     products: [{ type: String }],
     unitPrice: [{ type: Number }],
-    expectedMonthlySalesQuantity: [{ type: Number }],
+    expectedYearlySalesQuantity: [{ type: Number }],
     estimatedSalesGrowth: { type: Number }
   },
 
   costs: {
     initialCapitalExpenditures: { type: Number },
-    monthlyFixedCosts: { type: Number },
+    yearlyFixedCosts: { type: Number },
     variableUnitCosts: [{ type: Number }],
     costGrowth: { type: Number }
   },
@@ -41,9 +41,9 @@ const businessPlanSchema = new mongoose.Schema({
   },
 
   financialRatios: {
-    liquidityRatio: { type: Number },
-    profitabilityRatio: { type: Number },
-    debtRatio: { type: Number }
+    liquidityRatio: { type: Number, default: 0 },
+    profitabilityRatio: { type: Number, default: 0 },
+    debtRatio: { type: Number, default: 0 }
   },
 
   companyRating: {

@@ -1,13 +1,20 @@
 import { NextResponse } from "next/server";
 import connectDb from "../../../../backend/middleware/db";
 import BusinessPlan from "../../../../backend/models/BusinessPlan";
+import User from "../../../../backend/models/user";
+import jwt from "jsonwebtoken";
 
-// Helper functions to calculate financial metrics
+// Helper functions to calculate financial metrics (same as before)
 const calculateAnnualRevenues = (unitPrice, quantitySold, salesGrowth) => {
   return unitPrice * quantitySold * (1 + salesGrowth);
 };
 
-const calculateAnnualExpenses = (fixedCosts, variableCost, quantity, costGrowth) => {
+const calculateAnnualExpenses = (
+  fixedCosts,
+  variableCost,
+  quantity,
+  costGrowth
+) => {
   return fixedCosts + variableCost * quantity * (1 + costGrowth);
 };
 
@@ -20,7 +27,14 @@ const calculateCashFlow = (totalInflows, totalOutflows) => {
 };
 
 const calculateLoanAmortization = (loanAmount, interestRate, n) => {
-  if (!loanAmount || !interestRate || !n || loanAmount <= 0 || interestRate <= 0 || n <= 0) {
+  if (
+    !loanAmount ||
+    !interestRate ||
+    !n ||
+    loanAmount <= 0 ||
+    interestRate <= 0 ||
+    n <= 0
+  ) {
     return 0; // Return 0 or a default value if inputs are invalid
   }
   return (
@@ -29,9 +43,33 @@ const calculateLoanAmortization = (loanAmount, interestRate, n) => {
   );
 };
 
-// Handler function for the API route
+
+
+
 const generateBusinessPlan = async (request) => {
   try {
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { message: "Authorization token is required" },
+        { status: 401 }
+      );
+    }
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id; 
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return NextResponse.json(
+        { message: "User not found." },
+        { status: 404 }
+      );
+    }
+
+    const userPlan = user.currentPlan; 
+    const allowedPlans = ['intro', 'base', 'popular', 'enterprise'];
+
     const {
       companyName,
       industrySector,
@@ -43,7 +81,6 @@ const generateBusinessPlan = async (request) => {
       otherFinancialAssumptions,
     } = await request.json();
 
-    // Validate inputs
     if (
       !companyName ||
       !industrySector ||
@@ -60,76 +97,78 @@ const generateBusinessPlan = async (request) => {
       );
     }
 
-    // Ensure the required fields are numbers and convert them if necessary
-    const initialInvestments = typeof investmentsAndFinancing.initialInvestments === 'string'
-      ? Number(investmentsAndFinancing.initialInvestments.trim())
-      : Number(investmentsAndFinancing.initialInvestments);
-
-    const loanDuration = typeof investmentsAndFinancing.loanDuration === 'string'
-      ? Number(investmentsAndFinancing.loanDuration.trim())
-      : Number(investmentsAndFinancing.loanDuration);
-
-    // Check if interestRates is defined and is an array
-    let interestRate = 0; // Default to 0 or a suitable value
+    const initialInvestments = Number(investmentsAndFinancing.initialInvestments);
+    const loanDuration = Number(investmentsAndFinancing.loanDuration);
+    let interestRate = 0; 
     if (Array.isArray(investmentsAndFinancing.interestRates) && investmentsAndFinancing.interestRates.length > 0) {
-      interestRate = typeof investmentsAndFinancing.interestRates[0] === 'string'
-        ? Number(investmentsAndFinancing.interestRates[0].trim()) / 100 // Convert percentage to decimal
-        : Number(investmentsAndFinancing.interestRates[0]) / 100; // Convert percentage to decimal
-    } else {
-      console.log('No interest rates provided or interestRates is not an array.');
+      interestRate = Number(investmentsAndFinancing.interestRates[0]) / 100;
     }
 
-    // Log the values
-    console.log('Initial Investments:', initialInvestments);
-    console.log('Loan Duration:', loanDuration);
-    console.log('Interest Rate:', interestRate);
-
     if (isNaN(initialInvestments) || isNaN(loanDuration) || isNaN(interestRate)) {
-      if (isNaN(initialInvestments)) console.log("Invalid initialInvestments");
-      if (isNaN(loanDuration)) console.log("Invalid loanDuration");
-      if (isNaN(interestRate)) console.log("Invalid interestRate");
-
       return NextResponse.json(
         { message: "Invalid financial inputs" },
         { status: 400 }
       );
     }
 
-    // Calculate financial metrics with type checks
-    const unitPrice = typeof revenues.unitPrice === 'string' ? Number(revenues.unitPrice.trim()) : Number(revenues.unitPrice);
-    const expectedMonthlySalesQuantity = typeof revenues.expectedMonthlySalesQuantity === 'string' ? Number(revenues.expectedMonthlySalesQuantity.trim()) : Number(revenues.expectedMonthlySalesQuantity);
-    const estimatedSalesGrowth = typeof revenues.estimatedSalesGrowth === 'string' ? Number(revenues.estimatedSalesGrowth.trim()) : Number(revenues.estimatedSalesGrowth);
-    
-    const annualRevenues = calculateAnnualRevenues(unitPrice, expectedMonthlySalesQuantity, estimatedSalesGrowth);
+    const financialProjections = [];
 
-    const monthlyFixedCosts = typeof costs.monthlyFixedCosts === 'string' ? Number(costs.monthlyFixedCosts.trim()) : Number(costs.monthlyFixedCosts);
-    const variableUnitCosts = typeof costs.variableUnitCosts === 'string' ? Number(costs.variableUnitCosts.trim()) : Number(costs.variableUnitCosts);
-    const costGrowth = typeof costs.costGrowth === 'string' ? Number(costs.costGrowth.trim()) : Number(costs.costGrowth);
-    
-    const annualExpenses = calculateAnnualExpenses(monthlyFixedCosts, variableUnitCosts, expectedMonthlySalesQuantity, costGrowth);
+    for (let year = 1; year <= 5; year++) {
+      const unitPrice = Number(revenues.unitPrice);
+      const expectedYearlySalesQuantity = Number(revenues.expectedYearlySalesQuantity);
+      const estimatedSalesGrowth = Number(revenues.estimatedSalesGrowth);
+      
+      const annualRevenues = calculateAnnualRevenues(unitPrice, expectedYearlySalesQuantity, estimatedSalesGrowth * year);
+      const yearlyFixedCosts = Number(costs.yearlyFixedCosts);
+      const variableUnitCosts = Number(costs.variableUnitCosts);
+      const costGrowth = Number(costs.costGrowth);
+      
+      const annualExpenses = calculateAnnualExpenses(yearlyFixedCosts, variableUnitCosts, expectedYearlySalesQuantity, costGrowth * year);
+      const taxRate = Number(otherFinancialAssumptions.taxRate);
+      const netIncome = calculateNetIncome(annualRevenues, annualExpenses, taxRate);
+      const cashFlow = calculateCashFlow(annualRevenues, annualExpenses + initialInvestments);
+      const loanAmortization = loanDuration ? calculateLoanAmortization(initialInvestments, interestRate, loanDuration * 12) : 0;
 
-    const taxRate = typeof otherFinancialAssumptions.taxRate === 'string' ? Number(otherFinancialAssumptions.taxRate.trim()) : Number(otherFinancialAssumptions.taxRate);
-    const netIncome = calculateNetIncome(annualRevenues, annualExpenses, taxRate);
+      financialProjections.push({
+        year,
+        annualRevenues,
+        annualExpenses,
+        netIncome,
+        cashFlow,
+        loanAmortization,
+      });
+    }
 
-    const cashFlow = calculateCashFlow(annualRevenues, annualExpenses + initialInvestments);
+    // Handle null plan or unrecognized plan - show only two years and first three fields
+    if (!userPlan || !allowedPlans.includes(userPlan)) {
+      const limitedFinancialProjections = financialProjections.slice(0, 2).map(projection => ({
+        year: projection.year,
+        annualRevenues: projection.annualRevenues,
+        annualExpenses: projection.annualExpenses,
+        netIncome: projection.netIncome,
+      }));
 
-    const loanAmortization = loanDuration ? calculateLoanAmortization(initialInvestments, interestRate, loanDuration * 12) : 0;
+      return NextResponse.json(
+        { 
+          message: "Limited access. Showing data for 2 years with limited fields.",
+          limitedData: limitedFinancialProjections,
+        },
+        { status: 200 }
+      );
+    }
 
-    // Calculate financial ratios
-    const liquidityRatio = 1; // Example value
-    const profitabilityRatio = netIncome / (annualRevenues || 1); // Prevent division by zero
-    const debtRatio = initialInvestments / (initialInvestments + netIncome || 1); // Prevent division by zero
+    const liquidityRatio = 1; 
+    const profitabilityRatio = financialProjections[4].netIncome / (financialProjections[4].annualRevenues || 1);
+    const debtRatio = initialInvestments / (initialInvestments + financialProjections[4].netIncome || 1);
 
-    // Calculate company rating
-    const creditworthinessScore = 80; // Example score
-    const riskAssessmentScore = 70; // Example score
-    const growthPotentialScore = 90; // Example score
+    const creditworthinessScore = 80;
+    const riskAssessmentScore = 70;
+    const growthPotentialScore = 90;
     const compositeRatingScore =
       0.4 * creditworthinessScore +
       0.3 * riskAssessmentScore +
       0.3 * growthPotentialScore;
 
-    // Create a new business plan document
     const businessPlan = new BusinessPlan({
       companyName,
       industrySector,
@@ -139,13 +178,7 @@ const generateBusinessPlan = async (request) => {
       costs,
       investmentsAndFinancing,
       otherFinancialAssumptions,
-      financialProjections: {
-        annualRevenues,
-        annualExpenses,
-        netIncome,
-        cashFlow,
-        loanAmortization,
-      },
+      financialProjections,
       financialRatios: {
         liquidityRatio,
         profitabilityRatio,
@@ -159,12 +192,13 @@ const generateBusinessPlan = async (request) => {
       },
     });
 
-    // Save to the database
     await businessPlan.save();
 
-    // Return success response
     return NextResponse.json(
-      { message: "Business plan generated successfully", businessPlan },
+      { 
+        message: "Business plan generated successfully", 
+        financialProjections 
+      },
       { status: 200 }
     );
   } catch (error) {
@@ -175,5 +209,6 @@ const generateBusinessPlan = async (request) => {
     );
   }
 };
+
 
 export const POST = connectDb(generateBusinessPlan);
