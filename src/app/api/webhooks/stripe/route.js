@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import connectDb from '../../../../../backend/middleware/db';
 import User from '../../../../../backend/models/user';
-import Subscription from '../../../../../backend/models/subscription';
 import stripe from 'stripe';
 
 const stripeClient = stripe(process.env.STRIPE_SECRET_KEY);
@@ -68,7 +67,6 @@ const helper = async (request) => {
           const user = await User.findOne({ stripeCustomerId: subscription.customer });
   
           if (user) {
-            // Set the user's current plan to null upon subscription deletion
             user.currentPlan = null;
             await user.save();
           } else {
