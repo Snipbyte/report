@@ -12,10 +12,10 @@ const HeroSection = () => {
       <p className="text-lg text-paraColor text-center mt-4 w-[900px] mx-auto">
       Our team is committed to delivering accurate and insightful reports, combining data-driven analysis with expert perspectives to provide clear, actionable information. We strive to maintain the highest standards of integrity and transparency in all our reporting.
       </p>
-      <div className="p-10">
+      <div className="p-20">
         <Image
-          className="w-full rounded-md h-[600px] "
-          src="/images/dashboard5.avif"
+          className="w-full rounded-md h-[550px] "
+          src="/images/aboutus.jpg"
           width={1000}
           height={1000}
         />

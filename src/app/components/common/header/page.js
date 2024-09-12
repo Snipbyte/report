@@ -2,7 +2,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaDribbble, FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import { CiMenuFries } from "react-icons/ci";
 
 const Header = () => {
@@ -57,8 +56,8 @@ const Header = () => {
                     <Link href="/pricingplan" className='hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300'>Pricing</Link>
                 </div>
                 <div className='hidden md:flex gap-2 items-center'>
-                    <button className="text-center border-2 w-20 p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor">Login</button>
-                    <button className="text-center text-white border-2 w-20 p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700">Signup</button>
+                    <Link href="login" className="text-center border-2 w-20 p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor">Login</Link>
+                    <Link href="signup" className="text-center text-white border-2 w-20 p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700">Signup</Link>
                 </div>
                 <button className="md:hidden" onClick={toggleNav}>
                     <CiMenuFries size={30} />

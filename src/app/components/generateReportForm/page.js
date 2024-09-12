@@ -114,7 +114,7 @@ const GenerateReportForm = () => {
             name="companyName"
             value={formData.companyName}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
+            className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
         </div>
 
@@ -127,7 +127,7 @@ const GenerateReportForm = () => {
             name="industrySector"
             value={formData.industrySector}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
+            className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
         </div>
 
@@ -140,7 +140,7 @@ const GenerateReportForm = () => {
             name="dateOfEstablishment"
             value={formData.dateOfEstablishment}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
+            className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
         </div>
 
@@ -153,7 +153,7 @@ const GenerateReportForm = () => {
             name="location"
             value={formData.location}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
+            className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
         </div>
 
@@ -168,7 +168,7 @@ const GenerateReportForm = () => {
             name="revenues.unitPrice"
             value={formData.revenues.unitPrice}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
+            className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
           <label className="block text-sm font-medium text-gray-700 mt-4">
             Expected Monthly Sales Quantity
@@ -178,7 +178,7 @@ const GenerateReportForm = () => {
             name="revenues.expectedMonthlySalesQuantity"
             value={formData.revenues.expectedMonthlySalesQuantity}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
+            className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
           <label className="block text-sm font-medium text-gray-700 mt-4">
             Estimated Sales Growth
@@ -188,7 +188,7 @@ const GenerateReportForm = () => {
             name="revenues.estimatedSalesGrowth"
             value={formData.revenues.estimatedSalesGrowth}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
+            className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
         </div>
 
@@ -203,7 +203,7 @@ const GenerateReportForm = () => {
             name="costs.monthlyFixedCosts"
             value={formData.costs.monthlyFixedCosts}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
+            className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
           <label className="block text-sm font-medium text-gray-700 mt-4">
             Variable Unit Costs
@@ -213,7 +213,7 @@ const GenerateReportForm = () => {
             name="costs.variableUnitCosts"
             value={formData.costs.variableUnitCosts}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
+            className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
         </div>
 
@@ -228,7 +228,7 @@ const GenerateReportForm = () => {
             name="investmentsAndFinancing.initialInvestments"
             value={formData.investmentsAndFinancing.initialInvestments}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
+            className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
           
           <label className="block text-sm font-medium text-gray-700 mt-4">
@@ -239,7 +239,7 @@ const GenerateReportForm = () => {
             name="investmentsAndFinancing.loanDuration"
             value={formData.investmentsAndFinancing.loanDuration}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
+            className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
           <label className="block text-sm font-medium text-gray-700 mt-4">
             Interest Rate (%)
@@ -249,7 +249,7 @@ const GenerateReportForm = () => {
             name="investmentsAndFinancing.interestRate" // Updated key name
             value={formData.investmentsAndFinancing.interestRate}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
+            className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
         </div>
 
@@ -264,7 +264,7 @@ const GenerateReportForm = () => {
             name="otherFinancialAssumptions.taxRate"
             value={formData.otherFinancialAssumptions.taxRate}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
+            className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
         </div>
 
