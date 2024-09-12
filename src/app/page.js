@@ -11,22 +11,24 @@ import ChooseCard from "./components/landingpage/chooseCard/page";
 import AmbitionCard from "./components/landingpage/ambitionCard/page";
 import Testimonials from "./components/landingpage/testimonials/page";
 
-
 export default function Home() {
   return (
     <main className="overflow-hidden">
       <Header />
-      <HeroSection />
-      <SimulationCard />
-      <SectionCard />
-      <GuaidanceCard />
-      <WorkCard />
-      <ChooseCard />
-      <p className='text-4xl text-center font-bold text-headingColor my-6'>Don’t let financing hold back your Ambitions</p>
-      <AmbitionCard />
-      <Testimonials/>
+      <div className="lg:mx-auto lg:px-[100px]">
+        <HeroSection />
+         <SimulationCard />
+        <SectionCard />
+        <GuaidanceCard />
+        <WorkCard />
+        <ChooseCard />
+        <p className="text-4xl text-center font-bold text-headingColor my-6">
+          Don’t let financing hold back your Ambitions
+        </p>
+        <AmbitionCard />
+        <Testimonials />
+      </div>
       <Footer />
-   
     </main>
   );
 }
