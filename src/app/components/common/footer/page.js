@@ -9,8 +9,7 @@ const Footer = () => {
         <div className="flex flex-wrap items-center justify-between mt-5 mb-12">
             <div className="mb-4 lg:mb-0">
                 <Link href="/">
-                    {/* <Image className='w-40 h-20 my-2' src="/images/ksllogo.webp" width={1000} height={1000} /> */}
-                    Logo here
+                    <Image className='w-24 h-16 my-2' src="/images/logo.png" width={1000} height={1000} />
                 </Link>
             </div>
             <div className="w-full md:w-[55%] lg:w-[45%] my-2">

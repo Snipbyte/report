@@ -1,11 +1,14 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { FaGoogle } from 'react-icons/fa'
 
 const FormSection = () => {
   return (
-
-    <div className="md:w-1/2 w-full h-full bg-lightCard  md:p-20 p-10">
+    <div className="md:w-1/2 w-full bg-lightCard  md:p-16 p-10">
+      <Link href="/">
+        <Image className='w-20 h-14 mb-4' src="/images/logo.png" width={1000} height={1000} alt="Logo" />
+      </Link>
       <h2 className="text-3xl font-bold">
         Keep your online <br />
         buisness organized
