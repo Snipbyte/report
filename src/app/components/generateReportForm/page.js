@@ -1,6 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import Chart from "react-apexcharts"; // Import ApexCharts component
+import dynamic from "next/dynamic";
+
+// Dynamically import ApexCharts with SSR disabled
+const ApexCharts = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 
 const GenerateReportForm = () => {
   const [formData, setFormData] = useState({
@@ -331,7 +336,7 @@ const GenerateReportForm = () => {
             <h4 className="text-lg font-semibold mb-4">
               Bar Chart (Revenues vs Expenses)
             </h4>
-            <Chart
+            <ApexCharts
               options={barChartOptions}
               series={barChartSeries}
               type="bar"
@@ -344,7 +349,7 @@ const GenerateReportForm = () => {
             <h4 className="text-lg font-semibold mb-4">
               Line Chart (Net Income and Cash Flow)
             </h4>
-            <Chart
+            <ApexCharts
               options={lineChartOptions}
               series={lineChartSeries}
               type="line"
