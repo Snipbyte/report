@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Chart from "react-apexcharts"; // Import ApexCharts component
 
 const GenerateReportForm = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ const GenerateReportForm = () => {
     investmentsAndFinancing: {
       initialInvestments: "",
       loanDuration: "",
-      interestRate: "", 
+      interestRate: "",
     },
     otherFinancialAssumptions: {
       taxRate: "",
@@ -28,6 +29,8 @@ const GenerateReportForm = () => {
   });
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const [isLimitedAccess, setIsLimitedAccess] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -49,13 +52,14 @@ const GenerateReportForm = () => {
     e.preventDefault();
     setError(null);
 
-    // Convert necessary string fields to numbers
     const dataToSubmit = {
       ...formData,
       revenues: {
         ...formData.revenues,
         unitPrice: String(formData.revenues.unitPrice),
-        expectedYearlySalesQuantity: String(formData.revenues.expectedYearlySalesQuantity),
+        expectedYearlySalesQuantity: String(
+          formData.revenues.expectedYearlySalesQuantity
+        ),
         estimatedSalesGrowth: String(formData.revenues.estimatedSalesGrowth),
       },
       costs: {
@@ -66,7 +70,9 @@ const GenerateReportForm = () => {
       },
       investmentsAndFinancing: {
         ...formData.investmentsAndFinancing,
-        initialInvestments: String(formData.investmentsAndFinancing.initialInvestments),
+        initialInvestments: String(
+          formData.investmentsAndFinancing.initialInvestments
+        ),
         loanDuration: String(formData.investmentsAndFinancing.loanDuration),
         interestRate: String(formData.investmentsAndFinancing.interestRate),
       },
@@ -82,14 +88,16 @@ const GenerateReportForm = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(dataToSubmit),
       });
 
       const data = await response.json();
       if (response.ok) {
-        setResult(data.businessPlan);
+        setResult(data.limitedData || data.financialProjections);
+        setIsLimitedAccess(!!data.limitedData);
+        setActiveTab(0);
       } else {
         setError(data.message || "Error generating the business plan");
       }
@@ -97,6 +105,47 @@ const GenerateReportForm = () => {
       setError("Failed to generate the business plan");
     }
   };
+
+  // ApexChart Options for Bar Chart and Line Chart
+  const barChartOptions = {
+    chart: {
+      type: "bar",
+    },
+    xaxis: {
+      categories: result?.map((proj) => `Year ${proj.year}`) || [],
+    },
+  };
+
+  const barChartSeries = [
+    {
+      name: "Revenues",
+      data: result?.map((proj) => proj.annualRevenues) || [],
+    },
+    {
+      name: "Expenses",
+      data: result?.map((proj) => proj.annualExpenses) || [],
+    },
+  ];
+
+  const lineChartOptions = {
+    chart: {
+      type: "line",
+    },
+    xaxis: {
+      categories: result?.map((proj) => `Year ${proj.year}`) || [],
+    },
+  };
+
+  const lineChartSeries = [
+    {
+      name: "Net Income",
+      data: result?.map((proj) => proj.netIncome) || [],
+    },
+    {
+      name: "Cash Flow",
+      data: result?.map((proj) => proj.cashFlow) || [],
+    },
+  ];
 
   return (
     <div>
@@ -227,7 +276,7 @@ const GenerateReportForm = () => {
             onChange={handleInputChange}
             className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
-          
+
           <label className="block text-sm font-medium text-gray-700 mt-4">
             Loan Duration (years)
           </label>
@@ -276,9 +325,94 @@ const GenerateReportForm = () => {
       {result && (
         <div className="mt-6">
           <h3 className="text-lg font-semibold">Generated Business Plan:</h3>
-          <pre className="bg-gray-100 p-4 rounded">
-            {JSON.stringify(result, null, 2)}
-          </pre>
+
+          {/* Render Bar Chart */}
+          <div className="my-6">
+            <h4 className="text-lg font-semibold mb-4">
+              Bar Chart (Revenues vs Expenses)
+            </h4>
+            <Chart
+              options={barChartOptions}
+              series={barChartSeries}
+              type="bar"
+              height={350}
+            />
+          </div>
+
+          {/* Render Line Chart */}
+          <div className="my-6">
+            <h4 className="text-lg font-semibold mb-4">
+              Line Chart (Net Income and Cash Flow)
+            </h4>
+            <Chart
+              options={lineChartOptions}
+              series={lineChartSeries}
+              type="line"
+              height={350}
+            />
+          </div>
+
+          {/* Tabs to display years */}
+          <div className="relative">
+            <div className="mb-4 border-b border-gray-200">
+              <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+                {result.map((projection, index) => (
+                  <button
+                    key={index}
+                    className={`${
+                      activeTab === index
+                        ? "border-indigo-500 text-indigo-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    } whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm`}
+                    onClick={() => setActiveTab(index)}
+                  >
+                    Year {projection.year}
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            {/* Display the data for the selected year */}
+            <div className="bg-white shadow overflow-hidden sm:rounded-lg p-6">
+              <h4 className="text-lg font-semibold mb-4">
+                Year {result[activeTab].year}
+              </h4>
+              <p className="text-gray-700">
+                <strong>Annual Revenues:</strong> $
+                {result[activeTab].annualRevenues}
+              </p>
+              <p className="text-gray-700">
+                <strong>Annual Expenses:</strong> $
+                {result[activeTab].annualExpenses}
+              </p>
+              <p className="text-gray-700">
+                <strong>Net Income:</strong> ${result[activeTab].netIncome}
+              </p>
+              <p className="text-gray-700">
+                <strong>Cash Flow:</strong> ${result[activeTab].cashFlow}
+              </p>
+              {/* {result[activeTab].loanAmortization && (
+                <p className="text-gray-700">
+                  <strong>Loan Amortization:</strong> $
+                  {result[activeTab].loanAmortization}
+                </p>
+              )} */}
+            </div>
+
+            {/* Blur section only for limited access (2-year data) */}
+            {isLimitedAccess && (
+              <div className="absolute inset-0 bg-gray-200 bg-opacity-75 flex items-center justify-center">
+                <div className="text-center">
+                  <p className="text-xl font-semibold text-gray-600">
+                    Limited access. Upgrade to view full report.
+                  </p>
+                  <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md">
+                    Purchase Plan
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
