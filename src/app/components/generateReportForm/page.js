@@ -1,4 +1,3 @@
-// components/GenerateReportForm.js
 "use client";
 import React, { useState } from "react";
 
@@ -10,18 +9,18 @@ const GenerateReportForm = () => {
     location: "",
     revenues: {
       unitPrice: "",
-      expectedMonthlySalesQuantity: "",
+      expectedYearlySalesQuantity: "",
       estimatedSalesGrowth: "",
     },
     costs: {
-      monthlyFixedCosts: "",
+      yearlyFixedCosts: "",
       variableUnitCosts: "",
       costGrowth: "",
     },
     investmentsAndFinancing: {
       initialInvestments: "",
       loanDuration: "",
-      interestRate: "", // Corrected the key name
+      interestRate: "", 
     },
     otherFinancialAssumptions: {
       taxRate: "",
@@ -55,29 +54,25 @@ const GenerateReportForm = () => {
       ...formData,
       revenues: {
         ...formData.revenues,
-        unitPrice: Number(formData.revenues.unitPrice),
-        expectedMonthlySalesQuantity: Number(
-          formData.revenues.expectedMonthlySalesQuantity
-        ),
-        estimatedSalesGrowth: Number(formData.revenues.estimatedSalesGrowth),
+        unitPrice: String(formData.revenues.unitPrice),
+        expectedYearlySalesQuantity: String(formData.revenues.expectedYearlySalesQuantity),
+        estimatedSalesGrowth: String(formData.revenues.estimatedSalesGrowth),
       },
       costs: {
         ...formData.costs,
-        monthlyFixedCosts: Number(formData.costs.monthlyFixedCosts),
-        variableUnitCosts: Number(formData.costs.variableUnitCosts),
-        costGrowth: Number(formData.costs.costGrowth), // Assuming this is required as a number
+        yearlyFixedCosts: String(formData.costs.yearlyFixedCosts),
+        variableUnitCosts: String(formData.costs.variableUnitCosts),
+        costGrowth: String(formData.costs.costGrowth),
       },
       investmentsAndFinancing: {
         ...formData.investmentsAndFinancing,
-        initialInvestments: Number(
-          formData.investmentsAndFinancing.initialInvestments
-        ),
-        loanDuration: Number(formData.investmentsAndFinancing.loanDuration),
-        interestRate: Number(formData.investmentsAndFinancing.interestRate), // Use interestRate instead of interestRates
+        initialInvestments: String(formData.investmentsAndFinancing.initialInvestments),
+        loanDuration: String(formData.investmentsAndFinancing.loanDuration),
+        interestRate: String(formData.investmentsAndFinancing.interestRate),
       },
       otherFinancialAssumptions: {
         ...formData.otherFinancialAssumptions,
-        taxRate: Number(formData.otherFinancialAssumptions.taxRate),
+        taxRate: String(formData.otherFinancialAssumptions.taxRate),
       },
     };
 
@@ -177,8 +172,8 @@ const GenerateReportForm = () => {
           </label>
           <input
             type="number"
-            name="revenues.expectedMonthlySalesQuantity"
-            value={formData.revenues.expectedMonthlySalesQuantity}
+            name="revenues.expectedYearlySalesQuantity"
+            value={formData.revenues.expectedYearlySalesQuantity}
             onChange={handleInputChange}
             className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
@@ -202,8 +197,8 @@ const GenerateReportForm = () => {
           </label>
           <input
             type="number"
-            name="costs.monthlyFixedCosts"
-            value={formData.costs.monthlyFixedCosts}
+            name="costs.yearlyFixedCosts"
+            value={formData.costs.yearlyFixedCosts}
             onChange={handleInputChange}
             className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />

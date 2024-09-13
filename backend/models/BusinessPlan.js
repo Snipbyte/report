@@ -54,5 +54,6 @@ const businessPlanSchema = new mongoose.Schema({
   }
 });
 
-const BusinessPlan = mongoose.model('BusinessPlan', businessPlanSchema);
-export default BusinessPlan;
+
+export default mongoose.models.BusinessPlan || mongoose.model('BusinessPlan', businessPlanSchema);
+
