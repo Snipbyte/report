@@ -3,6 +3,13 @@ import connectDb from '../../../../../backend/middleware/db';
 import User from '../../../../../backend/models/user';
 import stripe from 'stripe';
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+
 const stripeClient = stripe(process.env.STRIPE_SECRET_KEY);
 const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 
