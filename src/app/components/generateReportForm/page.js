@@ -423,7 +423,7 @@ const GenerateReportForm = () => {
 
       {error && (
         <div className="mt-6 text-red-600">
-          <p>Error: {error}</p>
+           <p>Error: {error}</p>
         </div>
       )}
     </div>
