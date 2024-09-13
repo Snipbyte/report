@@ -82,10 +82,12 @@ const GenerateReportForm = () => {
     };
 
     try {
+      const token = localStorage.getItem("userToken");
       const response = await fetch("/api/generatebusinessplan", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(dataToSubmit),
       });
@@ -171,7 +173,7 @@ const GenerateReportForm = () => {
             className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
           <label className="block text-sm font-medium text-gray-700 mt-4">
-            Expected Monthly Sales Quantity
+            Expected Yearly Sales Quantity
           </label>
           <input
             type="number"
@@ -196,7 +198,7 @@ const GenerateReportForm = () => {
         <div className="mb-4">
           <h2 className="text-lg font-semibold">Costs</h2>
           <label className="block text-sm font-medium text-gray-700">
-            Monthly Fixed Costs
+            Yearly Fixed Costs
           </label>
           <input
             type="number"
