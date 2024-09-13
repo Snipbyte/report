@@ -22,13 +22,13 @@ const FormSection = () => {
     try {
       const response = await axios.post("/api/user/login", data);
       alert(response.data.message);
-      setLoading(false); 
-      localStorage.setItem("userToken",response.data.token);
-      router.push("/user/dashboard");
+      setLoading(false);
+      localStorage.setItem("userToken", response.data.token);
+      router.push("/generate-report");
     } catch (error) {
       console.error("Login error:", error);
       alert(error.response?.data?.message || "Login failed");
-      setLoading(false); 
+      setLoading(false);
     }
   };
 

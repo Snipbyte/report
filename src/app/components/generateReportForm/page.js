@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
+import jsPDF from "jspdf";
+import Link from "next/link";
 
 // Dynamically import ApexCharts with SSR disabled
 const ApexCharts = dynamic(() => import("react-apexcharts"), {
@@ -36,6 +38,7 @@ const GenerateReportForm = () => {
   const [error, setError] = useState(null);
   const [isLimitedAccess, setIsLimitedAccess] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -56,6 +59,7 @@ const GenerateReportForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setIsLoading(true);
 
     const dataToSubmit = {
       ...formData,
@@ -103,12 +107,41 @@ const GenerateReportForm = () => {
         setResult(data.limitedData || data.financialProjections);
         setIsLimitedAccess(!!data.limitedData);
         setActiveTab(0);
+        setIsLoading(false);
       } else {
         setError(data.message || "Error generating the business plan");
+        setIsLoading(false);
       }
     } catch (error) {
       setError("Failed to generate the business plan");
+      setIsLoading(false);
     }
+  };
+
+  // for pdf
+  // Function to generate and download PDF
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+
+    // Add title and relevant data to PDF
+    doc.text("Business Plan Report", 20, 20);
+    doc.text(`Company Name: ${formData.companyName}`, 20, 30);
+    doc.text(`Industry Sector: ${formData.industrySector}`, 20, 40);
+    doc.text(`Date of Establishment: ${formData.dateOfEstablishment}`, 20, 50);
+    doc.text(`Location: ${formData.location}`, 20, 60);
+
+    // Add chart data to PDF (simplified for example)
+    doc.text("Financial Projections:", 20, 70);
+    result?.forEach((proj, index) => {
+      doc.text(
+        `Year ${proj.year} - Revenues: ${proj.annualRevenues}, Expenses: ${proj.annualExpenses}, Net Income: ${proj.netIncome}`,
+        20,
+        80 + index * 10
+      );
+    });
+
+    // Save the PDF
+    doc.save("business_plan_report.pdf");
   };
 
   // ApexChart Options for Bar Chart and Line Chart
@@ -321,9 +354,12 @@ const GenerateReportForm = () => {
 
         <button
           type="submit"
-          className="w-full rounded-md bg-blue-600 text-white py-2 mt-4 hover:bg-blue-700"
+          className={`w-full rounded-md ${
+            isLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+          } text-white py-2 mt-4`}
+          disabled={isLoading}
         >
-          Generate Business Plan
+          {isLoading ? "Generating..." : "Generate Business Plan"}
         </button>
       </form>
 
@@ -411,19 +447,29 @@ const GenerateReportForm = () => {
                   <p className="text-xl font-semibold text-gray-600">
                     Limited access. Upgrade to view full report.
                   </p>
-                  <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md">
+                  <Link
+                    href="/pricingplan"
+                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
+                  >
                     Purchase Plan
-                  </button>
+                  </Link>
                 </div>
               </div>
             )}
           </div>
+          {/* Download PDF Button */}
+          <button
+            onClick={downloadPDF}
+            className="w-full rounded-md bg-green-600 text-white py-2 mt-4 hover:bg-green-700"
+          >
+            Download PDF
+          </button>
         </div>
       )}
 
       {error && (
         <div className="mt-6 text-red-600">
-           <p>Error: {error}</p>
+          <p>Error: {error}</p>
         </div>
       )}
     </div>
