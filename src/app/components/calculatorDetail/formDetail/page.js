@@ -310,17 +310,25 @@ const FormDetail = () => {
 
         {/* Result Section */}
         <div className="w-full lg:w-1/2 p-3 mt-4 lg:mt-0">
-          {result && (
+          {result ? (
             <>
-              <p className="text-center text-headingColor text-sm">
+              <p className="text-lg font-semibold text-gray-700 text-center mb-4">
                 Calculation Result
               </p>
-              <div>
-                <pre className="text-headingColor bg-gray-100 p-3 rounded-md">
-                  {JSON.stringify(result, null, 2)}
-                </pre>
-              </div>
+              <div className="space-y-4">
+    {Object.entries(result).map(([key, value]) => (
+      <div key={key}>
+        <h3 className="text-lg font-medium text-gray-800 capitalize">{key.replace(/([A-Z])/g, ' $1')}</h3>
+        <p className="text-gray-700">{value}</p>
+      </div>
+    ))}
+  </div>
+
             </>
+          ) : (
+            <p className="text-gray-500 text-center">
+              No result to display yet.
+            </p>
           )}
         </div>
       </div>
