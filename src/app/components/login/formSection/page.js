@@ -24,7 +24,7 @@ const FormSection = () => {
       alert(response.data.message);
       setLoading(false);
       localStorage.setItem("userToken", response.data.token);
-      router.push("/generate-report");
+      router.push("/user/dashboard");
     } catch (error) {
       console.error("Login error:", error);
       alert(error.response?.data?.message || "Login failed");
