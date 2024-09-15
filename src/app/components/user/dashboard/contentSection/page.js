@@ -5,7 +5,7 @@ import StatCard from '../statCard/page';
 
 const ContentSection = () => {
     return (
-        <div>
+        <div className='w-full'>
             <div className='flex flex-wrap  items-center justify-between my-5'>
                 <p className='text-headingColor text-5xl font-bold'>Dashboard</p>
                 <div className='text-md flex items-center gap-3 justify-end'>
@@ -18,10 +18,7 @@ const ContentSection = () => {
                             <option value="Y">Yearly</option>
                         </select>
                     </div>
-                    <div className='flex items-center gap-1 p-2 w-32 text-center text-white rounded-md bg-btnColor hover:bg-hoverBtnColor'>
-                        <CiExport className='w-4 h-4' />
-                        <button className='text-white'>Export CSV</button>
-                    </div>
+                  
                 </div>
             </div>
             <div className='md:flex block items-center justify-center my-4'>

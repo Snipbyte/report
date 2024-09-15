@@ -9,7 +9,7 @@ const PaymentCard = () => {
     <div>
       <div className='flex flex-wrap border-y py-6 '>
         <MyPlanCard />
-        <PaymentMethodCard />
+        {/* <PaymentMethodCard /> */}
       </div>
    
     </div>
