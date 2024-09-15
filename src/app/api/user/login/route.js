@@ -47,7 +47,7 @@ const loginUserHandler = async (request) => {
           email: user.email,
           blogs: user.blogs,
           listings: user.listings,
-          subscriptionPlan: user.subscriptionPlan
+          currentPlan: user.currentPlan
         }
       },
       { status: 200 }

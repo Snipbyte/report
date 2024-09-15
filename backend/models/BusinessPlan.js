@@ -5,7 +5,7 @@ const businessPlanSchema = new mongoose.Schema({
   industrySector: { type: String, required: true },
   dateOfEstablishment: { type: Date, required: true },
   location: { type: String, required: true },
-
+  
   revenues: {
     products: [{ type: String }],
     unitPrice: [{ type: Number }],
@@ -24,7 +24,7 @@ const businessPlanSchema = new mongoose.Schema({
     initialInvestments: { type: Number },
     sourcesOfFinancing: [{ type: String }],
     interestRates: [{ type: Number }],
-    loanDuration: { type: Number } // in years
+    loanDuration: { type: Number }
   },
 
   otherFinancialAssumptions: {
@@ -51,9 +51,14 @@ const businessPlanSchema = new mongoose.Schema({
     riskAssessmentScore: { type: Number },
     growthPotentialScore: { type: Number },
     compositeRatingScore: { type: Number }
+  },
+
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   }
+  
 });
 
-
 export default mongoose.models.BusinessPlan || mongoose.model('BusinessPlan', businessPlanSchema);
-

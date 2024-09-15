@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   firstname: {
@@ -29,73 +29,7 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Password is required'],
     minlength: [6, 'Password must be at least 6 characters long']
   },
-  profileImage: {
-    type: String,
-    default: null
-  },
-  displayName: {
-    type: String,
-    default: null
-  },
-  phone: {
-    type: String,
-    default: null
-  },
-  address1: {
-    type: String,
-    default: null
-  },
-  address2: {
-    type: String,
-    default: null
-  },
-  city: {
-    type: String,
-    default: null
-  },
-  zipcode: {
-    type: String,
-    default: null
-  },
-  state: {
-    type: String,
-    default: null
-  },
-  country: {
-    type: String,
-    default: null
-  },
-  about: {
-    type: String,
-    default: null
-  },
-  socialLinks: {
-    facebook: {
-      type: String,
-      default: null
-    },
-    twitter: {
-      type: String,
-      default: null
-    },
-    linkedin: {
-      type: String,
-      default: null
-    },
-    instagram: {
-      type: String,
-      default: null
-    },
-    pinterest: {
-      type: String,
-      default: null
-    }
-  },
   blogs: {
-    type: [String],
-    default: [],
-  },
-  listings: {
     type: [String],
     default: [],
   },
@@ -103,9 +37,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['intro', 'base', 'popular', 'enterprise', null],
     default: null,
+  },
+  businessPlans: [{ type: mongoose.Schema.Types.ObjectId, ref: 'BusinessPlan' }],
+  isVerified:{
+    type:Boolean,
+    default:false
   }
 });
 
-
 export default mongoose.models.User || mongoose.model('User', userSchema);
-

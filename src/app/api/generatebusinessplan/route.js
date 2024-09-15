@@ -43,9 +43,6 @@ const calculateLoanAmortization = (loanAmount, interestRate, n) => {
   );
 };
 
-
-
-
 const generateBusinessPlan = async (request) => {
   try {
     const authHeader = request.headers.get('Authorization');
@@ -190,6 +187,7 @@ const generateBusinessPlan = async (request) => {
         growthPotentialScore,
         compositeRatingScore,
       },
+      user: user._id
     });
 
     await businessPlan.save();
