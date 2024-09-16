@@ -51,7 +51,7 @@ const Footer = () => {
             </div>
             <div className="w-full lg:w-auto mb-6">
                 <p className="font-bold text-xl">Say Hello</p>
-                <p className="text-gray-300 my-4 lg:my-6">info@youremail.com</p>
+                <p className="text-gray-300 my-4 lg:my-6">info@izikemp.com</p>
             </div>
         </div>
         <hr className="mt-12 lg:mt-16 border-gray-600" />

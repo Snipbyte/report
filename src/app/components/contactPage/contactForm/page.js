@@ -9,19 +9,13 @@ const ContactForm = () => {
       <p className="text-paraColor text-sm text- mb-6">For any inquiries or specific issues, feel free to contact us via our form or on social media. Join our dynamic community of successful entrepreneurs!</p>
       <h2 className="font-light md:text-2xl text-xl text-headingColor">Address</h2>
       <hr className="my-4" />
-      <div className="flex items-center gap-1">
-        <FaLocationDot className="text-paraColor" />
-        <p className="text-paraColor text-sm font-light">
-          Your address at Lutaco Tower 007A Nguyen Van Tori
-        </p>
-      </div>
       <div className="flex items-center gap-1 my-4">
         <IoCall className="text-paraColor" />
-        <p className="text-paraColor text-sm font-light">+008 1234 6789</p>
+        <p className="text-paraColor text-sm font-light">+331 8884 0167</p>
       </div>
       <div className="flex items-center gap-1">
         <FaEnvelope className="text-paraColor" />
-        <p className="text-paraColor text-sm font-light">xyz@example.com</p>
+        <p className="text-paraColor text-sm font-light">info@izikemp.com</p>
       </div>
       <h2 className="font-light md:text-2xl text-xl mt-10">Contact us</h2>
       <hr className="my-4" />
