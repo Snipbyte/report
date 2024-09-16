@@ -10,7 +10,7 @@ const HeroSection = () => {
                     alt="Analytics Image"
                     className="w-full lg:h-[500px] h-full object-cover opacity-100"
                 />
-                <div  className="absolute inset-0 bg-gradient-to-r from-transparent to-white"></div>
+                 <div  className="absolute inset-0 bg-gradient-to-r from-transparent  to-white"></div>
             </div>
             <div className="lg:w-[50%] w-full p-4 bg-white opacity-90">
                 <h1 className="lg:text-5xl text-2xl w-full md:w-[500px] font-bold mb-4">Boost Your Funding Prospects with IziKemp!</h1>
