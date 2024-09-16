@@ -3,11 +3,13 @@ import connectDb from '../../../../backend/middleware/db';
 import User from '../../../../backend/models/user';
 import jwt from 'jsonwebtoken';
 
+export const dynamic = 'force-dynamic'; // Marks the route as dynamic
+
 const verifyEmailHandler = async (request) => {
   try {
-    const url = new URL(request.url);
+    const url = request.nextUrl; // Use nextUrl instead of request.url
     const token = url.searchParams.get('token');
-    console.log(token)
+
     if (!token) {
       return NextResponse.json(
         { message: "Verification token is required" },
