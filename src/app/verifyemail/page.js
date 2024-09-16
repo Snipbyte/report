@@ -50,13 +50,11 @@
 // };
 
 // export default VerifyEmail;
-
-import React from 'react'
+"use client";
+import React from "react";
 
 const VerifyEmail = () => {
-  return (
-    <div>VerifyEmail</div>
-  )
-}
+  return <div>VerifyEmail</div>;
+};
 
-export default VerifyEmail
+export default VerifyEmail;
