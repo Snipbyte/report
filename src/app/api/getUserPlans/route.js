@@ -3,6 +3,8 @@ import connectDb from "../../../../backend/middleware/db";
 import BusinessPlan from "../../../../backend/models/BusinessPlan";
 import jwt from "jsonwebtoken";
 
+export const dynamic = 'force-dynamic'; // Marks the route as dynamic
+
 const getBusinessPlansByUser = async (request) => {
   try {
     const authHeader = request.headers.get('Authorization');
@@ -18,7 +20,7 @@ const getBusinessPlansByUser = async (request) => {
 
     // Verify the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId =  decoded.id;  
+    const userId = decoded.id;
 
     if (!userId) {
       return NextResponse.json(
@@ -27,6 +29,7 @@ const getBusinessPlansByUser = async (request) => {
       );
     }
 
+    // Find business plans associated with the user
     const businessPlans = await BusinessPlan.find({ user: userId });
 
     if (!businessPlans || businessPlans.length === 0) {
