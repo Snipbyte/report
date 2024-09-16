@@ -21,7 +21,7 @@ i18n
         },
       },
     },
-    lng: localStorage.getItem('language') || 'en', // Default language
+    lng:'en', // Default language
     fallbackLng: 'en', // Fallback language if translation not found
     interpolation: {
       escapeValue: false, // React already escapes values
