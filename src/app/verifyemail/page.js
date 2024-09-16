@@ -1,18 +1,20 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation';
 
 const VerifyEmail = () => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const searchParams = useSearchParams();
-  const token = searchParams.get('token')
-  console.log(token)
-  useEffect(() => {
-    const verifyEmail = async () => {
+  const token = searchParams.get('token');
 
+  useEffect(() => {
+    // Check if we're running in the browser (client-side)
+    if (typeof window === 'undefined') return;
+
+    const verifyEmail = async () => {
       if (!token) {
         setMessage('Invalid verification link.');
         setLoading(false);
@@ -38,10 +40,8 @@ const VerifyEmail = () => {
       }
     };
 
-    if (token) {
-      verifyEmail();
-    }
-  }, []);
+    verifyEmail();
+  }, [token]);
 
   if (loading) {
     return <div>Loading...</div>;
