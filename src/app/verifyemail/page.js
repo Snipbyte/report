@@ -1,17 +1,18 @@
-"use client"; // Ensure this is at the top of the file
+"use client";
 
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation'
 
 const VerifyEmail = () => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const searchParams = useSearchParams(); // useSearchParams is client-side only
-  const token = searchParams.get('token');
-
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token')
+  console.log(token)
   useEffect(() => {
     const verifyEmail = async () => {
+
       if (!token) {
         setMessage('Invalid verification link.');
         setLoading(false);
@@ -40,7 +41,7 @@ const VerifyEmail = () => {
     if (token) {
       verifyEmail();
     }
-  }, [token]);
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
