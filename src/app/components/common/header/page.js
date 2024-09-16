@@ -3,18 +3,19 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CiMenuFries } from "react-icons/ci";
+import { useTranslation } from "react-i18next";
+import i18n from "../../../../../i18n";
 
 const Header = () => {
   const [shownav, setshownav] = useState(false);
   const menuRef = useRef(null); // Reference for the menu
   const headerRef = useRef(null); // Reference for the header
+  const { t } = useTranslation();
 
-  // Function to toggle the shownav state
   const toggleNav = () => {
-    setshownav(!shownav); // Toggle the value of shownav
+    setshownav(!shownav);
   };
 
-  // Function to close navbar when clicking outside of it
   const handleClickOutside = (event) => {
     if (
       menuRef.current &&
@@ -26,21 +27,19 @@ const Header = () => {
   };
 
   useEffect(() => {
-    // Add event listener to handle click outside
     document.addEventListener("click", handleClickOutside);
-
-    // Toggle body overflow when menu is open
-    if (shownav) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-
+    document.body.style.overflow = shownav ? "hidden" : "auto";
     return () => {
       document.removeEventListener("click", handleClickOutside);
-      document.body.style.overflow = "auto"; // Ensure overflow is reset on unmount
+      document.body.style.overflow = "auto";
     };
   }, [shownav]);
+
+  // Function to handle language switch
+  const handleLanguageChange = (language) => {
+    i18n.changeLanguage(language); // Change language in i18n
+    localStorage.setItem('language', language); // Save the selected language in localStorage
+  };
 
   return (
     <div ref={headerRef}>
@@ -59,51 +58,42 @@ const Header = () => {
             href="/"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
           >
-            Home
+            {t("Home")}
           </Link>
           <Link
             href="/about"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
           >
-            About Us
+            {t("About Us")}
           </Link>
           <Link
             href="/contact"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
           >
-            Contact Us
-          </Link>
-          <Link
-            href="/blogs"
-            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
-          >
-            Blogs
-          </Link>
-          <Link
-            href="/pricingplan"
-            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
-          >
-            Pricing
-          </Link>
-          <Link
-            href="/calculator"
-            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
-          >
-            Calculators
+            {t("Contact Us")}
           </Link>
         </div>
-        <div className="hidden md:flex gap-2 items-center">
+        <div className="flex gap-4 items-center">
+          {/* Language Switcher */}
+          <button
+            onClick={() =>
+              handleLanguageChange(i18n.language === "en" ? "fr" : "en")
+            }
+            className="text-white border-2 p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700"
+          >
+            {i18n.language === "en" ? "FR" : "EN"}
+          </button>
           <Link
-            href="login"
+            href="/login"
             className="text-center border-2 w-20 p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor"
           >
-            Login
+            {t("Login")}
           </Link>
           <Link
-            href="signup"
+            href="/signup"
             className="text-center text-white border-2 w-20 p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700"
           >
-            Signup
+            {t("Signup")}
           </Link>
         </div>
         <button className="md:hidden" onClick={toggleNav}>
@@ -135,40 +125,20 @@ const Header = () => {
             href="/"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white"
           >
-            Home
+            {t("Home")}
           </Link>
           <Link
             href="/about"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white"
           >
-            About Us
+            {t("About Us")}
           </Link>
           <Link
             href="/contact"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white"
           >
-            Contact Us
+            {t("Contact Us")}
           </Link>
-          <Link
-            href="/pricingplan"
-            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white"
-          >
-            Pricing
-          </Link>
-          <div className="flex gap-2 items-center">
-            <Link
-              href="login"
-              className="text-center border-2 w-20 p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor"
-            >
-              Login
-            </Link>
-            <Link
-              href="signup"
-              className="text-center text-white border-2 w-20 p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700"
-            >
-              Signup
-            </Link>
-          </div>
         </div>
       </div>
     </div>
