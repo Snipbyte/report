@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const DemoSection = () => {
@@ -11,9 +12,14 @@ const DemoSection = () => {
         and discuss how it would fit into
         <br /> your processes!
       </h2>
-      <button className="w-32 rounded-full text-md text-white bg-btnColor hover:bg-hoverBtnColor  px-2 py-2 duration-700  mt-5">
-        Book Demo
-      </button>
+      <div className="my-5">
+        <Link
+          href="/login"
+          className="my-5 w-32 rounded-full text-md text-white bg-btnColor hover:bg-hoverBtnColor  px-2 py-2 duration-700  mt-5"
+        >
+          Book Demo
+        </Link>
+      </div>
       <div className="absolute top-0 bottom-[-100px] left-[700px] ">
         <Image
           className=" h-[300px] "

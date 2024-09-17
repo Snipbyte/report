@@ -72,6 +72,12 @@ const Header = () => {
           >
             {t("Contact Us")}
           </Link>
+          <Link
+            href="/calculator"
+            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
+          >
+            {t("Calculators")}
+          </Link>
         </div>
         <div className="flex gap-4 items-center">
           {/* Language Switcher */}

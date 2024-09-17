@@ -6,11 +6,11 @@ const HeroSection = () => {
     <div className="bg-lightCard p-5">
         
       <h3 className="lg:text-6xl text-3xl font-bold text-center ">
-        Collaborative solution <br />
-        <span className="text-hoverBtnColor">for large teams</span>{" "}
+      Your Trusted  <br />
+        <span className="text-hoverBtnColor">Partner in Financing</span>{" "}
       </h3>
       <p className="text-lg text-paraColor text-center mt-4 w-[900px] mx-auto">
-      Our team is committed to delivering accurate and insightful reports, combining data-driven analysis with expert perspectives to provide clear, actionable information. We strive to maintain the highest standards of integrity and transparency in all our reporting.
+      At IziKemp, our mission is to empower entrepreneurs with powerful tools and expert advice. Explore our story, meet our team, and find out how we can help turn your ambitions into achievements.
       </p>
       <div className="p-20">
         <Image
