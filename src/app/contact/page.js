@@ -11,9 +11,9 @@ const Contact = () => {
       <Header/>
 
       {/* <Breadcrumb pageName="Contact Us" pageLink="/contact" /> */}
-      <div className="md:flex ">
+      <div className="md:flex items-center">
         <div className="md:w-1/2 w-full">
-          <Image className="w-full lg:h-[850px] h-full" src="/images/contacts.jpg" width={1000} height={1000} />
+          <Image className="w-full lg:h-[550px] h-full" src="/images/contacts.jpg" width={1000} height={1000} />
         </div>
         <div className="md:w-1/2 w-full">
           <ContactForm />
