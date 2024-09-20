@@ -1,8 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const SimulationCard = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="my-10 relative">
       <div className="lg:flex block ">
@@ -10,9 +13,7 @@ const SimulationCard = () => {
           <div className="w-14 h-1.5 bg-btnColor mt-10 mb-20"></div>
           <div className="w-80 h-0.5 bg-white"></div>
           <p className="text-white lg:w-96 w-full text-lg mt-20">
-            Instantly access personalized reports and tailored recommendations
-            with IziKemp. Save time, cut costs, and maximize your funding
-            opportunities in just a few clicks!
+            {t("description2")}
           </p>
         </div>
         <div className="relative lg:w-[50%] w-full h-full">
@@ -28,9 +29,9 @@ const SimulationCard = () => {
       </div>
       <Link
         href="/login"
-        className="absolute bottom-10  lg:left-[500px] left-4 flex justify-center w-60 text-center p-4 text-lg hover:duration-700 bg-btnColor text-white hover:bg-hoverBtnColor rounded-full"
+        className="absolute bottom-10  lg:left-[500px] left-4 flex justify-center w-68 text-center p-4 text-lg hover:duration-700 bg-btnColor text-white hover:bg-hoverBtnColor rounded-full"
       >
-        Start Your Simulation
+        {t("startSimulation")}
       </Link>
     </div>
   );

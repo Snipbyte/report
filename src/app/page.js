@@ -11,7 +11,12 @@ import AmbitionCard from "./components/landingpage/ambitionCard/page";
 import Testimonials from "./components/landingpage/testimonials/page";
 import Image from "next/image";
 
+import { useTranslation } from "react-i18next";
+
+
 export default function Home() {
+  const { t } = useTranslation();
+
   return (
     <main className="overflow-hidden">
       <Header />
@@ -23,7 +28,7 @@ export default function Home() {
         <WorkCard />
         <ChooseCard />
         <p className="text-4xl text-center font-bold text-headingColor my-6">
-          Don’t let financing hold back your Ambitions
+        {t("financingAmbitions")}
         </p>
         <AmbitionCard />
         <Testimonials />
