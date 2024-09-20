@@ -84,7 +84,7 @@ i18n.use(initReactI18next).init({
         dedicatedSupport: "Soutien dédié : notre équipe est là pour vous accompagner à chaque étape.",
         financingAmbitions: "Ne laissez pas le financement freiner vos ambitions.",
         tryIziKemp: "Essayez IziKemp, générez votre rapport instantanément et discutez avec un expert dès aujourd'hui !",
-        testimonials: "Témoignages :",
+        testimonials: "Témoignages:",
         testimonial1: "IziKemp m'a aidé à obtenir le financement dont j'avais besoin pour lancer mon projet. Le rapport immédiat et la consultation d'expert étaient inestimables !",
         successfulEntrepreneur: "Entrepreneur à succès",
       },
