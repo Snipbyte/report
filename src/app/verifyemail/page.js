@@ -9,7 +9,7 @@ const VerifyEmail = () => {
   const [error, setError] = useState(null);
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
-  
+
   useEffect(() => {
     const verifyEmail = async () => {
       if (!token) {
@@ -43,14 +43,26 @@ const VerifyEmail = () => {
   }, [token]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <div className="text-xl text-gray-700">Loading...</div>
+      </div>
+    );
   }
 
-  return <div>{error ? error : message}</div>;
+  return (
+    <div className="flex items-center justify-center h-screen bg-gray-100">
+      <div className={`max-w-md w-full p-6 rounded-lg shadow-md text-center ${error ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
+        <h1 className="text-2xl font-bold mb-4">{error ? 'Verification Failed' : 'Email Verified!'}</h1>
+        <p className="mb-4">{error ? error : message}</p>
+        <a href="/" className="mt-4 inline-block text-blue-600 hover:underline">Go to Home</a>
+      </div>
+    </div>
+  );
 };
 
 const VerifyEmailWithSuspense = () => (
-  <Suspense fallback={<div>Loading verification process...</div>}>
+  <Suspense fallback={<div className="flex items-center justify-center h-screen bg-gray-100"><div className="text-xl text-gray-700">Loading verification process...</div></div>}>
     <VerifyEmail />
   </Suspense>
 );

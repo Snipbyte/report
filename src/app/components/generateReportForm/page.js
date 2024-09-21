@@ -92,7 +92,7 @@ const GenerateReportForm = () => {
     };
 
     try {
-      const token = localStorage.getItem("userToken");
+      const token = localStorage.getItem("token");
       const response = await fetch("/api/generatebusinessplan", {
         method: "POST",
         headers: {

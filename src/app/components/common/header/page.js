@@ -41,6 +41,15 @@ const Header = () => {
     localStorage.setItem('language', language); // Save the selected language in localStorage
   };
 
+  // Function to handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // Remove token from localStorage
+    window.location.href = '/'; // Redirect to home page after logout
+  };
+
+  // Check if user is logged in
+  const isLoggedIn = !!localStorage.getItem('token');
+
   return (
     <div ref={headerRef}>
       <div className="text-white flex items-center justify-between p-4 bg-desColor">
@@ -54,53 +63,49 @@ const Header = () => {
           />
         </Link>
         <div className="hidden md:flex gap-4 items-center">
-          <Link
-            href="/"
-            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
-          >
+          <Link href="/" className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300">
             {t("Home")}
           </Link>
-          <Link
-            href="/about"
-            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
-          >
+          <Link href="/about" className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300">
             {t("About Us")}
           </Link>
-          <Link
-            href="/contact"
-            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
-          >
+          <Link href="/contact" className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300">
             {t("Contact Us")}
           </Link>
-          <Link
-            href="/calculator"
-            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
-          >
+          <Link href="/calculator" className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300">
             {t("Calculators")}
           </Link>
         </div>
         <div className="flex gap-4 items-center">
           {/* Language Switcher */}
-          <button
-            onClick={() =>
-              handleLanguageChange(i18n.language === "en" ? "fr" : "en")
-            }
-            className="text-white border-2 p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700"
-          >
+          <button onClick={() => handleLanguageChange(i18n.language === "en" ? "fr" : "en")} className="text-white border-2 p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700">
             {i18n.language === "en" ? "FR" : "EN"}
           </button>
-          <Link
-            href="/login"
-            className="text-center border-2 w-20 p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor"
-          >
-            {t("Login")}
-          </Link>
-          <Link
-            href="/signup"
-            className="text-center text-white border-2 w-20 p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700"
-          >
-            {t("Signup")}
-          </Link>
+
+          {/* Conditional rendering based on user login state */}
+          {isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              className="text-center border-2 w-20 p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor"
+            >
+              {t("Logout")}
+            </button>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="text-center border-2 w-20 p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor"
+              >
+                {t("Login")}
+              </Link>
+              <Link
+                href="/signup"
+                className="text-center text-white border-2 w-20 p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700"
+              >
+                {t("Signup")}
+              </Link>
+            </>
+          )}
         </div>
         <button className="md:hidden" onClick={toggleNav}>
           <CiMenuFries size={30} />

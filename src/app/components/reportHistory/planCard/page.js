@@ -18,14 +18,14 @@ const PlanCard = (props) => {
         >
           {props.heading}
         </p>
-        <p
+        {/* <p
           className={`text-xl ${
             props.isprofessioanl ? "text-white" : "text-headingColor"
           }`}
         >
           {props.rate}
           <span className="text-paraColor">/month</span>
-        </p>
+        </p> */}
       </div>
       <p className="text-paraColor text-sm">{props.days}</p>
       <div className="flex items-center gap-4 mt-8">
@@ -33,9 +33,8 @@ const PlanCard = (props) => {
           href="/generate-report"
           className="bg-white border border-btnColor text-btnColor p-2 rounded-md text-sm hover:text-hoverBtnColor hover:border-hoverBtnColor"
         >
-          {props.btn}
+          Generate new report
         </Link>
-        {/* {props.isprofessioanl ? <p className='text-lightCard'>Learn more about this plan</p> : ""} */}
       </div>
     </div>
   );

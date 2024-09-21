@@ -9,7 +9,7 @@ const MyPlanCard = () => {
       <p className="text-sm text-paraColor my-1 ">
         Change your plan based on your need.
       </p>
-      <div className="border w-96 p-2 my-3">
+      {/* <div className="border w-96 p-2 my-3">
         <div className="flex items-center gap-2">
           <BsRecordCircleFill className="text-hoverBtnColor" />
           <p className="text-headingColor">Pro</p>
@@ -23,7 +23,7 @@ const MyPlanCard = () => {
             (Next renew 24 September 2023)
           </p>
         </div>
-      </div>
+      </div> */}
       <div className="flex text-center gap-5 my-4 items-center">
         <Link
           href="/pricingplan"

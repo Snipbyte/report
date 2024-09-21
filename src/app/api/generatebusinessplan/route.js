@@ -137,21 +137,14 @@ const generateBusinessPlan = async (request) => {
     }
 
     // Handle null plan or unrecognized plan - show only two years and first three fields
+    let limitedData = null;
     if (!userPlan || !allowedPlans.includes(userPlan)) {
-      const limitedFinancialProjections = financialProjections.slice(0, 2).map(projection => ({
+      limitedData = financialProjections.slice(0, 2).map(projection => ({
         year: projection.year,
         annualRevenues: projection.annualRevenues,
         annualExpenses: projection.annualExpenses,
         netIncome: projection.netIncome,
       }));
-
-      return NextResponse.json(
-        { 
-          message: "Limited access. Showing data for 2 years with limited fields.",
-          limitedData: limitedFinancialProjections,
-        },
-        { status: 200 }
-      );
     }
 
     const liquidityRatio = 1; 
@@ -166,6 +159,7 @@ const generateBusinessPlan = async (request) => {
       0.3 * riskAssessmentScore +
       0.3 * growthPotentialScore;
 
+    // Save the full business plan to the database regardless of user plan
     const businessPlan = new BusinessPlan({
       companyName,
       industrySector,
@@ -192,6 +186,16 @@ const generateBusinessPlan = async (request) => {
 
     await businessPlan.save();
 
+    if (limitedData) {
+      return NextResponse.json(
+        { 
+          message: "Limited access. Showing data for 2 years with limited fields.",
+          limitedData, // Return only limited data to the user
+        },
+        { status: 200 }
+      );
+    }
+
     return NextResponse.json(
       { 
         message: "Business plan generated successfully", 
@@ -207,6 +211,5 @@ const generateBusinessPlan = async (request) => {
     );
   }
 };
-
 
 export const POST = connectDb(generateBusinessPlan);

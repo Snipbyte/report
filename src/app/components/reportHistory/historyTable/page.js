@@ -1,51 +1,86 @@
-import React from 'react'
+"use client";
+import React, { useState } from "react";
 
-const HistoryTable = () => {
-    return (
-        <div className="overflow-x-auto">
-            <table className="min-w-full bg-white ">
-                <thead>
-                    <tr className="bg-lightCard text-headingColor text-sm uppercase">
-                        <th className="text-left py-3 px-4">Report ID</th>
-                        <th className="text-left py-3 px-4">Title</th>
-                        <th className="text-left py-3 px-4">Date</th>
-                        <th className="text-left py-3 px-4">Status</th>
-                        <th className="text-left py-3 px-4">Actions</th>
-                    </tr>
-                </thead>
-                <tbody className="text-paraColor text-sm">
-                    <tr className="border-b">
-                        <td className="py-3 px-4">001</td>
-                        <td className="py-3 px-4">Monthly Report</td>
-                        <td className="py-3 px-4">2024-09-10</td>
-                        <td className="py-3 px-4 text-green-500">Completed</td>
-                        <td className="py-3 px-4">
-                            <button className="text-blue-500 hover:underline">View</button>
-                        </td>
-                    </tr>
-                    <tr className="border-b">
-                        <td className="py-3 px-4">002</td>
-                        <td className="py-3 px-4">Annual Report</td>
-                        <td className="py-3 px-4">2024-08-30</td>
-                        <td className="py-3 px-4 text-yellow-500">Pending</td>
-                        <td className="py-3 px-4">
-                            <button className="text-blue-500 hover:underline">View</button>
-                        </td>
-                    </tr>
-                    <tr className="border-b">
-                        <td className="py-3 px-4">003</td>
-                        <td className="py-3 px-4">Sales Report</td>
-                        <td className="py-3 px-4">2024-07-20</td>
-                        <td className="py-3 px-4 text-red-500">Failed</td>
-                        <td className="py-3 px-4">
-                            <button className="text-blue-500 hover:underline">View</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+const HistoryTable = ({ businessPlans }) => {
+  const [expandedPlan, setExpandedPlan] = useState(null); 
+  const handleToggleDetails = (planId) => {
+    setExpandedPlan(expandedPlan === planId ? null : planId);
+  };
 
-    )
-}
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white">
+        <thead>
+          <tr className="bg-lightCard text-headingColor text-sm uppercase">
+            <th className="text-left py-3 px-4">Company Name</th>
+            <th className="text-left py-3 px-4">Industry Sector</th>
+            <th className="text-left py-3 px-4">Date of Establishment</th>
+            <th className="text-left py-3 px-4">Location</th>
+            <th className="text-left py-3 px-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody className="text-paraColor text-sm">
+          {businessPlans && businessPlans.length > 0 ? (
+            businessPlans.map((plan) => (
+              <React.Fragment key={plan._id}>
+                <tr className="border-b">
+                  <td className="py-3 px-4">{plan.companyName}</td>
+                  <td className="py-3 px-4">{plan.industrySector}</td>
+                  <td className="py-3 px-4">
+                    {new Date(plan.dateOfEstablishment).toLocaleDateString()}
+                  </td>
+                  <td className="py-3 px-4">{plan.location}</td>
+                  <td className="py-3 px-4">
+                    <button
+                      className="text-blue-500 hover:underline"
+                      onClick={() => handleToggleDetails(plan._id)}
+                    >
+                      {expandedPlan === plan._id
+                        ? "Hide Details"
+                        : "View Details"}
+                    </button>
+                  </td>
+                </tr>
+                {expandedPlan === plan._id && (
+                  <tr className="bg-gray-100">
+                    <td colSpan="5" className="py-3 px-4">
+                      {/* Render additional details of the plan here */}
+                      <div>
+                        <h3 className="font-bold">Financial Projections:</h3>
+                        <p>
+                          Annual Revenues:{" "}
+                          {plan.financialProjections.annualRevenues.join(", ")}
+                        </p>
+                        <p>
+                          Annual Expenses:{" "}
+                          {plan.financialProjections.annualExpenses.join(", ")}
+                        </p>
+                        <p>
+                          Net Income:{" "}
+                          {plan.financialProjections.netIncome.join(", ")}
+                        </p>
+                        <p>
+                          Initial Investments:{" "}
+                          {plan.investmentsAndFinancing.initialInvestments}
+                        </p>
+                        {/* Add any other details you'd like to show */}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="py-3 px-4 text-center">
+                No business plans available.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
-export default HistoryTable
+export default HistoryTable;

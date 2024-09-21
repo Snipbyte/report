@@ -5,8 +5,11 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 const FormSection = () => {
+  const { t } = useTranslation();
+
   // Manage form state and errors
   const {
     register,
@@ -23,8 +26,12 @@ const FormSection = () => {
       const response = await axios.post("/api/user/login", data);
       alert(response.data.message);
       setLoading(false);
-      localStorage.setItem("userToken", response.data.token);
-      router.push("/user/dashboard");
+      await localStorage.setItem("token", response.data.token);
+
+   
+
+    // Now navigate to the dashboard
+    router.push("/user/dashboard");
     } catch (error) {
       console.error("Login error:", error);
       alert(error.response?.data?.message || "Login failed");
@@ -44,12 +51,12 @@ const FormSection = () => {
         />
       </Link>
       <h2 className="text-3xl font-bold">
-        Keep your online <br />
-        business organized
+     
+      {t("loginText")}
       </h2>
-      <p className="text-sm text-paraColor mt-1">
+      {/* <p className="text-sm text-paraColor mt-1">
         Sign up to start your 30 days free trial
-      </p>
+      </p> */}
 
       <div className="flex items-center gap-2">
         <div className="border mt-8 w-32"></div>
@@ -112,7 +119,7 @@ const FormSection = () => {
       </form>
 
       <Link href="signup" className="text-sm my-2 text-paraColor">
-        Don't have an account?{" "}
+      {t("noAccount")}{" "}
         <span className="text-btnColor underline hover:text-hoverBtnColor">
           Signup
         </span>
