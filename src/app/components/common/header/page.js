@@ -8,6 +8,7 @@ import i18n from "../../../../../i18n";
 
 const Header = () => {
   const [shownav, setshownav] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const menuRef = useRef(null); // Reference for the menu
   const headerRef = useRef(null); // Reference for the header
   const { t } = useTranslation();
@@ -29,6 +30,11 @@ const Header = () => {
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
     document.body.style.overflow = shownav ? "hidden" : "auto";
+
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token); // Set logged-in state based on the token
+
     return () => {
       document.removeEventListener("click", handleClickOutside);
       document.body.style.overflow = "auto";
@@ -44,11 +50,9 @@ const Header = () => {
   // Function to handle logout
   const handleLogout = () => {
     localStorage.removeItem('token'); // Remove token from localStorage
+    setIsLoggedIn(false); // Update logged-in state
     window.location.href = '/'; // Redirect to home page after logout
   };
-
-  // Check if user is logged in
-  const isLoggedIn = !!localStorage.getItem('token');
 
   return (
     <div ref={headerRef}>
