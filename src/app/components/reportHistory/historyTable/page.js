@@ -1,8 +1,11 @@
 "use client";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next"; // Import useTranslation
 
 const HistoryTable = ({ businessPlans }) => {
-  const [expandedPlan, setExpandedPlan] = useState(null); 
+  const { t } = useTranslation(); // Get translation function
+  const [expandedPlan, setExpandedPlan] = useState(null);
+  
   const handleToggleDetails = (planId) => {
     setExpandedPlan(expandedPlan === planId ? null : planId);
   };
@@ -12,11 +15,11 @@ const HistoryTable = ({ businessPlans }) => {
       <table className="min-w-full bg-white">
         <thead>
           <tr className="bg-lightCard text-headingColor text-sm uppercase">
-            <th className="text-left py-3 px-4">Company Name</th>
-            <th className="text-left py-3 px-4">Industry Sector</th>
-            <th className="text-left py-3 px-4">Date of Establishment</th>
-            <th className="text-left py-3 px-4">Location</th>
-            <th className="text-left py-3 px-4">Actions</th>
+            <th className="text-left py-3 px-4">{t("companyName")}</th>
+            <th className="text-left py-3 px-4">{t("industrySector")}</th>
+            <th className="text-left py-3 px-4">{t("dateOfEstablishment")}</th>
+            <th className="text-left py-3 px-4">{t("location")}</th>
+            <th className="text-left py-3 px-4">{t("actions")}</th>
           </tr>
         </thead>
         <tbody className="text-paraColor text-sm">
@@ -32,38 +35,39 @@ const HistoryTable = ({ businessPlans }) => {
                   <td className="py-3 px-4">{plan.location}</td>
                   <td className="py-3 px-4">
                     <button
-                      className="text-blue-500 hover:underline"
+                      className="text-blue-500"
                       onClick={() => handleToggleDetails(plan._id)}
                     >
-                      {expandedPlan === plan._id
-                        ? "Hide Details"
-                        : "View Details"}
+                      {expandedPlan === plan._id ? t("hideDetails") : t("viewDetails")}
                     </button>
                   </td>
                 </tr>
                 {expandedPlan === plan._id && (
-                  <tr className="bg-gray-100">
-                    <td colSpan="5" className="py-3 px-4">
-                      {/* Render additional details of the plan here */}
+                  <tr>
+                    <td colSpan="5" className="p-4">
                       <div>
-                        <h3 className="font-bold">Financial Projections:</h3>
+                        <p>{t("financialProjections")}</p>
                         <p>
-                          Annual Revenues:{" "}
-                          {plan.financialProjections.annualRevenues.join(", ")}
+                          {t("annualRevenues")}:{" "}
+                          {plan.financialProjections.annualRevenues.length > 0
+                            ? plan.financialProjections.annualRevenues.join(", ")
+                            : t("noData")}
                         </p>
                         <p>
-                          Annual Expenses:{" "}
-                          {plan.financialProjections.annualExpenses.join(", ")}
+                          {t("annualExpenses")}:{" "}
+                          {plan.financialProjections.annualExpenses.length > 0
+                            ? plan.financialProjections.annualExpenses.join(", ")
+                            : t("noData")}
                         </p>
                         <p>
-                          Net Income:{" "}
-                          {plan.financialProjections.netIncome.join(", ")}
+                          {t("netIncome")}:{" "}
+                          {plan.financialProjections.netIncome.length > 0
+                            ? plan.financialProjections.netIncome.join(", ")
+                            : t("noData")}
                         </p>
                         <p>
-                          Initial Investments:{" "}
-                          {plan.investmentsAndFinancing.initialInvestments}
+                          {t("initialInvestments")}: {plan.investmentsAndFinancing.initialInvestments}
                         </p>
-                        {/* Add any other details you'd like to show */}
                       </div>
                     </td>
                   </tr>
@@ -73,7 +77,7 @@ const HistoryTable = ({ businessPlans }) => {
           ) : (
             <tr>
               <td colSpan="5" className="py-3 px-4 text-center">
-                No business plans available.
+                {t("noBusinessPlans")}
               </td>
             </tr>
           )}

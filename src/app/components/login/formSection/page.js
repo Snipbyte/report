@@ -70,7 +70,7 @@ const FormSection = () => {
           <br />
           <input
             type="email"
-            placeholder="Enter your Email"
+            placeholder="john@doe.com"
             className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
             {...register("email", {
               required: "Email is required",
@@ -90,7 +90,7 @@ const FormSection = () => {
           <br />
           <input
             type="password"
-            placeholder="Enter your Password"
+            placeholder="******"
             className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
             {...register("password", {
               required: "Password is required",
@@ -113,7 +113,8 @@ const FormSection = () => {
               loading ? "bg-gray-400" : "hover:text-white hover:bg-black"
             }`}
           >
-            {loading ? "Please wait..." : "Login"}
+            {loading ? "Please wait..." : t('login')}
+           
           </button>
         </div>
       </form>
@@ -121,7 +122,7 @@ const FormSection = () => {
       <Link href="signup" className="text-sm my-2 text-paraColor">
       {t("noAccount")}{" "}
         <span className="text-btnColor underline hover:text-hoverBtnColor">
-          Signup
+        {t("signup")}
         </span>
       </Link>
     </div>

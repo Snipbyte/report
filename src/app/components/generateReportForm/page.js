@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import jsPDF from "jspdf";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 // Dynamically import ApexCharts with SSR disabled
 const ApexCharts = dynamic(() => import("react-apexcharts"), {
@@ -10,6 +11,7 @@ const ApexCharts = dynamic(() => import("react-apexcharts"), {
 });
 
 const GenerateReportForm = () => {
+  const { t } = useTranslation(); 
   const [formData, setFormData] = useState({
     companyName: "",
     industrySector: "",
@@ -191,7 +193,7 @@ const GenerateReportForm = () => {
         {/* Company Details Section */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
-            Company Name
+            {t("companyName")}
           </label>
           <input
             type="text"
@@ -204,7 +206,7 @@ const GenerateReportForm = () => {
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
-            Industry Sector
+            {t("industrySector")}
           </label>
           <input
             type="text"
@@ -217,7 +219,7 @@ const GenerateReportForm = () => {
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
-            Date of Establishment
+            {t("dateOfEstablishment")}
           </label>
           <input
             type="date"
@@ -230,7 +232,7 @@ const GenerateReportForm = () => {
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
-            Location
+            {t("location")}
           </label>
           <input
             type="text"
@@ -243,9 +245,9 @@ const GenerateReportForm = () => {
 
         {/* Revenue Section */}
         <div className="mb-4">
-          <h2 className="text-lg font-semibold">Revenues</h2>
+          <h2 className="text-lg font-semibold">{t("revenues")}</h2>
           <label className="block text-sm font-medium text-gray-700">
-            Unit Price
+            {t("unitPrice")}
           </label>
           <input
             type="number"
@@ -255,7 +257,7 @@ const GenerateReportForm = () => {
             className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
           <label className="block text-sm font-medium text-gray-700 mt-4">
-            Expected Yearly Sales Quantity
+            {t("expectedYearlySalesQuantity")}
           </label>
           <input
             type="number"
@@ -265,7 +267,7 @@ const GenerateReportForm = () => {
             className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
           <label className="block text-sm font-medium text-gray-700 mt-4">
-            Estimated Sales Growth
+            {t("estimatedSalesGrowth")}
           </label>
           <input
             type="number"
@@ -278,9 +280,9 @@ const GenerateReportForm = () => {
 
         {/* Costs Section */}
         <div className="mb-4">
-          <h2 className="text-lg font-semibold">Costs</h2>
+          <h2 className="text-lg font-semibold">{t("costs")}</h2>
           <label className="block text-sm font-medium text-gray-700">
-            Yearly Fixed Costs
+            {t("yearlyFixedCosts")}
           </label>
           <input
             type="number"
@@ -290,7 +292,7 @@ const GenerateReportForm = () => {
             className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
           <label className="block text-sm font-medium text-gray-700 mt-4">
-            Variable Unit Costs
+            {t("variableUnitCosts")}
           </label>
           <input
             type="number"
@@ -299,13 +301,23 @@ const GenerateReportForm = () => {
             onChange={handleInputChange}
             className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
+          <label className="block text-sm font-medium text-gray-700 mt-4">
+            {t("costGrowth")}
+          </label>
+          <input
+            type="number"
+            name="costs.costGrowth"
+            value={formData.costs.costGrowth}
+            onChange={handleInputChange}
+            className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
+          />
         </div>
 
-        {/* Financing Section */}
+        {/* Investments and Financing Section */}
         <div className="mb-4">
-          <h2 className="text-lg font-semibold">Investments & Financing</h2>
+          <h2 className="text-lg font-semibold">{t("investmentsAndFinancing")}</h2>
           <label className="block text-sm font-medium text-gray-700">
-            Initial Investments
+            {t("initialInvestments")}
           </label>
           <input
             type="number"
@@ -314,9 +326,8 @@ const GenerateReportForm = () => {
             onChange={handleInputChange}
             className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
-
           <label className="block text-sm font-medium text-gray-700 mt-4">
-            Loan Duration (years)
+            {t("loanDuration")}
           </label>
           <input
             type="number"
@@ -326,11 +337,11 @@ const GenerateReportForm = () => {
             className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
           />
           <label className="block text-sm font-medium text-gray-700 mt-4">
-            Interest Rate (%)
+            {t("interestRate")}
           </label>
           <input
             type="number"
-            name="investmentsAndFinancing.interestRate" // Updated key name
+            name="investmentsAndFinancing.interestRate"
             value={formData.investmentsAndFinancing.interestRate}
             onChange={handleInputChange}
             className="mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4 border border-gray-400"
@@ -339,9 +350,9 @@ const GenerateReportForm = () => {
 
         {/* Other Financial Assumptions Section */}
         <div className="mb-4">
-          <h2 className="text-lg font-semibold">Other Financial Assumptions</h2>
+          <h2 className="text-lg font-semibold">{t("otherFinancialAssumptions")}</h2>
           <label className="block text-sm font-medium text-gray-700">
-            Tax Rate (%)
+            {t("taxRate")}
           </label>
           <input
             type="number"
@@ -352,14 +363,12 @@ const GenerateReportForm = () => {
           />
         </div>
 
+        {/* Generate Report Button */}
         <button
           type="submit"
-          className={`w-full rounded-md ${
-            isLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-          } text-white py-2 mt-4`}
-          disabled={isLoading}
+          className="w-full bg-blue-500 text-white rounded-md py-2 hover:bg-blue-600 focus:outline-none"
         >
-          {isLoading ? "Generating..." : "Generate Business Plan"}
+          {t("generateReport")}
         </button>
       </form>
 

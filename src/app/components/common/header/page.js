@@ -32,7 +32,7 @@ const Header = () => {
     document.body.style.overflow = shownav ? "hidden" : "auto";
 
     // Check if user is logged in
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     setIsLoggedIn(!!token); // Set logged-in state based on the token
 
     return () => {
@@ -44,14 +44,14 @@ const Header = () => {
   // Function to handle language switch
   const handleLanguageChange = (language) => {
     i18n.changeLanguage(language); // Change language in i18n
-    localStorage.setItem('language', language); // Save the selected language in localStorage
+    localStorage.setItem("language", language); // Save the selected language in localStorage
   };
 
   // Function to handle logout
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove token from localStorage
+    localStorage.removeItem("token"); // Remove token from localStorage
     setIsLoggedIn(false); // Update logged-in state
-    window.location.href = '/'; // Redirect to home page after logout
+    window.location.href = "/"; // Redirect to home page after logout
   };
 
   return (
@@ -67,22 +67,47 @@ const Header = () => {
           />
         </Link>
         <div className="hidden md:flex gap-4 items-center">
-          <Link href="/" className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300">
-            {t("Home")}
+          {isLoggedIn && (
+            <Link
+              href="/user/dashboard"
+              className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
+            >
+              {t("dashboard")}
+            </Link>
+          )}
+          <Link
+            href="/"
+            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
+          >
+            {t("home")}
           </Link>
-          <Link href="/about" className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300">
-            {t("About Us")}
+          <Link
+            href="/about"
+            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
+          >
+            {t("about")}
           </Link>
-          <Link href="/contact" className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300">
-            {t("Contact Us")}
+          <Link
+            href="/contact"
+            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
+          >
+            {t("contact")}
           </Link>
-          <Link href="/calculator" className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300">
-            {t("Calculators")}
+          <Link
+            href="/calculator"
+            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
+          >
+            {t("calcualte")}
           </Link>
         </div>
         <div className="flex gap-4 items-center">
           {/* Language Switcher */}
-          <button onClick={() => handleLanguageChange(i18n.language === "en" ? "fr" : "en")} className="text-white border-2 p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700">
+          <button
+            onClick={() =>
+              handleLanguageChange(i18n.language === "en" ? "fr" : "en")
+            }
+            className="text-white border-2 p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700"
+          >
             {i18n.language === "en" ? "FR" : "EN"}
           </button>
 
@@ -90,23 +115,23 @@ const Header = () => {
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
-              className="text-center border-2 w-20 p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor"
+              className="text-center border-2 w-full p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor"
             >
-              {t("Logout")}
+              {t("logout")}
             </button>
           ) : (
             <>
               <Link
                 href="/login"
-                className="text-center border-2 w-20 p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor"
+                className="text-center border-2 w-full p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor"
               >
-                {t("Login")}
+                {t("login")}
               </Link>
               <Link
                 href="/signup"
-                className="text-center text-white border-2 w-20 p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700"
+                className="text-center text-white border-2 w-full p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700"
               >
-                {t("Signup")}
+                {t("signup")}
               </Link>
             </>
           )}
@@ -136,23 +161,31 @@ const Header = () => {
           X
         </button>
         <div className="flex flex-col gap-5 mt-20">
+          {isLoggedIn && (
+            <Link
+              href="/user/dashboard"
+              className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white"
+            >
+              {t("dashboard")}
+            </Link>
+          )}
           <Link
             href="/"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white"
           >
-            {t("Home")}
+            {t("home")}
           </Link>
           <Link
             href="/about"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white"
           >
-            {t("About Us")}
+            {t("about")}
           </Link>
           <Link
             href="/contact"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white"
           >
-            {t("Contact Us")}
+            {t("contact")}
           </Link>
         </div>
       </div>

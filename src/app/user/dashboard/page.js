@@ -4,8 +4,11 @@ import LineChart from "@/app/components/common/Charts/lineChart/page";
 import UserLayout from "@/app/components/layouts/userLayout/page";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
+  const { t } = useTranslation(); 
+
   const [user, setUser] = useState(null);
   const [businessPlans, setBusinessPlans] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -54,7 +57,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        Loading...
+        {t("loading")}
       </div>
     ); // Show loading state
   }
@@ -70,7 +73,7 @@ const Dashboard = () => {
 
   const chartSeries = [
     {
-      name: "Sales",
+      name: t("sales"),
       data: chartData.map((item) => item.sales),
     },
   ];
@@ -80,32 +83,34 @@ const Dashboard = () => {
   return (
     <UserLayout>
       <div className="p-6 bg-gray-50 min-h-screen">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+          {t("dashboard")}
+        </h1>
 
         {/* User Information */}
         {user && (
           <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
             <h2 className="text-2xl font-semibold text-gray-700">
-              User Information
+              {t("userInformation")}
             </h2>
             <p className="mt-2">
-              <strong>First Name:</strong> {user.firstname}
+              <strong>{t("firstName")}:</strong> {user.firstname}
             </p>
             <p>
-              <strong>Last Name:</strong> {user.lastname}
+              <strong>{t("lastName")}:</strong> {user.lastname}
             </p>
             <p>
-              <strong>Email:</strong> {user.email}
+              <strong>{t("email")}:</strong> {user.email}
             </p>
             <p>
-              <strong>Current Plan:</strong> {user.currentPlan || "None"}
+              <strong>{t("currentPlan")}:</strong> {user.currentPlan || t("none")}
             </p>
           </div>
         )}
 
         {/* Line Chart */}
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">
-          Business Plan Trends
+          {t("businessPlanTrends")}
         </h2>
         <div className="bg-white rounded-lg shadow-lg p-4 mb-6">
           <LineChart series={chartSeries} categories={chartCategories} />
@@ -113,15 +118,12 @@ const Dashboard = () => {
 
         {/* User Business Plans */}
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">
-          Business Plans
+          {t("businessPlans")}
         </h2>
         {businessPlans.length > 0 ? (
           <div className="space-y-4">
-            {/* User Business Plans */}
-
             {businessPlans.length > 0 ? (
               <div className="space-y-4">
-                {/* Display only the latest two entries */}
                 {businessPlans.slice(-2).map((plan) => (
                   <div
                     key={plan._id}
@@ -129,38 +131,38 @@ const Dashboard = () => {
                   >
                     <h3 className="font-bold text-lg">{plan.companyName}</h3>
                     <p className="mt-2">
-                      <strong>Industry Sector:</strong> {plan.industrySector}
+                      <strong>{t("industrySector")}:</strong> {plan.industrySector}
                     </p>
                     <p>
-                      <strong>Location:</strong> {plan.location}
+                      <strong>{t("location")}:</strong> {plan.location}
                     </p>
                     <p>
-                      <strong>Date of Establishment:</strong>{" "}
+                      <strong>{t("dateOfEstablishment")}:</strong>{" "}
                       {new Date(plan.dateOfEstablishment).toLocaleDateString()}
                     </p>
-                    <h4 className="font-semibold mt-2">Financial Ratios</h4>
+                    <h4 className="font-semibold mt-2">{t("financialRatios")}</h4>
                     <p>
-                      <strong>Liquidity Ratio:</strong>{" "}
+                      <strong>{t("liquidityRatio")}:</strong>{" "}
                       {plan.financialRatios.liquidityRatio}
                     </p>
                     <p>
-                      <strong>Profitability Ratio:</strong>{" "}
+                      <strong>{t("profitabilityRatio")}:</strong>{" "}
                       {plan.financialRatios.profitabilityRatio}
                     </p>
                     <p>
-                      <strong>Debt Ratio:</strong>{" "}
+                      <strong>{t("debtRatio")}:</strong>{" "}
                       {plan.financialRatios.debtRatio}
                     </p>
                     <p>
-                      <strong>Creditworthiness Score:</strong>{" "}
+                      <strong>{t("creditworthinessScore")}:</strong>{" "}
                       {plan.companyRating.creditworthinessScore}
                     </p>
                     <p>
-                      <strong>Risk Assessment Score:</strong>{" "}
+                      <strong>{t("riskAssessmentScore")}:</strong>{" "}
                       {plan.companyRating.riskAssessmentScore}
                     </p>
                     <p>
-                      <strong>Growth Potential Score:</strong>{" "}
+                      <strong>{t("growthPotentialScore")}:</strong>{" "}
                       {plan.companyRating.growthPotentialScore}
                     </p>
                   </div>
@@ -171,16 +173,16 @@ const Dashboard = () => {
                     href="/user/report-history"
                     className="mt-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded shadow hover:bg-blue-600 transition duration-200"
                   >
-                    View All
+                    {t("viewAll")}
                   </Link>
                 </div>
               </div>
             ) : (
-              <p>No business plans found.</p>
+              <p>{t("noBusinessPlansFound")}</p>
             )}
           </div>
         ) : (
-          <p>No business plans found.</p>
+          <p>{t("noBusinessPlansFound")}</p>
         )}
       </div>
     </UserLayout>

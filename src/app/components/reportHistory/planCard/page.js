@@ -1,41 +1,18 @@
-import Link from "next/link";
+"use client";
 import React from "react";
+import { useTranslation } from "react-i18next"; // Import useTranslation
 
-const PlanCard = (props) => {
+const PlanCard = ({ heading, rate, days, btn }) => {
+  const { t } = useTranslation(); // Get translation function
+
   return (
-    <div
-      className={`w-full lg:w-[50%] p-6 md:mt-0 mt-2 ${
-        props.isprofessioanl
-          ? "bg-hoverBtnColor"
-          : "border-2 border-hoverBtnColor"
-      }`}
-    >
-      <div className="flex items-center justify-between">
-        <p
-          className={`text-xl font-bold ${
-            props.isprofessioanl ? "text-white" : "text-headingColor"
-          } `}
-        >
-          {props.heading}
-        </p>
-        {/* <p
-          className={`text-xl ${
-            props.isprofessioanl ? "text-white" : "text-headingColor"
-          }`}
-        >
-          {props.rate}
-          <span className="text-paraColor">/month</span>
-        </p> */}
-      </div>
-      <p className="text-paraColor text-sm">{props.days}</p>
-      <div className="flex items-center gap-4 mt-8">
-        <Link
-          href="/generate-report"
-          className="bg-white border border-btnColor text-btnColor p-2 rounded-md text-sm hover:text-hoverBtnColor hover:border-hoverBtnColor"
-        >
-          Generate new report
-        </Link>
-      </div>
+    <div className="bg-white border rounded shadow p-4">
+      <h3 className="text-lg font-semibold">{heading}</h3>
+      <p>{t('rate')}: {rate}</p>
+      <p>{t('days')}: {days}</p>
+      <button className="bg-blue-500 text-white py-2 px-4 rounded">
+        {btn} {/* Using translation for button text */}
+      </button>
     </div>
   );
 };

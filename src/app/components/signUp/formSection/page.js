@@ -64,7 +64,7 @@ const FormSection = () => {
           <br />
           <input
             type="text"
-            placeholder="Enter your first name"
+            placeholder="John"
             className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
             {...register("firstname", {
               required: "First name is required",
@@ -85,7 +85,7 @@ const FormSection = () => {
           <br />
           <input
             type="text"
-            placeholder="Enter your last name"
+            placeholder="Doe"
             className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
             {...register("lastname", {
               required: "Last name is required",
@@ -106,7 +106,7 @@ const FormSection = () => {
           <br />
           <input
             type="email"
-            placeholder="Enter your email"
+            placeholder="john@doe.com"
             className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
             {...register("email", {
               required: "Email is required",
@@ -127,7 +127,7 @@ const FormSection = () => {
           <br />
           <input
             type="password"
-            placeholder="Enter your password"
+            placeholder="******"
             className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
             {...register("password", {
               required: "Password is required",
@@ -151,7 +151,8 @@ const FormSection = () => {
             }`}
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Please wait..." : "Sign up"}
+          {isSubmitting ? "Please wait..." : t('signup')}
+
           </button>
         </div>
       </form>
@@ -161,7 +162,7 @@ const FormSection = () => {
       {t("alreadyAcc")}
        
         <span className="text-btnColor underline hover:text-hoverBtnColor">
-          Login
+        {t("login")}
         </span>
       </Link>
     </div>

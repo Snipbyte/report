@@ -1,13 +1,14 @@
 "use client";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const calculators = {
   breakeven: {
-    label: "Break-Even Calculator",
+    label: "breakeven", // Update to use translation key
     fields: [
       {
         id: "fixedCosts",
-        label: "Fixed Costs",
+        label: "fixed", // Update to use translation key
         type: "number",
         placeholder: "1000",
       },
@@ -27,23 +28,23 @@ const calculators = {
     api: "/api/breakeven",
   },
   businessValuation: {
-    label: "Business Valuation Calculator",
+    label: "businessValuation", // Update to use translation key
     fields: [
       {
         id: "netProfit",
-        label: "Net Profit",
+        label: "netProfit", // Update to use translation key
         type: "number",
         placeholder: "50000",
       },
       {
         id: "growthRate",
-        label: "Growth Rate (%)",
+        label: "growthRate", // Update to use translation key
         type: "number",
         placeholder: "5",
       },
       {
         id: "discountRate",
-        label: "Discount Rate (%)",
+        label: "discountRate", // Update to use translation key
         type: "number",
         placeholder: "10",
       },
@@ -51,24 +52,24 @@ const calculators = {
     api: "/api/businessvaluation",
   },
   cashflow: {
-    label: "Cash Flow Calculator",
+    label: "cashflow", // Update to use translation key
     fields: [
       { id: "month", label: "Month", type: "text", placeholder: "January" },
       {
         id: "cashInflows",
-        label: "Cash Inflows",
+        label: "cashInflows", // Update to use translation key
         type: "number",
         placeholder: "10000",
       },
       {
         id: "cashOutflows",
-        label: "Cash Outflows",
+        label: "cashOutflows", // Update to use translation key
         type: "number",
         placeholder: "5000",
       },
       {
         id: "initialCashBalance",
-        label: "Initial Cash Balance",
+        label: "initialCashBalance", // Update to use translation key
         type: "number",
         placeholder: "5000",
       },
@@ -76,23 +77,23 @@ const calculators = {
     api: "/api/cashflow",
   },
   financialForecast: {
-    label: "Financial Forecast Calculator",
+    label: "financialForecast", // Update to use translation key
     fields: [
       {
         id: "revenues",
-        label: "Revenues",
+        label: "revenues", // Update to use translation key
         type: "number",
         placeholder: "20000",
       },
       {
         id: "fixedExpenses",
-        label: "Fixed Expenses",
+        label: "fixedExpenses", // Update to use translation key
         type: "number",
         placeholder: "8000",
       },
       {
         id: "variableExpenses",
-        label: "Variable Expenses",
+        label: "variableExpenses", // Update to use translation key
         type: "number",
         placeholder: "5000",
       },
@@ -100,122 +101,118 @@ const calculators = {
     api: "/api/financialforecast",
   },
   grossmargin: {
-    label: "Gross Margin Calculator",
+    label: "grossmargin", // Update to use translation key
     fields: [
       {
         id: "product",
-        label: "Product",
+        label: "product", // Update to use translation key
         type: "text",
         placeholder: "Product Name",
       },
       {
         id: "sellingPrice",
-        label: "Selling Price",
+        label: "sellingPrice", // Update to use translation key
         type: "number",
         placeholder: "15",
       },
       {
         id: "productionCost",
-        label: "Production Cost",
+        label: "productionCost", // Update to use translation key
         type: "number",
-        placeholder: "8",
+        placeholder: "10",
       },
     ],
     api: "/api/grossmargin",
   },
   roi: {
-    label: "ROI Calculator",
+    label: "roi", // Update to use translation key
     fields: [
       {
         id: "initialCost",
-        label: "Initial Cost",
+        label: "initialCost", // Update to use translation key
         type: "number",
         placeholder: "5000",
       },
       {
         id: "netGains",
-        label: "Net Gains",
+        label: "netGains", // Update to use translation key
         type: "number",
-        placeholder: "7000",
+        placeholder: "2000",
       },
     ],
     api: "/api/roi",
   },
   investment: {
-    label: "Investment Calculator",
+    label: "investment", // Update to use translation key
     fields: [
       {
         id: "monthlyIncome",
-        label: "Monthly Income",
-        type: "number",
-        placeholder: "5000",
-      },
-      {
-        id: "monthlyExpenses",
-        label: "Monthly Expenses",
+        label: "monthlyIncome", // Update to use translation key
         type: "number",
         placeholder: "3000",
       },
       {
-        id: "emergencySavings",
-        label: "Emergency Savings",
+        id: "monthlyExpenses",
+        label: "monthlyExpenses", // Update to use translation key
         type: "number",
-        placeholder: "1000",
+        placeholder: "1500",
+      },
+      {
+        id: "emergencySavings",
+        label: "emergencySavings", // Update to use translation key
+        type: "number",
+        placeholder: "5000",
       },
       {
         id: "regularContributions",
-        label: "Regular Contributions",
+        label: "regularContributions", // Update to use translation key
         type: "number",
-        placeholder: "200",
+        placeholder: "500",
       },
     ],
-    api: "/api/investmentcapacity",
+    api: "/api/investment",
   },
   financingSimulation: {
-    label: "Financing Simulation Calculator",
+    label: "financingSimulation", // Update to use translation key
     fields: [
       {
         id: "currentRevenue",
-        label: "Current Revenue",
+        label: "currentRevenue", // Update to use translation key
         type: "number",
-        placeholder: "200000",
-      },
-      {
-        id: "netProfit",
-        label: "Net Profit",
-        type: "number",
-        placeholder: "50000",
+        placeholder: "20000",
       },
       {
         id: "totalAssets",
-        label: "Total Assets",
-        type: "number",
-        placeholder: "300000",
-      },
-      {
-        id: "totalDebts",
-        label: "Total Debts",
+        label: "totalAssets", // Update to use translation key
         type: "number",
         placeholder: "100000",
       },
       {
-        id: "requestedAmount",
-        label: "Requested Amount",
+        id: "totalDebts",
+        label: "totalDebts", // Update to use translation key
         type: "number",
         placeholder: "50000",
       },
       {
+        id: "requestedAmount",
+        label: "requestedAmount", // Update to use translation key
+        type: "number",
+        placeholder: "20000",
+      },
+      {
         id: "useOfFunds",
-        label: "Use of Funds",
+        label: "useOfFunds", // Update to use translation key
         type: "text",
-        placeholder: "Expansion, Marketing, etc.",
+        placeholder: "Expansion",
       },
     ],
-    api: "/api/financingsimulator",
+    api: "/api/financingsimulation",
   },
 };
 
 const FormDetail = () => {
+  const { t } = useTranslation();
+
   const [selectedCalculator, setSelectedCalculator] = useState("breakeven");
   const [formData, setFormData] = useState({});
   const [result, setResult] = useState(null);
@@ -267,9 +264,8 @@ const FormDetail = () => {
           <form onSubmit={handleSubmit}>
             {/* Calculator Selection Dropdown */}
             <div>
-              <label htmlFor="calculator" className="mb-3 text-headingColor">
-                Select Calculator
-              </label>
+            <h2 className="text-xl font-bold">{t(calculators[selectedCalculator].label)}</h2>
+              
               <select
                 id="calculator"
                 value={selectedCalculator}
@@ -288,7 +284,7 @@ const FormDetail = () => {
             {currentCalculator.fields.map((field) => (
               <div key={field.id}>
                 <label htmlFor={field.id} className="mb-3 text-headingColor">
-                  {field.label}
+                {t(field.label)}:
                 </label>
                 <input
                   type={field.type}
@@ -296,14 +292,14 @@ const FormDetail = () => {
                   value={formData[field.id] || ""}
                   onChange={handleInputChange}
                   className="bg-white border border-desColor text-headingColor outline-none rounded-md w-full p-3 mt-2 mb-3"
-                  placeholder={field.placeholder}
+                  placeholder={t(field.placeholder)}
                 />
               </div>
             ))}
 
             {/* Submit Button */}
             <button className="w-full text-lg text-white bg-btnColor hover:bg-hoverBtnColor duration-700 rounded-md p-3 lg:mt-0 mt-4">
-              Calculate
+            {t("calculate")}
             </button>
           </form>
         </div>

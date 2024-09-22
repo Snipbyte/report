@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { FiLogOut } from "react-icons/fi";
 import axios from "axios";
 
-const NavbarAuth = ({ handleToggle, toggleDrawer }) => {
+const NavbarAuth = ({ handleToggle, toggleDrawer , isAdmin }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userData, setUserData] = useState(null); // To store user data
   const router = useRouter();
@@ -31,7 +31,9 @@ const NavbarAuth = ({ handleToggle, toggleDrawer }) => {
       console.error("Error fetching user data:", error);
       // Handle token expiration or error
       localStorage.removeItem("token");
+     if(!isAdmin){
       router.push("/login");
+     }
     }
   };
 
@@ -73,7 +75,8 @@ const NavbarAuth = ({ handleToggle, toggleDrawer }) => {
               >
                 <FiLogOut className="mx-2" /> Sign out
               </button>
-
+              {!isAdmin && 
+              <>
               <button
                 type="button"
                 className="relative mx-3 flex rounded-full bg-gray-800 text-sm focus:ring-4 focus:ring-gray-300 md:mr-0 dark:focus:ring-gray-600"
@@ -88,7 +91,7 @@ const NavbarAuth = ({ handleToggle, toggleDrawer }) => {
                     : "MK"}
                 </div>
               </button>
-
+        
               <div
                 className={`${
                   isDropdownOpen ? "block" : "hidden"
@@ -122,6 +125,8 @@ const NavbarAuth = ({ handleToggle, toggleDrawer }) => {
                   </li>
                 </ul>
               </div>
+              </>
+}
             </div>
           </div>
         </nav>
