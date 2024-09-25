@@ -1,13 +1,12 @@
-// AboutAuthor.js
 import Image from "next/image";
 import React from "react";
 
 const AboutAuthor = ({
-  authorName,
-  authorImage,
-  postTitle,
-  postDate,
-  thumbnailImage,
+  authorName = "Website Admin", // Provide default values
+  authorImage = "/images/default-author.jpg", // Default author image
+  postTitle = "Post Title", // Default post title
+  postDate = "Date", // Default post date
+  thumbnailImage = "/images/default-thumbnail.jpg", // Default thumbnail image
 }) => {
   return (
     <div>

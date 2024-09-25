@@ -1,9 +1,13 @@
-// BlogContent.js
 import React from "react";
 
 const BlogContent = ({ content }) => {
-  // Split the description into sentences
-  const sentences = content.description.split(".");
+  // Check if content is defined
+  if (!content) {
+    return <p>Loading content...</p>; // Or any loading indicator you prefer
+  }
+
+  // Split the description into sentences if content is valid
+  const sentences = content.description ? content.description.split(".") : [];
 
   return (
     <div className="lg:w-[950px] w-full">
