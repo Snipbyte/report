@@ -1,10 +1,8 @@
-// file: components/blogs/horizontalCard/page.js
-
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const HorizontalCard = ({ img, heading, des, tags, slug }) => {
+const HorizontalCard = ({ img, heading, des, tags = [], slug }) => { // Default value for tags
   return (
     <div className="md:flex block bg-white">
       <div className="md:w-1/2 w-full">
@@ -19,14 +17,18 @@ const HorizontalCard = ({ img, heading, des, tags, slug }) => {
       <div className="md:w-1/2 w-full p-10">
         {/* Display tags with styling */}
         <div className="flex flex-wrap space-x-2 my-2">
-          {tags.map((tag, index) => (
-            <span
-              key={index}
-              className="bg-hoverBtnColor text-white rounded-full px-3 py-1 text-sm font-semibold"
-            >
-              {tag}
-            </span>
-          ))}
+          {Array.isArray(tags) && tags.length > 0 ? ( // Check if tags is an array
+            tags.map((tag, index) => (
+              <span
+                key={index}
+                className="bg-hoverBtnColor text-white rounded-full px-3 py-1 text-sm font-semibold"
+              >
+                {tag}
+              </span>
+            ))
+          ) : (
+            <span className="text-gray-400">No tags available</span> // Fallback if no tags
+          )}
         </div>
         <Link
           href={`/blog-detail/${slug}`}
