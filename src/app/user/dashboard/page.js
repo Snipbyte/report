@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
 
   const [user, setUser] = useState(null);
   const [businessPlans, setBusinessPlans] = useState([]);
@@ -100,10 +100,11 @@ const Dashboard = () => {
               <strong>{t("lastName")}:</strong> {user.lastname}
             </p>
             <p>
-              <strong>{t("email")}:</strong> {user.email}
+              <strong>{t("E-mail")}:</strong> {user.email}
             </p>
             <p>
-              <strong>{t("currentPlan")}:</strong> {user.currentPlan || t("none")}
+              <strong>{t("currentPlan")}:</strong>{" "}
+              {user.currentPlan || t("none")}
             </p>
           </div>
         )}
@@ -131,7 +132,8 @@ const Dashboard = () => {
                   >
                     <h3 className="font-bold text-lg">{plan.companyName}</h3>
                     <p className="mt-2">
-                      <strong>{t("industrySector")}:</strong> {plan.industrySector}
+                      <strong>{t("industrySector")}:</strong>{" "}
+                      {plan.industrySector}
                     </p>
                     <p>
                       <strong>{t("location")}:</strong> {plan.location}
@@ -140,7 +142,9 @@ const Dashboard = () => {
                       <strong>{t("dateOfEstablishment")}:</strong>{" "}
                       {new Date(plan.dateOfEstablishment).toLocaleDateString()}
                     </p>
-                    <h4 className="font-semibold mt-2">{t("financialRatios")}</h4>
+                    <h4 className="font-semibold mt-2">
+                      {t("financialRatios")}
+                    </h4>
                     <p>
                       <strong>{t("liquidityRatio")}:</strong>{" "}
                       {plan.financialRatios.liquidityRatio}

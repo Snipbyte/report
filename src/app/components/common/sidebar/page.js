@@ -66,6 +66,14 @@ const CustomSidebar = ({ userRole, toggle, pathname }) => {
             >
               {t("history")}
             </MenuItem>
+            <MenuItem
+              icon={<FiAlertCircle />}
+              active={activeItem === "/user/update-password"}
+              onClick={() => handleMenuItemClick("/user/update-password")}
+              component={<Link href="/user/update-password" />}
+            >
+              {t("update-password")}
+            </MenuItem>
           </Menu>
         )}
         {userRole === "admin" && (
@@ -100,6 +108,14 @@ const CustomSidebar = ({ userRole, toggle, pathname }) => {
               component={<Link href="/admin/blogs" />}
             >
               {t("blogs")}
+            </MenuItem>
+            <MenuItem
+              icon={<FiHome />}
+              active={activeItem === "/admin/admins"}
+              onClick={() => handleMenuItemClick("/admin/admins")}
+              component={<Link href="/admin/admins" />}
+            >
+              {t("admins")}
             </MenuItem>
           </Menu>
         )}
