@@ -1,20 +1,43 @@
-import Image from 'next/image'
-import React from 'react'
+// file: components/blogs/horizontalCard/page.js
 
-const HorizontalCard = () => {
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+
+const HorizontalCard = ({ img, heading, des, tags, slug }) => {
   return (
-    <div className='md:flex block bg-white'>
-      <div className='md:w-1/2 w-full'>
-        <Image className='md:rounded-r-[40px] w-full h-96' src="/images/horizontalimage.jpg" width={1000} height={1000} />
+    <div className="md:flex block bg-white">
+      <div className="md:w-1/2 w-full">
+        <Image
+          className="md:rounded-r-[40px] w-full h-96"
+          src={img}
+          width={1000}
+          height={1000}
+          alt={heading}
+        />
       </div>
-      <div className='md:w-1/2 w-full p-10'>
-        <p className='my-2 text-hoverBtnColor font-bold text-md'>UI DESIGN</p>
-        <p className='text-headingColor  font-bold text-3xl'>Card UI Examples And Best Practices For Product Owners</p>
-        <p className='text-paraColor  my-4'>Now in 2022, more than 2.7 billion mobile app users in the world prefer Android apps. We follow the google design principles and the design thinking process to create seamless user experiences and aesthetic interfaces for mobile apps for the android platform.</p>
-        <p className='text-paraColor mt-8'>We make android apps more relevant to users that users love to use and bring your business experience to the next level.</p>
+      <div className="md:w-1/2 w-full p-10">
+        {/* Display tags with styling */}
+        <div className="flex flex-wrap space-x-2 my-2">
+          {tags.map((tag, index) => (
+            <span
+              key={index}
+              className="bg-hoverBtnColor text-white rounded-full px-3 py-1 text-sm font-semibold"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+        <Link
+          href={`/blog-detail/${slug}`}
+          className="text-headingColor font-bold text-3xl"
+        >
+          {heading}
+        </Link>
+        <p className="text-paraColor my-4">{des}</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HorizontalCard
+export default HorizontalCard;

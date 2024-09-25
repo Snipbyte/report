@@ -254,29 +254,29 @@ i18n.use(initReactI18next).init({
     },
     fr: {
       translation: {
-        welcome: "Boostez vos perspectives de financement avec IziKemp !",
+        welcome: "Boostez Vos Chances de Financement avec IziKemp !",
         description:
-          "Accédez à des simulateurs de pointe et générez instantanément des rapports personnalisés pour évaluer votre éligibilité auprès des banques et des fonds d'investissement, accompagnés de nos conseils d'experts.",
+          "Accédez à des simulateurs de pointe et générez instantanément des rapports personnalisés pour évaluer votre éligibilité auprès des banques et fonds d'investissement, avec l'accompagnement de nos experts.",
         description2:
           "Accédez instantanément à des rapports personnalisés et à des recommandations sur mesure avec IziKemp. Gagnez du temps, réduisez les coûts et maximisez vos opportunités de financement en quelques clics !",
         startSimulation: "Commencez votre simulation",
         description3:
-          "Chez IziKemp, nous comprenons les besoins des entrepreneurs et des porteurs de projets. Notre gamme de simulateurs innovants vous offre les outils nécessaires pour:",
+          "Chez IziKemp, nous comprenons les besoins des entrepreneurs et porteurs de projet. Notre suite de simulateurs innovants vous offre les outils nécessaires pour:",
         description4:
-          "Évaluer votre éligibilité au financement avec un scoring précis basé sur les critères des banques et des fonds d'investissement.",
+          "Évaluer votre éligibilité au financement grâce à un scoring précis basé sur les critères des banques et fonds d'investissement.",
         description5:
           "Explorer diverses options d'investissement pour optimiser votre projet. - Générer facilement et instantanément les éléments financiers de votre plan d'affaires.",
-        heading1: "Conseils d'experts :",
+        heading1: "L'accompagnement par nos experts :",
         description6:
-          "En plus de nos outils technologiques avancés, profitez de l'expertise de notre équipe :",
+          "En plus de nos outils technologiques avancés, bénéficiez de l'expertise de notre équipe :",
         description7:
           "Experts bancaires : Obtenez des conseils sur les meilleures pratiques pour présenter votre projet aux banques.",
         description8:
-          "Spécialistes du financement : Découvrez des opportunités de financement adaptées à vos besoins spécifiques.",
+          "Spécialistes en financement : Découvrez les opportunités de financement adaptées à vos besoins spécifiques.",
         description9:
           "Professionnels de l'assurance : Assurez-vous que votre projet est sécurisé et conforme aux exigences des investisseurs.",
         description10:
-          "Chaque utilisateur bénéficie d'une consultation gratuite avec l'un de nos experts pour mieux orienter son projet.",
+          "Chaque utilisateur bénéficie d'un entretien gratuit avec l'un de nos experts pour mieux orienter son projet.",
         mission:
           "Chez IziKemp, notre mission est de donner aux entrepreneurs les moyens de réussir grâce à des outils puissants et des conseils d'experts. Découvrez notre histoire, rencontrez notre équipe et voyez comment nous pouvons vous aider à transformer vos ambitions en réussites.",
 
@@ -293,18 +293,18 @@ i18n.use(initReactI18next).init({
         aboutUs: "À propos de nous",
         whyChoose: "Pourquoi choisir IziKemp ?",
         accuracyTrust:
-          "Précision et confiance : nos outils sont basés sur des critères reconnus, vous offrant une analyse fiable.",
+          "Précision et Confiance : Nos outils sont basés sur des critères reconnus, vous offrant une analyse fiable.",
         customizationSupport:
-          "Personnalisation et soutien : chaque rapport est unique et adapté à votre projet, avec des conseils personnalisés.",
+          "Personnalisation et Accompagnement: Chaque rapport est unique, adapté à votre projet, avec un accompagnement sur-mesure.",
         dedicatedSupport:
-          "Soutien dédié : notre équipe est là pour vous accompagner à chaque étape.",
+          "SSupport dédié : Notre équipe est là pour vous accompagner à chaque étape du processus.",
         financingAmbitions:
-          "Ne laissez pas le financement freiner vos ambitions.",
+          "Ne laissez pas le financement freiner vos ambitions. Essayez IziKemp, générez votre rapport immédiatement et discutez avec un expert dès aujourd'hui !",
         tryIziKemp:
           "Essayez IziKemp, générez votre rapport instantanément et discutez avec un expert dès aujourd'hui !",
-        testimonials: "Témoignages:",
+        testimonials: "Témoignages :",
         testimonial1:
-          "IziKemp m'a aidé à obtenir le financement dont j'avais besoin pour lancer mon projet. Le rapport immédiat et la consultation d'expert étaient inestimables !",
+          "IziKemp m'a aidé à obtenir le financement dont j'avais besoin pour lancer mon projet. Le rapport immédiat et l'entretien avec un expert ont été inestimables !",
         successfulEntrepreneur: "Entrepreneur à succès",
 
         trustedPartner: "Votre Partenaire de Confiance en Financement",

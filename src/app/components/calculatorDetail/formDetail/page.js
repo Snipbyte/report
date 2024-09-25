@@ -4,14 +4,9 @@ import { useTranslation } from "react-i18next";
 
 const calculators = {
   breakeven: {
-    label: "breakeven", // Update to use translation key
+    label: "breakeven",
     fields: [
-      {
-        id: "fixedCosts",
-        label: "fixed", // Update to use translation key
-        type: "number",
-        placeholder: "1000",
-      },
+      { id: "fixedCosts", label: "fixed", type: "number", placeholder: "1000" },
       {
         id: "variableCostPerUnit",
         label: "Variable Cost Per Unit",
@@ -28,185 +23,86 @@ const calculators = {
     api: "/api/breakeven",
   },
   businessValuation: {
-    label: "businessValuation", // Update to use translation key
+    label: "businessValuation",
     fields: [
-      {
-        id: "netProfit",
-        label: "netProfit", // Update to use translation key
-        type: "number",
-        placeholder: "50000",
-      },
-      {
-        id: "growthRate",
-        label: "growthRate", // Update to use translation key
-        type: "number",
-        placeholder: "5",
-      },
-      {
-        id: "discountRate",
-        label: "discountRate", // Update to use translation key
-        type: "number",
-        placeholder: "10",
-      },
+      { id: "netProfit", label: "netProfit", type: "number", placeholder: "50000" },
+      { id: "growthRate", label: "growthRate", type: "number", placeholder: "5" },
+      { id: "discountRate", label: "discountRate", type: "number", placeholder: "10" },
     ],
     api: "/api/businessvaluation",
   },
   cashflow: {
-    label: "cashflow", // Update to use translation key
+    label: "cashflow",
     fields: [
       { id: "month", label: "Month", type: "text", placeholder: "January" },
       {
         id: "cashInflows",
-        label: "cashInflows", // Update to use translation key
+        label: "cashInflows",
         type: "number",
         placeholder: "10000",
       },
       {
         id: "cashOutflows",
-        label: "cashOutflows", // Update to use translation key
+        label: "cashOutflows",
         type: "number",
         placeholder: "5000",
       },
       {
         id: "initialCashBalance",
-        label: "initialCashBalance", // Update to use translation key
+        label: "initialCashBalance",
         type: "number",
         placeholder: "5000",
       },
     ],
     api: "/api/cashflow",
   },
-  financialForecast: {
-    label: "financialForecast", // Update to use translation key
-    fields: [
-      {
-        id: "revenues",
-        label: "revenues", // Update to use translation key
-        type: "number",
-        placeholder: "20000",
-      },
-      {
-        id: "fixedExpenses",
-        label: "fixedExpenses", // Update to use translation key
-        type: "number",
-        placeholder: "8000",
-      },
-      {
-        id: "variableExpenses",
-        label: "variableExpenses", // Update to use translation key
-        type: "number",
-        placeholder: "5000",
-      },
-    ],
-    api: "/api/financialforecast",
-  },
+  // financialForecast: {
+  //   label: "financialForecast",
+  //   fields: [
+  //     { id: "revenues", label: "revenues", type: "number", placeholder: "20000" },
+  //     { id: "fixedExpenses", label: "fixedExpenses", type: "number", placeholder: "8000" },
+  //     { id: "variableExpenses", label: "variableExpenses", type: "number", placeholder: "5000" },
+  //   ],
+  //   api: "/api/financialforecast",
+  // },
   grossmargin: {
-    label: "grossmargin", // Update to use translation key
+    label: "grossmargin",
     fields: [
-      {
-        id: "product",
-        label: "product", // Update to use translation key
-        type: "text",
-        placeholder: "Product Name",
-      },
-      {
-        id: "sellingPrice",
-        label: "sellingPrice", // Update to use translation key
-        type: "number",
-        placeholder: "15",
-      },
-      {
-        id: "productionCost",
-        label: "productionCost", // Update to use translation key
-        type: "number",
-        placeholder: "10",
-      },
+      { id: "product", label: "product", type: "text", placeholder: "Product Name" },
+      { id: "sellingPrice", label: "sellingPrice", type: "number", placeholder: "15" },
+      { id: "productionCost", label: "productionCost", type: "number", placeholder: "10" },
     ],
     api: "/api/grossmargin",
   },
   roi: {
-    label: "roi", // Update to use translation key
+    label: "roi",
     fields: [
-      {
-        id: "initialCost",
-        label: "initialCost", // Update to use translation key
-        type: "number",
-        placeholder: "5000",
-      },
-      {
-        id: "netGains",
-        label: "netGains", // Update to use translation key
-        type: "number",
-        placeholder: "2000",
-      },
+      { id: "initialCost", label: "initialCost", type: "number", placeholder: "5000" },
+      { id: "netGains", label: "netGains", type: "number", placeholder: "2000" },
     ],
     api: "/api/roi",
   },
   investment: {
-    label: "investment", // Update to use translation key
+    label: "investment",
     fields: [
-      {
-        id: "monthlyIncome",
-        label: "monthlyIncome", // Update to use translation key
-        type: "number",
-        placeholder: "3000",
-      },
-      {
-        id: "monthlyExpenses",
-        label: "monthlyExpenses", // Update to use translation key
-        type: "number",
-        placeholder: "1500",
-      },
-      {
-        id: "emergencySavings",
-        label: "emergencySavings", // Update to use translation key
-        type: "number",
-        placeholder: "5000",
-      },
-      {
-        id: "regularContributions",
-        label: "regularContributions", // Update to use translation key
-        type: "number",
-        placeholder: "500",
-      },
+      { id: "monthlyIncome", label: "monthlyIncome", type: "number", placeholder: "3000" },
+      { id: "monthlyExpenses", label: "monthlyExpenses", type: "number", placeholder: "1500" },
+      { id: "emergencySavings", label: "emergencySavings", type: "number", placeholder: "5000" },
+      { id: "regularContributions", label: "regularContributions", type: "number", placeholder: "500" },
     ],
-    api: "/api/investment",
+    api: "/api/investmentcapacity",
   },
   financingSimulation: {
-    label: "financingSimulation", // Update to use translation key
+    label: "financingSimulation",
     fields: [
-      {
-        id: "currentRevenue",
-        label: "currentRevenue", // Update to use translation key
-        type: "number",
-        placeholder: "20000",
-      },
-      {
-        id: "totalAssets",
-        label: "totalAssets", // Update to use translation key
-        type: "number",
-        placeholder: "100000",
-      },
-      {
-        id: "totalDebts",
-        label: "totalDebts", // Update to use translation key
-        type: "number",
-        placeholder: "50000",
-      },
-      {
-        id: "requestedAmount",
-        label: "requestedAmount", // Update to use translation key
-        type: "number",
-        placeholder: "20000",
-      },
-      {
-        id: "useOfFunds",
-        label: "useOfFunds", // Update to use translation key
-        type: "text",
-        placeholder: "Expansion",
-      },
+      { id: "currentRevenue", label: "currentRevenue", type: "number", placeholder: "20000" },
+      { id: "netProfit", label: "netProfit", type: "number", placeholder: "15000" },
+      { id: "totalAssets", label: "totalAssets", type: "number", placeholder: "100000" },
+      { id: "totalDebts", label: "totalDebts", type: "number", placeholder: "50000" },
+      { id: "requestedAmount", label: "requestedAmount", type: "number", placeholder: "20000" },
+      { id: "useOfFunds", label: "useOfFunds", type: "text", placeholder: "Expansion" },
     ],
-    api: "/api/financingsimulation",
+    api: "/api/financingsimulator",
   },
 };
 
@@ -233,6 +129,14 @@ const FormDetail = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const calculator = calculators[selectedCalculator];
+
+    // Validate if all fields have values
+    const missingFields = calculator.fields.filter(field => !formData[field.id]);
+
+    if (missingFields.length > 0) {
+      alert(`Error: Please fill in all required fields (${missingFields.map(f => f.label).join(', ')})`);
+      return;
+    }
 
     try {
       const response = await fetch(calculator.api, {
@@ -264,8 +168,10 @@ const FormDetail = () => {
           <form onSubmit={handleSubmit}>
             {/* Calculator Selection Dropdown */}
             <div>
-            <h2 className="text-xl font-bold">{t(calculators[selectedCalculator].label)}</h2>
-              
+              <h2 className="text-xl font-bold">
+                {t(calculators[selectedCalculator].label)}
+              </h2>
+
               <select
                 id="calculator"
                 value={selectedCalculator}
@@ -284,7 +190,7 @@ const FormDetail = () => {
             {currentCalculator.fields.map((field) => (
               <div key={field.id}>
                 <label htmlFor={field.id} className="mb-3 text-headingColor">
-                {t(field.label)}:
+                  {t(field.label)}:
                 </label>
                 <input
                   type={field.type}
@@ -299,7 +205,7 @@ const FormDetail = () => {
 
             {/* Submit Button */}
             <button className="w-full text-lg text-white bg-btnColor hover:bg-hoverBtnColor duration-700 rounded-md p-3 lg:mt-0 mt-4">
-            {t("calculate")}
+              {t("calculate")}
             </button>
           </form>
         </div>
@@ -312,14 +218,15 @@ const FormDetail = () => {
                 Calculation Result
               </p>
               <div className="space-y-4">
-    {Object.entries(result).map(([key, value]) => (
-      <div key={key}>
-        <h3 className="text-lg font-medium text-gray-800 capitalize">{key.replace(/([A-Z])/g, ' $1')}</h3>
-        <p className="text-gray-700">{value}</p>
-      </div>
-    ))}
-  </div>
-
+                {Object.entries(result).map(([key, value]) => (
+                  <div key={key}>
+                    <h3 className="text-lg font-medium text-gray-800 capitalize">
+                      {key.replace(/([A-Z])/g, " $1")}
+                    </h3>
+                    <p className="text-gray-700">{value}</p>
+                  </div>
+                ))}
+              </div>
             </>
           ) : (
             <p className="text-gray-500 text-center">

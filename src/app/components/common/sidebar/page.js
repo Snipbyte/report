@@ -1,11 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
-import {
-  FiActivity,
-  FiAlertCircle,
-  FiHome,
-} from "react-icons/fi";
+import { FiActivity, FiAlertCircle, FiHome } from "react-icons/fi";
 import Link from "next/link";
 import { useTranslation } from "react-i18next"; // Import useTranslation
 
@@ -96,6 +92,14 @@ const CustomSidebar = ({ userRole, toggle, pathname }) => {
               component={<Link href="/admin/users" />}
             >
               {t("users")}
+            </MenuItem>
+            <MenuItem
+              icon={<FiHome />}
+              active={activeItem === "/admin/blogs"}
+              onClick={() => handleMenuItemClick("/admin/blogs")}
+              component={<Link href="/admin/blogs" />}
+            >
+              {t("blogs")}
             </MenuItem>
           </Menu>
         )}
