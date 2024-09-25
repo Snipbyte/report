@@ -1,4 +1,3 @@
-// BlogDetail.js
 "use client";
 import BlogContent from "@/app/components/blogDetail/aboutAuthor/blogContent/page";
 import AboutAuthor from "@/app/components/blogDetail/aboutAuthor/page";
@@ -22,7 +21,8 @@ const BlogDetail = () => {
     const fetchBlogs = async () => {
       try {
         const response = await axios.get("/api/blogs/all");
-        setBlogs(response.data);
+        // Ensure that response.data is an array
+        setBlogs(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error("Error fetching blogs:", error);
       }
@@ -81,14 +81,18 @@ const BlogDetail = () => {
 
         <p className="text-headingColor text-4xl font-bold my-4">Latest Blog</p>
         <div className="flex flex-wrap my-5 items-center justify-around">
-          {blogs.slice(0, 3).map((blog) => (
-            <VerticalCard
-              key={blog.slug}
-              img={blog.thumbnailImage || "/images/blog-placeholder.jpg"}
-              heading={blog.title}
-              des={blog.description}
-            />
-          ))}
+          {Array.isArray(blogs) && blogs.length > 0 ? (
+            blogs.slice(0, 3).map((blog) => (
+              <VerticalCard
+                key={blog.slug}
+                img={blog.thumbnailImage || "/images/blog-placeholder.jpg"}
+                heading={blog.title}
+                des={blog.description}
+              />
+            ))
+          ) : (
+            <p>No blogs available.</p>
+          )}
         </div>
       </div>
       <Footer />
