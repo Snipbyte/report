@@ -104,7 +104,7 @@ i18n.use(initReactI18next).init({
         caltxt: "Business loan and interest rate calculator",
         home: "home",
         contact: "contact",
-        calcualte: "calcualte",
+        calcualte: "calculator",
         login: "login",
         signup: "signup",
         calculators: "calculators",
@@ -347,7 +347,7 @@ i18n.use(initReactI18next).init({
           "Le sous-sol est étonnamment pratique pour garder mes affaires professionnelles au même endroit.",
         alreadyAcc: "Vous avez déjà un compte ?",
 
-        calcualte: "calculer",
+        calcualte: "calculatrice",
         contact: "contact",
         login: "connexion",
         signup: "inscription",
