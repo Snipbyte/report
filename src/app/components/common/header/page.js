@@ -138,7 +138,7 @@ const Header = () => {
                 href="/admin/login"
                 className="text-center border-2 w-full p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor"
               >
-                {t("Adminlogin")}
+                {t("adminLogin")}
               </Link>
               <Link
                 href="/signup"
