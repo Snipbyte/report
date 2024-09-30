@@ -99,6 +99,7 @@ const Header = () => {
           >
             {t("blogs")}
           </Link>
+        
           <Link
             href="/calculator"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
@@ -132,6 +133,12 @@ const Header = () => {
                 className="text-center border-2 w-full p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor"
               >
                 {t("login")}
+              </Link>
+              <Link
+                href="/admin/login"
+                className="text-center border-2 w-full p-2 rounded-lg text-black bg-white duration-700 hover:text-hoverBtnColor"
+              >
+                {t("Adminlogin")}
               </Link>
               <Link
                 href="/signup"

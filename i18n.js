@@ -105,6 +105,7 @@ i18n.use(initReactI18next).init({
         home: "home",
         contact: "contact",
         calcualte: "calculator",
+        adminLogin:"Admin Login",
         login: "login",
         signup: "signup",
         calculators: "calculators",
@@ -348,6 +349,7 @@ i18n.use(initReactI18next).init({
         alreadyAcc: "Vous avez déjà un compte ?",
 
         calcualte: "calculatrice",
+        adminLogin:"Connexion administrateur",
         contact: "contact",
         login: "connexion",
         signup: "inscription",
