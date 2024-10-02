@@ -35,21 +35,25 @@ const Test = () => {
           <BusinessCard
             img="/images/b1.jpg"
             heading="Business creation"
+            btn={t("learnMore")}
             des={`${t("financingSimulatorsfinal")}`}
           />
           <BusinessCard
             img="/images/b2.jpg"
             heading="Company modification"
+            btn={t("learnMore")}
             des={`${t("iziKempOffersfinal")}`}
           />
           <BusinessCard
             img="/images/b3.jpg"
             heading="Business Closure"
+            btn={t("learnMore")}
             des={`${t("speedEfficiencyfinal")}`}
           />
           <BusinessCard
             img="/images/b3.jpg"
             heading="Business Closure"
+            btn={t("learnMore")}
             des={`${t("personalizedRecommendationsfinal")}`}
           />
         </div>
