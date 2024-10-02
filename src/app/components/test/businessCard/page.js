@@ -1,16 +1,17 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
 const BusinessCard = (props) => {
     return (
-        <div className='w-full lg:w-[30%]'>
-            <div className='bg-white shadow-2xl rounded-xl p-4'>
+        <div className='w-full bg-white p-5 h-[570px]  lg:w-[23%]'>
+            <div className=''>
                 <Image className='w-80 h-80' src={props.img} width={1000} height={1000} />
                 <p className='text-2xl my-2 font-bold text-headingColor'>{props.heading}</p>
                 <p className='text-paraColor text-md my-4'>{props.des}</p>
-                <button className='w-full text-center p-3 text-xl hover:duration-700 bg-btnColor text-white hover:bg-hoverBtnColor rounded-md'>
+                <Link href="/landing-page" className='w-full text-center p-3 text-xl hover:duration-700 bg-btnColor text-white hover:bg-hoverBtnColor rounded-md'>
                     Learn More
-                </button>
+                </Link>
             </div>
         </div>
     )

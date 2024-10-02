@@ -105,7 +105,7 @@ i18n.use(initReactI18next).init({
         home: "home",
         contact: "contact",
         calcualte: "calculator",
-        adminLogin:"Admin Login",
+        adminLogin: "Admin Login",
         login: "login",
         signup: "signup",
         calculators: "calculators",
@@ -251,6 +251,72 @@ i18n.use(initReactI18next).init({
         register: "Register",
         sayHello: "Say Hello",
         email: "info@izikemp.com",
+
+        // for homepage
+        homefinal: "Home",
+        igniteAmbitionfinal:
+          "Ignite Your Entrepreneurial Ambition with IziKemp!",
+        turnDreamIntoRealityfinal:
+          "Turn your entrepreneurial dream into reality with the help of our smart tools and dedicated experts.",
+        iziKempSimplifiesfinal:
+          "At IziKemp, we simplify the funding process, providing tailored solutions that give you the edge in securing finances.",
+        whyChooseIziKempfinal: "Why Choose IziKemp?",
+        personalizedReportsfinal:
+          "- Personalized Reports: Receive detailed analyses and specific recommendations tailored to your project with just a few clicks.",
+        advancedScoringfinal:
+          "- Advanced Scoring: Instantly evaluate your funding potential using our algorithms based on bank and investor criteria.",
+        freeConsultationfinal:
+          "- Free Consultation: Benefit from a complimentary session with our experts to refine your financial strategy.",
+        startSimulationTodayfinal:
+          "Start your personalized simulation today and pave the way to success!",
+        ourServicesfinal: "Our Services",
+        financingSimulatorsfinal: "Financing Simulators",
+        iziKempOffersfinal:
+          "At IziKemp, we offer a comprehensive range of simulators tailored to precisely meet your financial needs.",
+        speedEfficiencyfinal:
+          "- Speed and Efficiency: Obtain your results instantly to make informed decisions.",
+        personalizedRecommendationsfinal:
+          "- Personalized Recommendations: Our reports include advice tailored to your unique situation to maximize your chances of success.",
+        businessPlanGeneratorfinal: "Business Plan Generator",
+        buildBusinessPlanfinal:
+          "Build a robust business plan with our user-friendly generator that instantly creates professional financial projections.",
+        simplificationPrecisionfinal:
+          "- Simplification and Precision: Get a complete financial overview with just a few clicks.",
+        insightfulAnalysisfinal:
+          "- Insightful Analysis: Receive strategic recommendations to strengthen your financial proposals.",
+        expertGuidancefinal: "Expert Guidance",
+        meetOurTeamfinal:
+          "Meet our team of specialists who will support you at every step of your entrepreneurial journey.",
+        freeConsultationGuidancefinal:
+          "- Free Consultation: Each entrepreneur gains a complimentary initial session to uncover the best financing strategies.",
+        tailoredExpertisefinal:
+          "- Tailored Expertise: Enjoy bespoke advice from our banking and insurance experts for every crucial financial decision.",
+        howItWorksfinal: "How It Works",
+        simpleEffectiveProcessfinal: "Simple and Effective Process",
+        chooseSimulatorfinal:
+          "1. Choose Your Simulator: Access a tool specifically designed for your financing needs.",
+        enterDatafinal:
+          "2. Enter Your Data: Fill out essential information for a precise analysis.",
+        receivePersonalizedReportfinal:
+          "3. Instantly Receive Your Personalized Report: Review your eligibility score and carefully crafted, tailored recommendations.",
+        benefitConsultationExpertsfinal:
+          "4. Benefit from a Consultation with Our Experts: Optimize your financing strategy with professional, free advice.",
+        testimonialsfinal: "Testimonials",
+        testimonialAlexfinal:
+          '"Thanks to IziKemp, I secured a crucial loan for my business expansion. The personalized recommendations and expert assistance made all the difference!"',
+        testimonialMariefinal:
+          '"I always hesitated to seek funding, but with IziKemp, the process became clear and structured. Receiving an immediate and accurate report truly reassured me!"',
+        faqfinal: "FAQ",
+        learnMore: "Learn More",
+        whatMakesSimulatorsUniquefinal:
+          "What makes IziKemp's simulators unique?",
+        areConsultationsFreefinal: "Are the consultations really free?",
+        howIsInformationProtectedfinal: "How is my information protected?",
+        blogNewsfinal: "Blog/News",
+        stayInformedInspiredfinal: "Stay Informed and Inspired",
+        aboutUsfinal: "About Us",
+        contactfinal: "Contact",
+        clientPortalfinal: "Client Portal",
       },
     },
     fr: {
@@ -349,7 +415,7 @@ i18n.use(initReactI18next).init({
         alreadyAcc: "Vous avez déjà un compte ?",
 
         calcualte: "calculatrice",
-        adminLogin:"Connexion administrateur",
+        adminLogin: "Connexion administrateur",
         contact: "contact",
         login: "connexion",
         signup: "inscription",
@@ -401,6 +467,7 @@ i18n.use(initReactI18next).init({
         industrySector: "Secteur d'industrie",
         dateOfEstablishment: "Date de création",
         location: "Emplacement",
+        learnMore :"apprendre encore plus",
         unitPrice: "Prix unitaire",
         expectedYearlySalesQuantity: "Quantité de ventes annuelles prévue",
         estimatedSalesGrowth: "Croissance des ventes estimée",
@@ -502,6 +569,73 @@ i18n.use(initReactI18next).init({
         sayHello: "Dites bonjour",
         logout: "déconnexion",
         email: "info@izikemp.com",
+
+        // homepage
+        homefinal: "Accueil",
+        igniteAmbitionfinal:
+          "Boostez Votre Ambition Entrepreneuriale avec IziKemp!",
+        turnDreamIntoRealityfinal:
+          "Transformez votre rêve entrepreneurial en réalité avec l’aide de nos outils intelligents et nos experts dédiés.",
+        iziKempSimplifiesfinal:
+          "IziKemp sait qu’obtenir un financement peut être un défi majeur, c’est pourquoi nous simplifions le processus en vous offrant des solutions sur mesure.",
+        whyChooseIziKempfinal: "Pourquoi choisir IziKemp ?",
+        personalizedReportsfinal:
+          "- Rapports personnalisés : Recevez des analyses détaillées et des recommandations spécifiques adaptées à votre projet en quelques clics.",
+        advancedScoringfinal:
+          "- Scoring avancé : Évaluez instantanément votre potentiel de financement grâce à nos algorithmes basés sur les critères des banques et des investisseurs.",
+        freeConsultationfinal:
+          "- Consultation gratuite : Profitez d'une session gratuite avec nos experts pour affiner votre stratégie financière.",
+        startSimulationTodayfinal:
+          "Commencez votre simulation personnalisée dès aujourd'hui et ouvrez la voie au succès !",
+        ourServicesfinal: "Nos services",
+        financingSimulatorsfinal: "Simulateurs de financement",
+        iziKempOffersfinal:
+          "Chez IziKemp, nous offrons une gamme complète de simulateurs adaptés à vos besoins financiers spécifiques.",
+        speedEfficiencyfinal:
+          "- Rapidité et efficacité : Obtenez vos résultats instantanément pour prendre des décisions éclairées.",
+        personalizedRecommendationsfinal:
+          "- Recommandations personnalisées : Nos rapports incluent des conseils adaptés à votre situation unique pour maximiser vos chances de succès.",
+        businessPlanGeneratorfinal: "Générateur de plan d'affaires",
+        buildBusinessPlanfinal:
+          "Créez un plan d'affaires solide avec notre générateur facile à utiliser qui produit instantanément des projections financières professionnelles.",
+        simplificationPrecisionfinal:
+          "- Simplification et précision : Obtenez une vue d'ensemble financière complète en quelques clics.",
+        insightfulAnalysisfinal:
+          "- Analyse perspicace : Recevez des recommandations stratégiques pour renforcer vos propositions financières.",
+        expertGuidancefinal: "Conseils d'experts",
+        meetOurTeamfinal:
+          "Rencontrez notre équipe de spécialistes qui vous accompagneront à chaque étape de votre parcours entrepreneurial.",
+        freeConsultationGuidancefinal:
+          "- Consultation gratuite : Chaque entrepreneur bénéficie d'une session initiale gratuite pour découvrir les meilleures stratégies de financement.",
+        tailoredExpertisefinal:
+          "- Expertise sur mesure : Profitez de conseils adaptés à vos besoins de la part de nos experts bancaires et en assurance pour chaque décision financière cruciale.",
+        howItWorksfinal: "Comment ça marche",
+        simpleEffectiveProcessfinal: "Processus simple et efficace",
+        chooseSimulatorfinal:
+          "1. Choisissez votre simulateur : Accédez à un outil spécialement conçu pour répondre à vos besoins de financement.",
+        enterDatafinal:
+          "2. Saisissez vos données : Remplissez les informations essentielles pour une analyse précise.",
+        receivePersonalizedReportfinal:
+          "3. Recevez instantanément votre rapport personnalisé : Consultez votre score d'éligibilité et des recommandations sur mesure.",
+        benefitConsultationExpertsfinal:
+          "4. Profitez d'une consultation avec nos experts : Optimisez votre stratégie de financement grâce à des conseils professionnels et gratuits.",
+        testimonialsfinal: "Témoignages",
+        testimonialAlexfinal:
+          '"Grâce à IziKemp, j’ai obtenu un prêt essentiel pour l’expansion de mon entreprise. Les recommandations personnalisées et l’assistance d’experts ont fait toute la différence !"',
+        testimonialMariefinal:
+          '"J’ai toujours hésité à demander des financements, mais avec IziKemp, le processus est devenu clair et structuré. Recevoir un rapport immédiat et précis m’a vraiment rassurée !"',
+        faqfinal: "FAQ",
+        whatMakesSimulatorsUniquefinal:
+          "Qu'est-ce qui rend les simulateurs d'IziKemp uniques ?",
+        areConsultationsFreefinal:
+          "Les consultations sont-elles vraiment gratuites ?",
+        howIsInformationProtectedfinal:
+          "Comment mes informations sont-elles protégées ?",
+        blogNewsfinal: "Blog/Actualités",
+        stayInformedInspiredfinal: "Restez informé et inspiré",
+        aboutUsfinal: "À propos de nous",
+        contactfinal: "Contact",
+        clientPortalfinal: "Espace client",
       },
     },
   },
