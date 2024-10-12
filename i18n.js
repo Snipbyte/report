@@ -467,7 +467,7 @@ i18n.use(initReactI18next).init({
         industrySector: "Secteur d'industrie",
         dateOfEstablishment: "Date de création",
         location: "Emplacement",
-        learnMore :"apprendre encore plus",
+        learnMore :"En savoir plus",
         unitPrice: "Prix unitaire",
         expectedYearlySalesQuantity: "Quantité de ventes annuelles prévue",
         estimatedSalesGrowth: "Croissance des ventes estimée",

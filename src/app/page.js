@@ -12,6 +12,7 @@ import AmbitionCard from "./components/test/ambitionCard/page";
 import EntrepreneursCard from "./components/test/entrepreneursCard/page";
 import MainServiceCard from "./components/test/mainServiceCard/page";
 import Footer from "./components/common/footer/page";
+import Link from "next/link";
 
 const Test = () => {
   const { t } = useTranslation();
@@ -28,6 +29,12 @@ const Test = () => {
         <p className="lg:text-4xl text-2xl font-bold text-headingColor mt-20 py-4">
           {t("startSimulationTodayfinal")}
         </p>
+        <Link
+            href="/calculator"
+            className="mt-4 mb-2 w-60 text-center p-4 text-lg hover:duration-700 bg-btnColor text-white hover:bg-hoverBtnColor rounded-full my-4"
+          >
+            {t("startSimulation")}
+          </Link>
         <p className="lg:text-4xl text-2xl font-bold text-headingColor mt-20 py-4">
           {t("ourServicesfinal")}
         </p>
