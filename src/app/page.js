@@ -38,7 +38,7 @@ const Test = () => {
         <p className="lg:text-4xl text-2xl font-bold text-headingColor mt-20 py-4">
           {t("ourServicesfinal")}
         </p>
-        <div className="flex flex-wrap items-start justify-around py-8">
+        <div className="hidden lg:flex lg:flex-wrap lg:items-start justify-around lg:py-8">
           <BusinessCard
             img="/images/b1.jpg"
             heading="Business creation"
