@@ -147,6 +147,7 @@ i18n.use(initReactI18next).init({
         useOfFunds: "Use of Funds",
         dashboard: "dashboard",
 
+        subscribed:"subscribed users",
         generate: "Generate Business Plan Report",
         // generate report
         companyName: "Company Name",
@@ -461,6 +462,7 @@ i18n.use(initReactI18next).init({
         requestedAmount: "Montant demandé",
         useOfFunds: "Utilisation des fonds",
         dashboard: "tableau de bord",
+        subscribed:"utilisateurs abonnés",
         generate: "Générer un rapport de plan d'affaires",
         // generate report
         companyName: "Nom de l'entreprise",
