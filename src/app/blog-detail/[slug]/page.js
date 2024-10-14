@@ -20,7 +20,7 @@ const BlogDetail = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("/api/blogs/all");
+        const response = await axios.post("/api/blogs/all");
         // Ensure that response.data is an array
         setBlogs(Array.isArray(response.data) ? response.data : []);
       } catch (error) {

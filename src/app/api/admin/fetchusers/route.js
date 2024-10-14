@@ -34,4 +34,4 @@ const getAllUsersHandler = async () => {
 };
 
 // Export the GET request handler
-export const GET = connectDb(getAllUsersHandler);
+export const POST = connectDb(getAllUsersHandler);

@@ -15,4 +15,4 @@ const getAllBlogs = async () => {
   }
 };
 
-export const GET = connectDb(getAllBlogs);
+export const POST = connectDb(getAllBlogs);

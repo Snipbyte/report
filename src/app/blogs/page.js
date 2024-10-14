@@ -1,4 +1,3 @@
-// file: pages/blogs.js
 "use client";
 import React, { useEffect, useState } from "react";
 import HeroSection from "../components/blogs/heroSection/page";
@@ -17,7 +16,7 @@ const Blogs = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("/api/blogs/all");
+        const response = await axios.post("/api/blogs/all");
         setBlogs(response.data);
       } catch (error) {
         console.error("Error fetching blogs:", error);

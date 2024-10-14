@@ -21,7 +21,7 @@ const Users = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("/api/admin/fetchusers");
+        const response = await axios.post("/api/admin/fetchusers");
         setUsers(response.data.users);
       } catch (error) {
         setError("Error fetching users");

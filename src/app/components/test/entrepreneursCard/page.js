@@ -10,7 +10,7 @@ const EntrepreneursCard = () => {
     <div className="lg:flex block items-center justify-center p-10 shadow">
       <div className="lg:w-1/2 w-full mb-6 lg:mb-0">
         <p className="text-headingColor text-2xl lg:text-4xl p-6 lg:p-10 text-left">
-          {t("freeConsultationfinal")}
+          {t("generate")}
         </p>
       </div>
 

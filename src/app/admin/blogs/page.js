@@ -1,22 +1,23 @@
-// file: pages/admin/blogs.js
-
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AdminLayout from "@/app/components/layouts/adminLayout/page";
 import UploadBlog from "@/app/components/admin/blogs/uploadBlog/uploadBlog";
+import EditBlog from "@/app/components/admin/blogs/editBlog/editBlog"; // NEW
 import Link from "next/link";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [showModal, setShowModal] = useState(false); // To toggle the blog pop-up
+  const [showEditModal, setShowEditModal] = useState(false); // NEW: Modal for editing blog
+  const [editBlogData, setEditBlogData] = useState(null); // NEW: Data for the blog being edited
   const [message, setMessage] = useState(""); // Custom success or error message
   const [isError, setIsError] = useState(false); // To determine if it's a success or failure
 
   // Fetch all blogs
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get("/api/blogs/all");
+      const response = await axios.post("/api/blogs/all");
       setBlogs(response.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
@@ -43,9 +44,14 @@ const Blogs = () => {
     }
   };
 
+  // NEW: Open edit modal and set blog data
+  const handleEdit = (blog) => {
+    setEditBlogData(blog); // Set the blog data to be edited
+    setShowEditModal(true); // Open edit modal
+  };
+
   return (
     <AdminLayout>
-      {/* Display custom success or error message */}
       {message && (
         <div
           className={`p-4 mb-4 text-sm rounded ${
@@ -59,7 +65,6 @@ const Blogs = () => {
       <div className="container mx-auto p-6">
         <h1 className="text-2xl font-bold mb-4">Blogs</h1>
 
-        {/* Display the list of blogs */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {blogs.map((blog) => (
             <div
@@ -79,6 +84,13 @@ const Blogs = () => {
                   onClick={() => handleDelete(blog.slug)}
                 >
                   Delete
+                </button>
+                {/* Edit Button */}
+                <button
+                  className="bg-blue-500 text-white py-1 px-3 rounded-md"
+                  onClick={() => handleEdit(blog)}
+                >
+                  Edit
                 </button>
               </div>
             </div>
@@ -110,6 +122,29 @@ const Blogs = () => {
                   setShowModal(false);
                   fetchBlogs(); // Refresh blog list after adding new one
                   setMessage("Blog added successfully.");
+                  setIsError(false);
+                }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Modal for editing a blog */}
+        {showEditModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
+              <button
+                className="absolute top-2 right-2 text-gray-500"
+                onClick={() => setShowEditModal(false)}
+              >
+                &times;
+              </button>
+              <EditBlog
+                blogData={editBlogData}
+                onSuccess={() => {
+                  setShowEditModal(false);
+                  fetchBlogs(); // Refresh blog list after editing
+                  setMessage("Blog edited successfully.");
                   setIsError(false);
                 }}
               />

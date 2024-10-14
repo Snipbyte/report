@@ -14,7 +14,7 @@ const Dashboard = () => {
       try {
         // Fetch users and business plans data from APIs
         const [usersRes, businessPlansRes] = await Promise.all([
-          axios.get("/api/admin/fetchusers"),             // Fetch users from /api/admin/fetchusers
+          axios.post("/api/admin/fetchusers"),             // Fetch users from /api/admin/fetchusers
           axios.get("/api/admin/fetchbusinessplandetails")      // Fetch business plans from /api/admin/fetchbusinessplans
         ]);
 

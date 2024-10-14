@@ -1,7 +1,5 @@
-
 "use client";
 import React from "react";
-
 
 import { useTranslation } from "react-i18next";
 import Header from "./components/common/header/page";
@@ -29,41 +27,15 @@ const Test = () => {
         <p className="lg:text-4xl text-2xl font-bold text-headingColor mt-20 py-4">
           {t("startSimulationTodayfinal")}
         </p>
-        <Link
+        <div className="flex justify-center gap-2">
+          <Link
             href="/calculator"
             className="mt-4 mb-2 w-60 text-center p-4 text-lg hover:duration-700 bg-btnColor text-white hover:bg-hoverBtnColor rounded-full my-4"
           >
             {t("startSimulation")}
           </Link>
-        <p className="lg:text-4xl text-2xl font-bold text-headingColor mt-20 py-4">
-          {t("ourServicesfinal")}
-        </p>
-        <div className="hidden lg:flex lg:flex-wrap lg:items-start justify-around lg:py-8">
-          <BusinessCard
-            img="/images/b1.jpg"
-            heading="Business creation"
-            btn={t("learnMore")}
-            des={`${t("financingSimulatorsfinal")}`}
-          />
-          <BusinessCard
-            img="/images/b2.jpg"
-            heading="Company modification"
-            btn={t("learnMore")}
-            des={`${t("iziKempOffersfinal")}`}
-          />
-          <BusinessCard
-            img="/images/b3.jpg"
-            heading="Business Closure"
-            btn={t("learnMore")}
-            des={`${t("speedEfficiencyfinal")}`}
-          />
-          <BusinessCard
-            img="/images/b3.jpg"
-            heading="Business Closure"
-            btn={t("learnMore")}
-            des={`${t("personalizedRecommendationsfinal")}`}
-          />
         </div>
+     
       </div>
       <div className="my-4">
         <p className="lg:text-4xl text-2xl font-bold text-headingColor mt-20">
@@ -86,6 +58,13 @@ const Test = () => {
             des={`${t("insightfulAnalysisfinal")}`}
             btn={`${t("generate")}`}
           />
+           <AmbitionCard
+            img="/images/t1.png"
+            heading={`${t("businessPlanGeneratorfinal")}`}
+            des={`${t("freeConsultationfinal")}`}
+            btn={`${t("generate")}`}
+          />
+          
         </div>
       </div>
       <div className="mt-20">
