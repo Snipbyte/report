@@ -12,9 +12,9 @@ const About = () => {
       <Header />
       <HeroSection />
       <ContentSection />
-      <div className="my-2">
+      {/* <div className="my-2">
         <DemoSection />
-      </div>
+      </div> */}
       {/* <ContactSection/> */}
       <Footer />
     </div>

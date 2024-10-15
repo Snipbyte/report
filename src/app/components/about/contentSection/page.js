@@ -13,14 +13,14 @@ const ContentSection = () => {
       </h3>
      
       <div className="flex flex-col lg:flex-row items-center justify-center gap-10 p-10 mt-10">
-        <div className="lg:w-1/2">
+        <div className="w-full">
           <h2 className="text-4xl font-bold">{t("empoweringEntrepreneurs")}</h2>
           <p className="text-md text-paraColor mt-4">{t("foundersChallenges")}</p>
           <p className="text-md text-paraColor mt-4">{t("teamOfExperts")}</p>
           <p className="text-md text-paraColor mt-4">{t("partnerSupport")}</p>
           <p className="text-md text-paraColor mt-4">{t("moveForward")}</p>
         </div>
-        <div className="flex justify-center lg:w-1/2">
+        {/* <div className="flex justify-center lg:w-1/2">
           <Image
             className="w-full max-w-[400px] rounded-md"
             src="/images/contentdashboard2.png"
@@ -28,7 +28,7 @@ const ContentSection = () => {
             height={500}
             alt="Content Dashboard"
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
