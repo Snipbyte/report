@@ -11,6 +11,9 @@ import EntrepreneursCard from "./components/test/entrepreneursCard/page";
 import MainServiceCard from "./components/test/mainServiceCard/page";
 import Footer from "./components/common/footer/page";
 import Link from "next/link";
+import BlogSection from "./components/landingpage/blogSection/page";
+import ClientPortal from "./components/landingpage/clientPortal/page";
+import Calculators from "./components/landingpage/Calculators/page";
 
 const Test = () => {
   const { t } = useTranslation();
@@ -35,7 +38,6 @@ const Test = () => {
             {t("startSimulation")}
           </Link>
         </div>
-     
       </div>
       <div className="my-4">
         <p className="lg:text-4xl text-2xl font-bold text-headingColor mt-20">
@@ -58,18 +60,20 @@ const Test = () => {
             des={`${t("insightfulAnalysisfinal")}`}
             btn={`${t("generate")}`}
           />
-           <AmbitionCard
+          <AmbitionCard
             img="/images/t1.png"
             heading={`${t("businessPlanGeneratorfinal")}`}
             des={`${t("freeConsultationfinal")}`}
             btn={`${t("generate")}`}
           />
-          
         </div>
       </div>
       <div className="mt-20">
         <EntrepreneursCard />
       </div>
+      <BlogSection />
+      <ClientPortal />
+      <Calculators />
       {/* <FaqCard /> */}
       <div>
         <p className="my-5 lg:text-5xl text-2xl font-bold text-headingColor mb-6">

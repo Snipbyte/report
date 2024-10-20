@@ -106,7 +106,9 @@ i18n.use(initReactI18next).init({
         contact: "contact",
         calcualte: "calculator",
         adminLogin: "Admin Login",
+        stayInform:"Stay Informed and Inspired",
         login: "login",
+        
         signup: "signup",
         calculators: "calculators",
         fixed: "Fixed Costs",
@@ -114,6 +116,8 @@ i18n.use(initReactI18next).init({
         about: "about",
 
         // FormDetail translations
+        your3:"Access your secure client portal to review your reports and track your progress. With IziKemp, all your potential is at your fingertips.",
+        your2:"Your Personal Gateway to Success",
         breakeven: "Break-Even Calculator",
         businessValuation: "Business Valuation Calculator",
         cashflow: "Cash Flow Calculator",
@@ -316,6 +320,7 @@ i18n.use(initReactI18next).init({
         blogNewsfinal: "Blog/News",
         stayInformedInspiredfinal: "Stay Informed and Inspired",
         aboutUsfinal: "About Us",
+        stay2:"Discover the latest in funding trends, entrepreneurial tips, and updates on our tools. Our blog is designed to provide you with the information and motivation needed at every stage of your entrepreneurial journey.",
         contactfinal: "Contact",
         clientPortalfinal: "Client Portal",
       },
@@ -418,6 +423,7 @@ i18n.use(initReactI18next).init({
         calcualte: "calculatrice",
         adminLogin: "Connexion administrateur",
         contact: "contact",
+        stayInform:"Restez informé et inspiré",
         login: "connexion",
         signup: "inscription",
         calculators: "calculatrices",
@@ -430,6 +436,8 @@ i18n.use(initReactI18next).init({
         home: " accueil",
 
         // FormDetail translations
+        your3:"Accédez à votre portail client sécurisé pour consulter vos rapports et suivre vos progrès. Avec IziKemp, tout votre potentiel est à portée de main.",
+        your2:"Votre passerelle personnelle vers le succès",
         breakeven: "Calculateur de seuil de rentabilité",
         businessValuation: "Calculateur d'évaluation d'entreprise",
         cashflow: "Calculateur de flux de trésorerie",
@@ -636,6 +644,7 @@ i18n.use(initReactI18next).init({
         blogNewsfinal: "Blog/Actualités",
         stayInformedInspiredfinal: "Restez informé et inspiré",
         aboutUsfinal: "À propos de nous",
+        stay2:"Découvrez les dernières tendances en matière de financement, des conseils entrepreneuriaux et des mises à jour sur nos outils. Notre blog est conçu pour vous fournir les informations et la motivation nécessaires à chaque étape de votre parcours entrepreneurial.",
         contactfinal: "Contact",
         clientPortalfinal: "Espace client",
       },

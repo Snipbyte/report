@@ -21,13 +21,7 @@ const HeroSection = () => {
         </Link>
       </div>
       <div className="flex flex-wrap items-center justify-center gap-5 my-8">
-        <Image
-          className="w-full md:w-64 h-auto rounded-md"
-          src="/images/worker1.jpg"
-          width={1000}
-          height={1000}
-          alt="Worker 1"
-        />
+        
         <Image
           className="w-full md:w-64 h-auto rounded-md"
           src="/images/image3.jpg"
