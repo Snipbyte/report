@@ -27,7 +27,7 @@ const BlogSection = () => {
           <div className="w-80 h-0.5 bg-white"></div>
           <ul className="list-disc list-inside p-2 text-white lg:w-96 w-full text-lg mt-20">
             <li>{t("stayInform")}</li>
-            <li>{t("stay2")}</li>
+            <li className="hidden md:block">{t("stay2")}</li>
           </ul>
         </div>
       </div>
