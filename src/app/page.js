@@ -71,9 +71,11 @@ const Test = () => {
       <div className="mt-20">
         <EntrepreneursCard />
       </div>
+      {/* 3 new sections  */}
       <BlogSection />
       <ClientPortal />
       <Calculators />
+      {/* 3 new sections  */}
       {/* <FaqCard /> */}
       <div>
         <p className="my-5 lg:text-5xl text-2xl font-bold text-headingColor mb-6">
