@@ -9,25 +9,25 @@ const ChooseSection = () => {
   // Data for the services
   const services = [
     {
-      title: t("sentence34"), 
-      description1:t("sentence35"),
+      title: t("sentence34"),
+      description1: t("sentence35"),
       description2: t("sentence36"),
       description3: t("sentence37"),
       link: "/calculator",
     },
     {
-        title: t("sentence38"),
-        description1: t("sentence39"),
-        description2: t("sentence36"),
-        description3: t("sentence37"),
-        link: "/calculator",
+      title: t("sentence38"),
+      description1: t("sentence39"),
+      description2: t("sentence40"),
+      description3: t("sentence41"),
+      link: "/calculator",
     },
     {
-        title: t("sentence42"),
-        description1: t("sentence39"),
-        description2: t("sentence36"),
-        description3: t("sentence37"),
-        link: "/calculator",
+      title: t("sentence42"),
+      description1: t("sentence43"),
+      description2: t("sentence44"),
+      description3: t("sentence45"),
+      link: "/calculator",
     },
   ];
 
@@ -35,16 +35,22 @@ const ChooseSection = () => {
     <div className="lg:flex items-center block my-1 bg-gradient-to-tr from-indigo-950 via-indigo-900 to-violet-950">
       <div className="w-full lg:w-[40%] h-full text-center p-2 text-white">
         <p className="lg:text-5xl text-2xl md:text-4xl font-bold my-6 w-60 mx-auto">
-        {t("sentence12")}
+          {t("sentence12")}
         </p>
       </div>
       <div className="w-full lg:w-[60%] bg-lightCard p-10">
         {services.map((service, index) => (
           <div key={index} className="relative lg:h-auto mb-8">
             <p className="text-headingColor font-bold">• {service.title}</p>
-            <p className="text-headingColor my-2 text-xs md:text-sm">• {service.description1}</p>
-            <p className="text-headingColor my-2 text-xs md:text-sm">• {service.description2}</p>
-            <p className="text-headingColor mt-2 mb-12 text-xs md:text-sm">• {service.description3}</p>
+            <p className="text-headingColor my-2 text-xs md:text-sm">
+              • {service.description1}
+            </p>
+            <p className="text-headingColor my-2 text-xs md:text-sm">
+              • {service.description2}
+            </p>
+            <p className="text-headingColor mt-2 mb-12 text-xs md:text-sm">
+              • {service.description3}
+            </p>
             {/* Show link only on large screens */}
             <Link
               href={service.link}

@@ -97,7 +97,7 @@ const Header = () => {
             href="/blogs"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
           >
-            {t("blogs")}
+            {t("Blogs")}
           </Link>
         
           <Link

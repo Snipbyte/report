@@ -103,9 +103,9 @@ i18n.use(initReactI18next).init({
         caldes:
           "Before applying for a small business loan, make sure you know how much financing you can afford. Bankrate’s business loan calculator can help you estimate what your loan will cost and how much you’ll pay each month. Just enter a loan amount, loan term and interest rate.",
         caltxt: "Business loan and interest rate calculator",
-        home: "home",
+        home: "Home",
         contact: "contact",
-        calcualte: "calculator",
+        calcualte: "Calculator",
         adminLogin: "Admin Login",
         stayInform: "Stay Informed and Inspired",
         login: "login",
@@ -114,7 +114,7 @@ i18n.use(initReactI18next).init({
         calculators: "calculators",
         fixed: "Fixed Costs",
         selectCal: "Select Calculator",
-        about: "about",
+        about: "About",
 
         // FormDetail translations
         your3:
@@ -208,10 +208,10 @@ i18n.use(initReactI18next).init({
         sentence3:
           "At IziKemp, we simplify the funding process, providing tailored solutions that give you the edge in",
         sentence4: "securing finances",
-        sentence5: "Receive detailed analyses and specific recommendations",
+        sentence5: "Personalized Reports: Receive detailed analyses and specific recommendations tailored to your project with just a few clicks.",
         sentence6: "project with just a few clicks.",
         sentence7:
-          "Advanced Scoring: Instantly evaluate your funding potential using our algorithms based on",
+          "Advanced Scoring: Instantly evaluate your funding potential using our algorithms based on bank and investor criteria.",
         sentence8: "bank and investor criteria.",
         sentence9:
           "Free Consultation: Benefit from a complimentary session with our experts to refine your financial strategy.",
@@ -252,25 +252,25 @@ i18n.use(initReactI18next).init({
         sentence33: "— David H., Small Business Owner",
         sentence34: "Financing Simulators",
         sentence35:
-          "At IziKemp, we offer a comprehensive range of simulators tailored to precisely meet your financial needs. Whether you're considering a bank loan...",
+          "At IziKemp, we offer a comprehensive range of simulators tailored to precisely meet your financial needs. Whether you're considering a bank loan or securing investor capital, our tools provide a clear picture of your options.",
         sentence36:
           "Speed and Efficiency: Obtain your results instantly to make informed decisions.",
         sentence37:
           "Personalized Recommendations: Our reports include advice tailored to your unique situation to maximize your chances of success.",
-        sentence38: "Financing Simulators",
+        sentence38: "Business Plan Generator",
         sentence39:
-          "At IziKemp, we offer a comprehensive range of simulators tailored to precisely meet your financial needs. Whether you're considering a bank loan...",
+          "Build a robust business plan with our user-friendly generator that instantly creates professional financial projections",
         sentence40:
-          "Speed and Efficiency: Obtain your results instantly to make informed decisions.",
+          "Simplification and Precision: Get a complete financial overview with just a few clicks.",
         sentence41:
-          "Personalized Recommendations: Our reports include advice tailored to your unique situation to maximize your chances of success.",
-        sentence42: "Financing Simulators",
+          "Insightful Analysis: Receive strategic recommendations to strengthen your financial proposals",
+        sentence42: "Expert Guidance",
         sentence43:
-          "At IziKemp, we offer a comprehensive range of simulators tailored to precisely meet your financial needs. Whether you're considering a bank loan...",
+          "Meet our team of specialists who will support you at every step of your entrepreneurial journey",
         sentence44:
           "Speed and Efficiency: Obtain your results instantly to make informed decisions.",
         sentence45:
-          "Personalized Recommendations: Our reports include advice tailored to your unique situation to maximize your chances of success.",
+          "Tailored Expertise: Enjoy bespoke advice from our banking and insurance experts for every crucial financial decision",
         sentence46: "Services",
         sentence47: "We’re Here to Help",
         sentence48:
@@ -499,7 +499,7 @@ i18n.use(initReactI18next).init({
           "Le sous-sol est étonnamment pratique pour garder mes affaires professionnelles au même endroit.",
         alreadyAcc: "Vous avez déjà un compte ?",
 
-        calcualte: "calculatrice",
+        calcualte: "Calculatrice",
         adminLogin: "Connexion administrateur",
         contact: "contact",
         stayInform: "Restez informé et inspiré",
@@ -512,7 +512,7 @@ i18n.use(initReactI18next).init({
         caldes:
           "Avant de demander un prêt pour petite entreprise, assurez-vous de savoir combien de financement vous pouvez vous permettre. La calculatrice de prêt commercial de Bankrate peut vous aider à estimer le coût de votre prêt et combien vous paierez chaque mois. Il vous suffit d'entrer le montant du prêt, la durée du prêt et le taux d'intérêt.",
         caltxt: "Calculatrice de prêt commercial et de taux d'intérêt",
-        home: " accueil",
+        home: "Accueil",
 
         // FormDetail translations
         your3:
@@ -647,13 +647,13 @@ i18n.use(initReactI18next).init({
           "Chez IziKemp, nous simplifions le processus de financement en fournissant des solutions sur mesure qui vous donnent un avantage dans",
         sentence4: "l'obtention de financements",
         sentence5:
-          "Recevez des analyses détaillées et des recommandations spécifiques",
+          "Rapports Personnalisés : Recevez des analyses détaillées et des recommandations spécifiques adaptées à votre projet en quelques clics.",
         sentence6: "projet en quelques clics seulement.",
         sentence7:
-          "- Scoring avancé : Évaluez instantanément votre potentiel de financement grâce à nos algorithmes basés sur",
+          "Évaluation Avancée : Évaluez instantanément votre potentiel de financement à l'aide de nos algorithmes basés sur les critères des banques et des investisseurs.",
         sentence8: "les critères bancaires et d'investisseurs.",
         sentence9:
-          "- Consultation gratuite : Profitez d'une séance gratuite avec nos experts pour affiner votre stratégie financière.",
+          "Consultation gratuite : Profitez d'une séance gratuite avec nos experts pour affiner votre stratégie financière.",
         sentence10: "Pourquoi choisir IziKemp ?",
         sentence11:
           "Commencez votre simulation personnalisée aujourd'hui et ouvrez la voie au succès !",
@@ -691,16 +691,26 @@ i18n.use(initReactI18next).init({
         sentence33: "— David H., Propriétaire de petite entreprise",
         sentence34: "Simulateurs de financement",
         sentence35:
-          "Chez IziKemp, nous offrons une gamme complète de simulateurs conçus pour répondre précisément à vos besoins financiers. Que vous envisagiez un prêt bancaire...",
+          "Chez IziKemp, nous offrons une gamme complète de simulateurs adaptés pour répondre précisément à vos besoins financiers. Que vous envisagiez un prêt bancaire ou l'obtention de capitaux d'investisseurs, nos outils vous offrent une vision claire de vos options.",
         sentence36:
-          "Rapidité et efficacité : Obtenez vos résultats instantanément pour prendre des décisions éclairées.",
+          "Vitesse et Efficacité : Obtenez vos résultats instantanément pour prendre des décisions éclairées.",
         sentence37:
-          "Recommandations personnalisées : Nos rapports incluent des conseils adaptés à votre situation unique pour maximiser vos chances de succès.",
-        sentence38: "Simulateurs de financement",
+          "Recommandations Personnalisées : Nos rapports incluent des conseils adaptés à votre situation unique afin de maximiser vos chances de réussite.",
+        sentence38: "Générateur de Plan d'Affaires",
         sentence39:
-          "Chez IziKemp, nous offrons une gamme complète de simulateurs conçus pour répondre précisément à vos besoins financiers. Que vous envisagiez un prêt bancaire...",
+          "Créez un plan d'affaires solide avec notre générateur convivial qui génère instantanément des projections financières professionnelles.",
         sentence40:
-          "Recommandations personnalisées : Nos rapports incluent des conseils adaptés à votre situation unique pour maximiser vos chances de succès",
+          "Simplification et Précision : Obtenez une vue d'ensemble financière complète en quelques clics.",
+          sentence41:
+          "Analyse Approfondie : Recevez des recommandations stratégiques pour renforcer vos propositions financières.",
+          sentence42:
+          "Conseils d'Experts",
+          sentence43:
+          "Rencontrez notre équipe de spécialistes qui vous accompagnera à chaque étape de votre parcours entrepreneurial.",
+          sentence44:
+          "Consultation Gratuite : Chaque entrepreneur bénéficie d'une première séance offerte pour découvrir les meilleures stratégies de financement.",
+          sentence45:
+          "Expertise Sur Mesure : Bénéficiez de conseils personnalisés de la part de nos experts en banque et en assurance pour chaque décision financière cruciale.",
         // for footer
         inquiries:
           "Pour toute demande, contactez-nous à [email/contact]. Suivez-nous sur [réseaux sociaux]. Rejoignez notre communauté d'entrepreneurs réussis!",

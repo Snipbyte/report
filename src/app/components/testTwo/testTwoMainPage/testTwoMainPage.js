@@ -23,17 +23,17 @@ const TestTwoMainPage = () => {
     {
       bgColor: "bg-orange-400",
       icon: <MdOutlinePayments />,
-      heading: "FINANCING SIMULATORS",
+      heading: `${t("sentence13")}`,
     },
     {
       bgColor: "bg-gray-400",
       icon: <GoGraph />,
-      heading: "BUSINESS PLAN GENERATOR",
+      heading: `${t("sentence14")}`,
     },
     {
       bgColor: "bg-yellow-400",
       icon: <FaPersonChalkboard />,
-      heading: "EXPERT GUIDANCE",
+      heading: `${t("sentence15")}`,
     },
   ];
   return (
@@ -42,7 +42,7 @@ const TestTwoMainPage = () => {
       <SimulationCard />
       <ChooseSection />
       <p className="bg-gradient-to-tr from-indigo-950 via-blue-950 to-violet-950 text-white text-xl md:text-3xl lg:text-5xl text-center p-10">
-      {t("sentence12")}
+        {t("sentence12")}
       </p>
       <div className="md:flex block items-center justify-around mt-12 p-2">
         {services.map((service, index) => (

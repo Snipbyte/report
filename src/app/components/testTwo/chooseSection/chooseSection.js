@@ -18,22 +18,18 @@ const ChooseSection = () => {
       <div className="lg:flex items-center block my-10">
         <div className="w-full lg:w-[40%]">
           <p className="lg:text-5xl text-2xl md:text-4xl font-bold text-headingColor my-6 w-60 mx-auto pt-2">
-          {t("sentence10")}
+            {t("sentence10")}
           </p>
         </div>
         <div className="w-full  lg:w-[60%]  bg-lightCard  p-10">
           <div className="bg-blue-100 border-2 border-white p-3 rounded-md my-4">
-            <p className="text-headingColor  text-md ">{t("sentence5")}</p>
+            <p className="text-headingColor  text-md ">{t("sentence5")} </p>
           </div>
-          <div className="bg-sky-100 border-2 border-white p-3 rounded-md my-4">
-            <p className="text-headingColor  text-md ">{t("sentence6")}</p>
-          </div>
+
           <div className="bg-green-100 border-2 border-white p-3 rounded-md my-4">
             <p className="text-headingColor  text-md">{t("sentence7")}</p>
           </div>
-          <div className="bg-teal-100 border-2 border-white p-3 rounded-md my-4">
-            <p className="text-headingColor  text-md ">{t("sentence8")}</p>
-          </div>
+
           <div className="bg-emerald-100 border-2 border-white p-3 rounded-md my-4">
             <p className="text-headingColor  text-md ">{t("sentence9")}</p>
           </div>
