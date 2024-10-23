@@ -36,9 +36,9 @@ const TestimonialSection = () => {
                         <p className=" text-headingColor mt-2">
                             •  "Thanks to IziKemp, I secured a crucial loan for my business expansion. The personalized recommendations and expert assistance made all the difference!"
                         </p>
-                        <p className="text-headingColor my-2">
-                            •  — Alexia M., {t("successfulEntrepreneur")}
-                        </p>
+                            <p className="text-headingColor my-2">
+                                •  — Alexia M., {t("successfulEntrepreneur")}
+                            </p>
                     </div>
                     <div className="my-1">
                         <p className=" text-headingColor mt-2">
