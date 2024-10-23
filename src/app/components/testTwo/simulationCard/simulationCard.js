@@ -11,7 +11,7 @@ const SimulationCard = () => {
     return (
         <div className="my-1 relative">
             <div className="lg:flex block ">
-                <div className="w-full  lg:w-[50%] bg-desColor shadow-2xl p-10">
+                <div className="w-full lg:h-[500px] lg:w-[50%] bg-desColor shadow-2xl p-10">
                     <div className="w-14 h-1.5 bg-btnColor my-2"></div>
                     <p className="text-white lg:w-96 w-full lg:text-3xl text-2xl mt-20">
                         HOME: Ignite Your Entrepreneurial Ambition with IziKemp
