@@ -32,15 +32,9 @@ const ClientPortal = () => {
         </div>
         <Link
           href="/login"
-          className="absolute bottom-28  lg:left-[500px] left-4 flex justify-center lg:w-60 w-40 text-center lg:p-4 p-2 lg:text-lg text-sm hover:duration-700 bg-btnColor text-white hover:bg-hoverBtnColor rounded-full"
+          className="absolute bottom-20  lg:left-[500px] left-4 flex justify-center lg:w-60 w-40 text-center lg:p-4 p-2 lg:text-lg text-sm hover:duration-700 bg-btnColor text-white hover:bg-hoverBtnColor rounded-full"
         >
           {t("login")}
-        </Link>
-        <Link
-          href="/sign-up"
-          className="absolute bottom-8  lg:left-[500px] left-4 flex justify-center lg:w-60 w-40 text-center lg:p-4 p-2 lg:text-lg text-sm hover:duration-700 bg-btnColor text-white hover:bg-hoverBtnColor rounded-full"
-        >
-          {t("Create Account")}
         </Link>
       </div>
     </div>

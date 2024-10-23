@@ -24,7 +24,7 @@ const SimulationCard = () => {
                         funding process, providing tailored
                         solutions that give you the edge in
                     </p>
-                    <p className="text-blue-500 lg:w-96 w-full my-2">• securing finances.</p>
+                    <p className="text-white lg:w-96 w-full my-2">• securing finances.</p>
                 </div>
                 <div className="relative lg:w-[50%] w-full h-full">
                     <Image
