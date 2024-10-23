@@ -42,12 +42,7 @@ const WorkSection = () => {
         </div>
         <div className="border-2 border-green-500 p-1 rounded-md my-4">
           <p className="text-headingColor text-xs md:text-lg my-2">
-            {t("sentence19")}
-          </p>
-        </div>
-        <div className="border-2 border-indigo-500 p-1 rounded-md my-4">
-          <p className="text-headingColor text-xs md:text-lg my-2">
-            {t("sentence20")}
+            {t("sentence19")} {t("sentence20")}
           </p>
         </div>
       </div>
