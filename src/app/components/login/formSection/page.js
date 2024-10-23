@@ -40,7 +40,7 @@ const FormSection = () => {
   };
 
   return (
-    <div className="md:w-1/2 w-full bg-lightCard  md:p-16 p-10">
+    <div className="w-full bg-lightCard  md:p-16 p-10">
       <Link href="/">
         <Image
           className="w-20 h-14 mb-4"
@@ -71,7 +71,7 @@ const FormSection = () => {
           <input
             type="email"
             placeholder="john@doe.com"
-            className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
+            className="text-sm outline-none w-full border-2 rounded p-1.5 mt-1"
             {...register("email", {
               required: "Email is required",
               pattern: {
@@ -91,7 +91,7 @@ const FormSection = () => {
           <input
             type="password"
             placeholder="******"
-            className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
+            className="text-sm outline-none w-full border-2 rounded p-1.5 mt-1"
             {...register("password", {
               required: "Password is required",
               minLength: {
@@ -109,7 +109,7 @@ const FormSection = () => {
           <button
             type="submit"
             disabled={loading} // Disable button when loading
-            className={`text-black border-2 w-72 p-2 my-8 rounded-lg border-black duration-700 ${
+            className={`text-black border-2 w-full p-2 my-8 rounded-lg border-black duration-700 ${
               loading ? "bg-gray-400" : "hover:text-white hover:bg-black"
             }`}
           >

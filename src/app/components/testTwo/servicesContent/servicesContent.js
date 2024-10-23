@@ -9,24 +9,24 @@ const ChooseSection = () => {
   // Data for the services
   const services = [
     {
-      title: "Financing Simulators",
-      description1: "At IziKemp, we offer a comprehensive range of simulators tailored to precisely meet your financial needs. Whether you're considering a bank loan...",
-      description2: "Speed and Efficiency: Obtain your results instantly to make informed decisions.",
-      description3: "Personalized Recommendations: Our reports include advice tailored to your unique situation to maximize your chances of success.",
+      title: t("sentence34"), 
+      description1:t("sentence35"),
+      description2: t("sentence36"),
+      description3: t("sentence37"),
       link: "/calculator",
     },
     {
-        title: "Financing Simulators",
-        description1: "At IziKemp, we offer a comprehensive range of simulators tailored to precisely meet your financial needs. Whether you're considering a bank loan...",
-        description2: "Speed and Efficiency: Obtain your results instantly to make informed decisions.",
-        description3: "Personalized Recommendations: Our reports include advice tailored to your unique situation to maximize your chances of success.",
+        title: t("sentence38"),
+        description1: t("sentence39"),
+        description2: t("sentence36"),
+        description3: t("sentence37"),
         link: "/calculator",
     },
     {
-        title: "Financing Simulators",
-        description1: "At IziKemp, we offer a comprehensive range of simulators tailored to precisely meet your financial needs. Whether you're considering a bank loan...",
-        description2: "Speed and Efficiency: Obtain your results instantly to make informed decisions.",
-        description3: "Personalized Recommendations: Our reports include advice tailored to your unique situation to maximize your chances of success.",
+        title: t("sentence42"),
+        description1: t("sentence39"),
+        description2: t("sentence36"),
+        description3: t("sentence37"),
         link: "/calculator",
     },
   ];
@@ -35,7 +35,7 @@ const ChooseSection = () => {
     <div className="lg:flex items-center block my-1 bg-gradient-to-tr from-indigo-950 via-indigo-900 to-violet-950">
       <div className="w-full lg:w-[40%] h-full text-center p-2 text-white">
         <p className="lg:text-5xl text-2xl md:text-4xl font-bold my-6 w-60 mx-auto">
-          Services
+        {t("sentence12")}
         </p>
       </div>
       <div className="w-full lg:w-[60%] bg-lightCard p-10">

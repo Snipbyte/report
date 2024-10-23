@@ -35,7 +35,7 @@ const FormSection = () => {
   };
 
   return (
-    <div className="md:w-1/2 w-full bg-lightCard md:p-16 p-10">
+    <div className=" w-full bg-lightCard md:p-16 p-10">
       <Link href="/">
         <Image
           className="w-20 h-14 mb-4"
@@ -51,11 +51,7 @@ const FormSection = () => {
       {/* <p className="text-sm text-paraColor mt-1">
         Sign up to start your 30 days free trial
       </p> */}
-      <div className="flex items-center gap-2">
-        <div className="border mt-8 w-32"></div>
-        <p className="text-sm mt-7 text-paraColor">or</p>
-        <div className="border mt-8 w-32"></div>
-      </div>
+    
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* First Name Input */}
@@ -65,7 +61,7 @@ const FormSection = () => {
           <input
             type="text"
             placeholder="John"
-            className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
+            className="text-sm outline-none w-full border-2 rounded p-1.5 mt-1"
             {...register("firstname", {
               required: "First name is required",
               minLength: {
@@ -86,7 +82,7 @@ const FormSection = () => {
           <input
             type="text"
             placeholder="Doe"
-            className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
+            className="text-sm outline-none w-full border-2 rounded p-1.5 mt-1"
             {...register("lastname", {
               required: "Last name is required",
               minLength: {
@@ -107,7 +103,7 @@ const FormSection = () => {
           <input
             type="email"
             placeholder="john@doe.com"
-            className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
+            className="text-sm outline-none w-full border-2 rounded p-1.5 mt-1"
             {...register("email", {
               required: "Email is required",
               pattern: {
@@ -128,7 +124,7 @@ const FormSection = () => {
           <input
             type="password"
             placeholder="******"
-            className="text-sm outline-none w-72 border-2 rounded p-1.5 mt-1"
+            className="text-sm outline-none w-full border-2 rounded p-1.5 mt-1"
             {...register("password", {
               required: "Password is required",
               minLength: {
@@ -146,7 +142,7 @@ const FormSection = () => {
         <div className="mt-5">
           <button
             type="submit"
-            className={`text-black border-2 w-72 my-8 p-2 rounded-lg border-black duration-700 ${
+            className={`text-black border-2 w-full my-8 p-2 rounded-lg border-black duration-700 ${
               isSubmitting ? "bg-gray-400 cursor-not-allowed" : "hover:text-white hover:bg-black"
             }`}
             disabled={isSubmitting}

@@ -93,7 +93,8 @@ i18n.use(initReactI18next).init({
         calculator1: "Calculate Your Payment on any loan.",
         bsnDesc:
           "Own a small business? Chances are you face difficult decisions about how to allocate scare resources every day. Use Bankrate's small business calculators to fine tune your strategy.",
-        loginText: "Keep your online business organized.",
+        loginText:
+          "Empowering Your Vision with Tailored Business Plans for Success.",
         noAccount: "Don't have an account?",
         extraTxt:
           "Basement is Supringly hand for keeping my buisness stuff in one place.",
@@ -106,9 +107,9 @@ i18n.use(initReactI18next).init({
         contact: "contact",
         calcualte: "calculator",
         adminLogin: "Admin Login",
-        stayInform:"Stay Informed and Inspired",
+        stayInform: "Stay Informed and Inspired",
         login: "login",
-        
+
         signup: "signup",
         calculators: "calculators",
         fixed: "Fixed Costs",
@@ -116,8 +117,9 @@ i18n.use(initReactI18next).init({
         about: "about",
 
         // FormDetail translations
-        your3:"Access your secure client portal to review your reports and track your progress. With IziKemp, all your potential is at your fingertips.",
-        your2:"Your Personal Gateway to Success",
+        your3:
+          "Access your secure client portal to review your reports and track your progress. With IziKemp, all your potential is at your fingertips.",
+        your2: "Your Personal Gateway to Success",
         breakeven: "Break-Even Calculator",
         businessValuation: "Business Valuation Calculator",
         cashflow: "Cash Flow Calculator",
@@ -151,7 +153,7 @@ i18n.use(initReactI18next).init({
         useOfFunds: "Use of Funds",
         dashboard: "dashboard",
 
-        subscribed:"subscribed users",
+        subscribed: "subscribed users",
         generate: "Generate Business Plan Report",
         // generate report
         companyName: "Company Name",
@@ -198,6 +200,82 @@ i18n.use(initReactI18next).init({
         viewAll: "View All",
         noBusinessPlansFound: "No business plans found.",
         sales: "Sales",
+
+        // forhomepage
+        sentence1: "Ignite Your Entrepreneurial Ambition with IziKemp",
+        sentence2:
+          "Turn your entrepreneurial dream into reality with the help of our smart tools and dedicated experts.",
+        sentence3:
+          "At IziKemp, we simplify the funding process, providing tailored solutions that give you the edge in",
+        sentence4: "securing finances",
+        sentence5: "Receive detailed analyses and specific recommendations",
+        sentence6: "project with just a few clicks.",
+        sentence7:
+          "Advanced Scoring: Instantly evaluate your funding potential using our algorithms based on",
+        sentence8: "bank and investor criteria.",
+        sentence9:
+          "Free Consultation: Benefit from a complimentary session with our experts to refine your financial strategy.",
+        sentence10: "Why Choose IziKemp?",
+        sentence11:
+          "Start your personalized simulation today and pave the way to success!",
+        sentence12: "Our Services",
+        sentence13: "FINANCING SIMULATORS",
+        sentence14: "BUSINESS PLAN GENERATOR",
+        sentence15: "EXPERT GUIDANCE",
+        sentence16:
+          "• Choose Your Simulator: Access a tool specifically designed for your financing needs.",
+        sentence17:
+          "• Enter Your Data: Fill out essential information for a precise analysis.",
+        sentence18:
+          "• Instantly Receive Your Personalized Report: Review your eligibility score and carefully crafted, tailored recommendations.",
+        sentence19:
+          "• Benefit from a Consultation with Our Experts: Optimize your financing strategy with professional,",
+        sentence20: "• free advice.",
+        sentence21: "Simple and Effective Process",
+        sentence22:
+          "Thanks to IziKemp, I secured a crucial loan for my business expansion. The personalized recommendations and expert assistance made all the difference!",
+        sentence23: "— Alexia M., Successful Entrepreneur",
+        sentence24:
+          "I always hesitated to seek funding, but with IziKemp, the process became clear and structured. Receiving an immediate and accurate report truly reassured me!",
+        sentence25: "— Nadia T., Business Creator",
+        sentence26:
+          "IziKemp transformed what I thought would be a daunting funding journey into a straightforward and tailored process. Their expert guidance was invaluable in helping me get the right loan for my restaurant's renovation.",
+        sentence27: "— Ousmane L., Restaurant Owner",
+        sentence28:
+          "The clarity and precision of IziKemp's approach gave me the confidence to apply for funding. With their support, I was able to finance the development of my tech startup seamlessly!",
+        sentence29: "— Marie-Paul R., Tech Innovator",
+        sentence30:
+          "Navigating the complexities of business finance seemed overwhelming until I found IziKemp. Their comprehensive report and customized advice were exactly what I needed to secure the backing for my boutique.",
+        sentence31: "— Sarah K., Boutique Owner",
+        sentence32:
+          "Thanks to IziKemp, I didn't just receive a loan; I received peace of mind and a clear path forward. Their dedication to understanding my business needs was exceptional!",
+        sentence33: "— David H., Small Business Owner",
+        sentence34: "Financing Simulators",
+        sentence35:
+          "At IziKemp, we offer a comprehensive range of simulators tailored to precisely meet your financial needs. Whether you're considering a bank loan...",
+        sentence36:
+          "Speed and Efficiency: Obtain your results instantly to make informed decisions.",
+        sentence37:
+          "Personalized Recommendations: Our reports include advice tailored to your unique situation to maximize your chances of success.",
+        sentence38: "Financing Simulators",
+        sentence39:
+          "At IziKemp, we offer a comprehensive range of simulators tailored to precisely meet your financial needs. Whether you're considering a bank loan...",
+        sentence40:
+          "Speed and Efficiency: Obtain your results instantly to make informed decisions.",
+        sentence41:
+          "Personalized Recommendations: Our reports include advice tailored to your unique situation to maximize your chances of success.",
+        sentence42: "Financing Simulators",
+        sentence43:
+          "At IziKemp, we offer a comprehensive range of simulators tailored to precisely meet your financial needs. Whether you're considering a bank loan...",
+        sentence44:
+          "Speed and Efficiency: Obtain your results instantly to make informed decisions.",
+        sentence45:
+          "Personalized Recommendations: Our reports include advice tailored to your unique situation to maximize your chances of success.",
+        sentence46: "Services",
+        sentence47: "We’re Here to Help",
+        sentence48:
+          "For any inquiries or specific issues, feel free to contact us via our form or on social media. Join our dynamic community of successful entrepreneurs!",
+        sentence49: "Contact",
 
         // for payment
         payment: {
@@ -269,9 +347,9 @@ i18n.use(initReactI18next).init({
         personalizedReportsfinal:
           "- Personalized Reports: Receive detailed analyses and specific recommendations tailored to your project with just a few clicks.",
         advancedScoringfinal:
-          "- Advanced Scoring: Instantly evaluate your funding potential using our algorithms based on bank and investor criteria.",
+          "Advanced Scoring: Instantly evaluate your funding potential using our algorithms based on bank and investor criteria.",
         freeConsultationfinal:
-          "- Free Consultation: Benefit from a complimentary session with our experts to refine your financial strategy.",
+          "Free Consultation: Benefit from a complimentary session with our experts to refine your financial strategy.",
         startSimulationTodayfinal:
           "Start your personalized simulation today and pave the way to success!",
         ourServicesfinal: "Our Services",
@@ -293,7 +371,7 @@ i18n.use(initReactI18next).init({
         meetOurTeamfinal:
           "Meet our team of specialists who will support you at every step of your entrepreneurial journey.",
         freeConsultationGuidancefinal:
-          "- Free Consultation: Each entrepreneur gains a complimentary initial session to uncover the best financing strategies.",
+          "Free Consultation: Each entrepreneur gains a complimentary initial session to uncover the best financing strategies.",
         tailoredExpertisefinal:
           "- Tailored Expertise: Enjoy bespoke advice from our banking and insurance experts for every crucial financial decision.",
         howItWorksfinal: "How It Works",
@@ -320,7 +398,8 @@ i18n.use(initReactI18next).init({
         blogNewsfinal: "Blog/News",
         stayInformedInspiredfinal: "Stay Informed and Inspired",
         aboutUsfinal: "About Us",
-        stay2:"Discover the latest in funding trends, entrepreneurial tips, and updates on our tools. Our blog is designed to provide you with the information and motivation needed at every stage of your entrepreneurial journey.",
+        stay2:
+          "Discover the latest in funding trends, entrepreneurial tips, and updates on our tools. Our blog is designed to provide you with the information and motivation needed at every stage of your entrepreneurial journey.",
         contactfinal: "Contact",
         clientPortalfinal: "Client Portal",
       },
@@ -423,21 +502,22 @@ i18n.use(initReactI18next).init({
         calcualte: "calculatrice",
         adminLogin: "Connexion administrateur",
         contact: "contact",
-        stayInform:"Restez informé et inspiré",
+        stayInform: "Restez informé et inspiré",
         login: "connexion",
         signup: "inscription",
         calculators: "calculatrices",
         fixed: "Coûts fixes",
         selectCal: "Sélectionner la calculatrice.",
-        about: "propos",
+        about: "A propos de nous",
         caldes:
           "Avant de demander un prêt pour petite entreprise, assurez-vous de savoir combien de financement vous pouvez vous permettre. La calculatrice de prêt commercial de Bankrate peut vous aider à estimer le coût de votre prêt et combien vous paierez chaque mois. Il vous suffit d'entrer le montant du prêt, la durée du prêt et le taux d'intérêt.",
         caltxt: "Calculatrice de prêt commercial et de taux d'intérêt",
         home: " accueil",
 
         // FormDetail translations
-        your3:"Accédez à votre portail client sécurisé pour consulter vos rapports et suivre vos progrès. Avec IziKemp, tout votre potentiel est à portée de main.",
-        your2:"Votre passerelle personnelle vers le succès",
+        your3:
+          "Accédez à votre portail client sécurisé pour consulter vos rapports et suivre vos progrès. Avec IziKemp, tout votre potentiel est à portée de main.",
+        your2: "Votre passerelle personnelle vers le succès",
         breakeven: "Calculateur de seuil de rentabilité",
         businessValuation: "Calculateur d'évaluation d'entreprise",
         cashflow: "Calculateur de flux de trésorerie",
@@ -470,14 +550,14 @@ i18n.use(initReactI18next).init({
         requestedAmount: "Montant demandé",
         useOfFunds: "Utilisation des fonds",
         dashboard: "tableau de bord",
-        subscribed:"utilisateurs abonnés",
+        subscribed: "utilisateurs abonnés",
         generate: "Générer un rapport de plan d'affaires",
         // generate report
         companyName: "Nom de l'entreprise",
         industrySector: "Secteur d'industrie",
         dateOfEstablishment: "Date de création",
         location: "Emplacement",
-        learnMore :"En savoir plus",
+        learnMore: "En savoir plus",
         unitPrice: "Prix unitaire",
         expectedYearlySalesQuantity: "Quantité de ventes annuelles prévue",
         estimatedSalesGrowth: "Croissance des ventes estimée",
@@ -559,7 +639,68 @@ i18n.use(initReactI18next).init({
         payment: "Paiement",
         history: "Histoire",
         users: "Utilisateurs",
-
+        //  for homepage
+        sentence1: "Allumez votre ambition entrepreneuriale avec IziKemp",
+        sentence2:
+          "Transformez votre rêve entrepreneurial en réalité grâce à nos outils intelligents et à nos experts dédiés.",
+        sentence3:
+          "Chez IziKemp, nous simplifions le processus de financement en fournissant des solutions sur mesure qui vous donnent un avantage dans",
+        sentence4: "l'obtention de financements",
+        sentence5:
+          "Recevez des analyses détaillées et des recommandations spécifiques",
+        sentence6: "projet en quelques clics seulement.",
+        sentence7:
+          "- Scoring avancé : Évaluez instantanément votre potentiel de financement grâce à nos algorithmes basés sur",
+        sentence8: "les critères bancaires et d'investisseurs.",
+        sentence9:
+          "- Consultation gratuite : Profitez d'une séance gratuite avec nos experts pour affiner votre stratégie financière.",
+        sentence10: "Pourquoi choisir IziKemp ?",
+        sentence11:
+          "Commencez votre simulation personnalisée aujourd'hui et ouvrez la voie au succès !",
+        sentence12: "Nos services",
+        sentence13: "SIMULATEURS DE FINANCEMENT",
+        sentence14: "GÉNÉRATEUR DE PLAN D'AFFAIRES",
+        sentence15: "CONSEILS D'EXPERTS",
+        sentence16:
+          "• Choisissez votre simulateur : Accédez à un outil spécifiquement conçu pour vos besoins de financement.",
+        sentence17:
+          "• Saisissez vos données : Remplissez les informations essentielles pour une analyse précise.",
+        sentence18:
+          "• Recevez instantanément votre rapport personnalisé : Consultez votre score d'éligibilité et des recommandations soigneusement élaborées et sur mesure.",
+        sentence19:
+          "• Profitez d'une consultation avec nos experts : Optimisez votre stratégie de financement avec des conseils professionnels,",
+        sentence20: "• gratuits.",
+        sentence21: "Processus simple et efficace",
+        sentence22:
+          "Grâce à IziKemp, j'ai obtenu un prêt crucial pour l'expansion de mon entreprise. Les recommandations personnalisées et l'assistance experte ont fait toute la différence !",
+        sentence23: "— Alexia M., Entrepreneur à succès",
+        sentence24:
+          "J'ai toujours hésité à demander un financement, mais avec IziKemp, le processus est devenu clair et structuré. Recevoir un rapport immédiat et précis m'a vraiment rassuré !",
+        sentence25: "— Nadia T., Créatrice d'entreprise",
+        sentence26:
+          "IziKemp a transformé ce que je pensais être un parcours de financement intimidant en un processus simple et sur mesure. Leurs conseils d'experts ont été inestimables pour m'aider à obtenir le bon prêt pour la rénovation de mon restaurant.",
+        sentence27: "— Ousmane L., Propriétaire de restaurant",
+        sentence28:
+          "La clarté et la précision de l'approche d'IziKemp m'ont donné la confiance nécessaire pour demander un financement. Grâce à leur soutien, j'ai pu financer le développement de ma startup tech sans accroc !",
+        sentence29: "— Marie-Paul R., Innovatrice technologique",
+        sentence30:
+          "Naviguer dans les complexités du financement d'entreprise semblait accablant jusqu'à ce que je trouve IziKemp. Leur rapport complet et leurs conseils personnalisés étaient exactement ce dont j'avais besoin pour obtenir le soutien nécessaire pour ma boutique.",
+        sentence31: "— Sarah K., Propriétaire de boutique",
+        sentence32:
+          "Grâce à IziKemp, je n'ai pas seulement obtenu un prêt ; j'ai trouvé la tranquillité d'esprit et un chemin clair à suivre. Leur dévouement à comprendre les besoins de mon entreprise était exceptionnel !",
+        sentence33: "— David H., Propriétaire de petite entreprise",
+        sentence34: "Simulateurs de financement",
+        sentence35:
+          "Chez IziKemp, nous offrons une gamme complète de simulateurs conçus pour répondre précisément à vos besoins financiers. Que vous envisagiez un prêt bancaire...",
+        sentence36:
+          "Rapidité et efficacité : Obtenez vos résultats instantanément pour prendre des décisions éclairées.",
+        sentence37:
+          "Recommandations personnalisées : Nos rapports incluent des conseils adaptés à votre situation unique pour maximiser vos chances de succès.",
+        sentence38: "Simulateurs de financement",
+        sentence39:
+          "Chez IziKemp, nous offrons une gamme complète de simulateurs conçus pour répondre précisément à vos besoins financiers. Que vous envisagiez un prêt bancaire...",
+        sentence40:
+          "Recommandations personnalisées : Nos rapports incluent des conseils adaptés à votre situation unique pour maximiser vos chances de succès",
         // for footer
         inquiries:
           "Pour toute demande, contactez-nous à [email/contact]. Suivez-nous sur [réseaux sociaux]. Rejoignez notre communauté d'entrepreneurs réussis!",
@@ -611,7 +752,7 @@ i18n.use(initReactI18next).init({
         simplificationPrecisionfinal:
           "- Simplification et précision : Obtenez une vue d'ensemble financière complète en quelques clics.",
         insightfulAnalysisfinal:
-          "- Analyse perspicace : Recevez des recommandations stratégiques pour renforcer vos propositions financières.",
+          "Analyse perspicace : Recevez des recommandations stratégiques pour renforcer vos propositions financières.",
         expertGuidancefinal: "Conseils d'experts",
         meetOurTeamfinal:
           "Rencontrez notre équipe de spécialistes qui vous accompagneront à chaque étape de votre parcours entrepreneurial.",
@@ -644,7 +785,8 @@ i18n.use(initReactI18next).init({
         blogNewsfinal: "Blog/Actualités",
         stayInformedInspiredfinal: "Restez informé et inspiré",
         aboutUsfinal: "À propos de nous",
-        stay2:"Découvrez les dernières tendances en matière de financement, des conseils entrepreneuriaux et des mises à jour sur nos outils. Notre blog est conçu pour vous fournir les informations et la motivation nécessaires à chaque étape de votre parcours entrepreneurial.",
+        stay2:
+          "Découvrez les dernières tendances en matière de financement, des conseils entrepreneuriaux et des mises à jour sur nos outils. Notre blog est conçu pour vous fournir les informations et la motivation nécessaires à chaque étape de votre parcours entrepreneurial.",
         contactfinal: "Contact",
         clientPortalfinal: "Espace client",
       },

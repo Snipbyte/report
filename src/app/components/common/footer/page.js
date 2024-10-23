@@ -74,9 +74,9 @@ const Footer = () => {
               <button
                 type="submit"
                 className="ml-2 text-white bg-blue-600 p-2 rounded"
-                 disabled={loading}
+                disabled={loading}
               >
-                 <FaArrowRight />
+                <FaArrowRight />
               </button>
             </div>
           </form>
@@ -111,10 +111,7 @@ const Footer = () => {
           <Link className="text-gray-300 my-4 lg:my-6 block" href="/contact">
             {t("contact")}
           </Link>
-          <Link
-            className="text-gray-300 my-4 lg:my-6 block"
-            href="/registration-form"
-          >
+          <Link className="text-gray-300 my-4 lg:my-6 block" href="/signup">
             {t("register")}
           </Link>
         </div>
