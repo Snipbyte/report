@@ -91,6 +91,7 @@ i18n.use(initReactI18next).init({
         calculator3: "Quick Ratio Calculator",
         calculator2: "Current Ratio Calculator",
         calculator1: "Calculate Your Payment on any loan.",
+        forgetPass: "Forget Password",
         bsnDesc:
           "Own a small business? Chances are you face difficult decisions about how to allocate scare resources every day. Use Bankrate's small business calculators to fine tune your strategy.",
         loginText:
@@ -208,7 +209,8 @@ i18n.use(initReactI18next).init({
         sentence3:
           "At IziKemp, we simplify the funding process, providing tailored solutions that give you the edge in",
         sentence4: "securing finances",
-        sentence5: "Personalized Reports: Receive detailed analyses and specific recommendations tailored to your project with just a few clicks.",
+        sentence5:
+          "Personalized Reports: Receive detailed analyses and specific recommendations tailored to your project with just a few clicks.",
         sentence6: "project with just a few clicks.",
         sentence7:
           "Advanced Scoring: Instantly evaluate your funding potential using our algorithms based on bank and investor criteria.",
@@ -229,8 +231,8 @@ i18n.use(initReactI18next).init({
         sentence18:
           "• Instantly Receive Your Personalized Report: Review your eligibility score and carefully crafted, tailored recommendations.",
         sentence19:
-          "• Benefit from a Consultation with Our Experts: Optimize your financing strategy with professional,",
-        sentence20: "• free advice.",
+          "• Benefit from a Consultation with Our Experts: Optimize your financing strategy with professional",
+        sentence20: "free advice.",
         sentence21: "Simple and Effective Process",
         sentence22:
           "Thanks to IziKemp, I secured a crucial loan for my business expansion. The personalized recommendations and expert assistance made all the difference!",
@@ -396,6 +398,7 @@ i18n.use(initReactI18next).init({
         areConsultationsFreefinal: "Are the consultations really free?",
         howIsInformationProtectedfinal: "How is my information protected?",
         blogNewsfinal: "Blog/News",
+        stayInformed: "Restez informé des nouveautés",
         stayInformedInspiredfinal: "Stay Informed and Inspired",
         aboutUsfinal: "About Us",
         stay2:
@@ -491,6 +494,7 @@ i18n.use(initReactI18next).init({
         calculator3: "Calculateur de ratio de liquidité immédiate.",
         calculator2: "Calculateur de ratio de liquidité générale.",
         calculator1: "Calculez votre paiement sur n'importe quel prêt.",
+        forgetPass: "Mot de passe oublié",
         bsnDesc:
           "Vous avez une petite entreprise ? Il y a de fortes chances que vous soyez confronté à des décisions difficiles sur la manière d'allouer des ressources limitées chaque jour. Utilisez les calculatrices pour petites entreprises de Bankrate pour affiner votre stratégie.",
         loginText: "Gardez votre entreprise en ligne organisée.",
@@ -668,8 +672,8 @@ i18n.use(initReactI18next).init({
         sentence18:
           "• Recevez instantanément votre rapport personnalisé : Consultez votre score d'éligibilité et des recommandations soigneusement élaborées et sur mesure.",
         sentence19:
-          "• Profitez d'une consultation avec nos experts : Optimisez votre stratégie de financement avec des conseils professionnels,",
-        sentence20: "• gratuits.",
+          "• Profitez d'une consultation avec nos experts : Optimisez votre stratégie de financement avec des conseils professionnels",
+        sentence20: " gratuits.",
         sentence21: "Processus simple et efficace",
         sentence22:
           "Grâce à IziKemp, j'ai obtenu un prêt crucial pour l'expansion de mon entreprise. Les recommandations personnalisées et l'assistance experte ont fait toute la différence !",
@@ -701,15 +705,14 @@ i18n.use(initReactI18next).init({
           "Créez un plan d'affaires solide avec notre générateur convivial qui génère instantanément des projections financières professionnelles.",
         sentence40:
           "Simplification et Précision : Obtenez une vue d'ensemble financière complète en quelques clics.",
-          sentence41:
+        sentence41:
           "Analyse Approfondie : Recevez des recommandations stratégiques pour renforcer vos propositions financières.",
-          sentence42:
-          "Conseils d'Experts",
-          sentence43:
+        sentence42: "Conseils d'Experts",
+        sentence43:
           "Rencontrez notre équipe de spécialistes qui vous accompagnera à chaque étape de votre parcours entrepreneurial.",
-          sentence44:
+        sentence44:
           "Consultation Gratuite : Chaque entrepreneur bénéficie d'une première séance offerte pour découvrir les meilleures stratégies de financement.",
-          sentence45:
+        sentence45:
           "Expertise Sur Mesure : Bénéficiez de conseils personnalisés de la part de nos experts en banque et en assurance pour chaque décision financière cruciale.",
         // for footer
         inquiries:
@@ -793,6 +796,7 @@ i18n.use(initReactI18next).init({
         howIsInformationProtectedfinal:
           "Comment mes informations sont-elles protégées ?",
         blogNewsfinal: "Blog/Actualités",
+        stayInformed: "Stay informed of news",
         stayInformedInspiredfinal: "Restez informé et inspiré",
         aboutUsfinal: "À propos de nous",
         stay2:

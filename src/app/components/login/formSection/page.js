@@ -9,38 +9,65 @@ import { useTranslation } from "react-i18next";
 
 const FormSection = () => {
   const { t } = useTranslation();
-
-  // Manage form state and errors
   const {
     register,
     handleSubmit,
     formState: { errors },
+    getValues, // Get values from the form
   } = useForm();
   const [loading, setLoading] = useState(false);
+  const [forgotPasswordLoading, setForgotPasswordLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
-  // Handle form submission
+  // Handle login form submission
   const onSubmit = async (data) => {
-    setLoading(true); // Set loading to true
+    setLoading(true);
     try {
       const response = await axios.post("/api/user/login", data);
       alert(response.data.message);
-      setLoading(false);
       await localStorage.setItem("token", response.data.token);
-
-   
-
-    // Now navigate to the dashboard
-    router.push("/user/dashboard");
+      router.push("/user/dashboard");
     } catch (error) {
       console.error("Login error:", error);
       alert(error.response?.data?.message || "Login failed");
+    } finally {
       setLoading(false);
     }
   };
 
+  // Handle forgot password submission
+  const handleForgotPassword = async () => {
+    const email = getValues("email"); // Use getValues to get the email from the form
+    if (!email) {
+      setErrorMessage("Please enter your email"); // Set error message if email is empty
+      return;
+    }
+    setErrorMessage(""); // Clear any previous error messages
+    setForgotPasswordLoading(true);
+    setMessage("");
+    try {
+      const response = await axios.post("/api/user/forget-password", { email });
+      setMessage(
+        "An email has been sent to you with a random password. Use that password to login."
+      );
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
+    } catch (error) {
+      console.error("Forgot password error:", error);
+      setMessage(
+        error.response?.data?.message ||
+          "Failed to send email. Please try again."
+      );
+    } finally {
+      setForgotPasswordLoading(false);
+    }
+  };
+
   return (
-    <div className="w-full bg-lightCard  md:p-16 p-10">
+    <div className="w-full bg-lightCard md:p-16 p-10">
       <Link href="/">
         <Image
           className="w-20 h-14 mb-4"
@@ -50,20 +77,7 @@ const FormSection = () => {
           alt="Logo"
         />
       </Link>
-      <h2 className="text-3xl font-bold">
-     
-      {t("loginText")}
-      </h2>
-      {/* <p className="text-sm text-paraColor mt-1">
-        Sign up to start your 30 days free trial
-      </p> */}
-
-      <div className="flex items-center gap-2">
-        <div className="border mt-8 w-32"></div>
-        <p className="text-sm mt-7 text-paraColor">or</p>
-        <div className="border mt-8 w-32"></div>
-      </div>
-
+      <h2 className="text-3xl font-bold">{t("loginText")}</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mt-3">
           <label className="text-sm">Email</label>
@@ -108,21 +122,35 @@ const FormSection = () => {
         <div className="mt-5">
           <button
             type="submit"
-            disabled={loading} // Disable button when loading
+            disabled={loading}
             className={`text-black border-2 w-full p-2 my-8 rounded-lg border-black duration-700 ${
               loading ? "bg-gray-400" : "hover:text-white hover:bg-black"
             }`}
           >
-            {loading ? "Please wait..." : t('login')}
-           
+            {loading ? "Please wait..." : t("login")}
           </button>
         </div>
       </form>
-
+      <button
+        onClick={handleForgotPassword} // Call the new function directly
+        className={`text-black border-2 w-full p-2 my-2 rounded-lg border-black duration-700 ${
+          forgotPasswordLoading
+            ? "bg-gray-400"
+            : "hover:text-white hover:bg-black"
+        }`}
+        disabled={forgotPasswordLoading}
+      >
+        {forgotPasswordLoading ? "Sending..." : t("forgetPass")}
+      </button>
+      {message && <p className="text-green-600 text-sm">{message}</p>}
+      {errorMessage && (
+        <p className="text-red-600 text-sm">{errorMessage}</p>
+      )}{" "}
+      {/* Display the error message */}
       <Link href="signup" className="text-sm my-2 text-paraColor">
-      {t("noAccount")}{" "}
+        {t("noAccount")}{" "}
         <span className="text-btnColor underline hover:text-hoverBtnColor">
-        {t("signup")}
+          {t("signup")}
         </span>
       </Link>
     </div>

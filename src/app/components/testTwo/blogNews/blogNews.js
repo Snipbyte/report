@@ -30,9 +30,15 @@ const BlogNews = () => {
           </p>
           <div className="w-full lg:w-80 h-0.5 bg-white"></div>
           <ul className="list-disc list-inside p-2 text-white w-full lg:w-96 text-base lg:text-lg mt-10 lg:mt-20">
-            <li>{t("stayInform")}</li>
+            <li>{t("stayInform")} </li>
             <li>{t("stay2")}</li>
           </ul>
+          <Link
+            href="/blogs"
+            className="lg:absolute  lg:bottom-5 left-4 lg:left-[500px] flex justify-center w-auto text-center p-3 lg:p-4 text-base lg:text-lg hover:duration-700 bg-btnColor text-white hover:bg-hoverBtnColor rounded-full"
+          >
+            {t("stayInformed")}
+          </Link>
         </div>
       </div>
     </div>
