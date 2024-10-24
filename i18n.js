@@ -398,7 +398,7 @@ i18n.use(initReactI18next).init({
         areConsultationsFreefinal: "Are the consultations really free?",
         howIsInformationProtectedfinal: "How is my information protected?",
         blogNewsfinal: "Blog/News",
-        stayInformed: "Restez informé des nouveautés",
+        stayInformed: "Stay informed of news",
         stayInformedInspiredfinal: "Stay Informed and Inspired",
         aboutUsfinal: "About Us",
         stay2:
@@ -796,7 +796,7 @@ i18n.use(initReactI18next).init({
         howIsInformationProtectedfinal:
           "Comment mes informations sont-elles protégées ?",
         blogNewsfinal: "Blog/Actualités",
-        stayInformed: "Stay informed of news",
+        stayInformed: "Restez informé des nouveautés",
         stayInformedInspiredfinal: "Restez informé et inspiré",
         aboutUsfinal: "À propos de nous",
         stay2:
