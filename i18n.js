@@ -408,7 +408,7 @@ i18n.use(initReactI18next).init({
        },
      },
     fr: {
-      translation: {
+       translation: {
         welcome: "Boostez Vos Chances de Financement avec IziKemp !",
         description:
           "Accédez à des simulateurs de pointe et générez instantanément des rapports personnalisés pour évaluer votre éligibilité auprès des banques et fonds d'investissement, avec l'accompagnement de nos experts.",
