@@ -65,7 +65,7 @@ const generateBusinessPlan = async (request) => {
     }
 
     const userPlan = user.currentPlan; 
-    const allowedPlans = ['intro', 'base', 'popular', 'enterprise'];
+    const allowedPlans = ['started', 'unlimited'];
 
     const {
       companyName,
@@ -134,6 +134,10 @@ const generateBusinessPlan = async (request) => {
         cashFlow,
         loanAmortization,
       });
+    }
+
+    if(user.businessPlans.length <= 3 && userPlan === 'started') {
+      
     }
 
     // Handle null plan or unrecognized plan - show only two years and first three fields

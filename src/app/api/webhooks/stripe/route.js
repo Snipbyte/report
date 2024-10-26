@@ -41,15 +41,11 @@ const helper = async (request) => {
             // Determine the plan based on the price ID
             for (const item of lineItems) {
               const priceId = item.price.id;
-              if (priceId === process.env.STRIPE_INTRO_PRICE_ID) {
-                currentPlan = 'intro';
-              } else if (priceId === process.env.STRIPE_BASE_PRICE_ID) {
-                currentPlan = 'base';
-              } else if (priceId === process.env.STRIPE_POPULAR_PRICE_ID) {
-                currentPlan = 'popular';
-              } else if (priceId === process.env.STRIPE_ENTERPRISE_PRICE_ID) {
-                currentPlan = 'enterprise';
-              } else {
+              if (priceId === process.env.STRIPE_STARTER_PRICE_ID) {
+                currentPlan = 'starter';
+              } else if (priceId === process.env.STRIPE_UNLIMITED_PRICE_ID) {
+                currentPlan = 'unlimited';
+              }  else {
                 throw new Error("Invalid priceId");
               }
             }
