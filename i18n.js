@@ -405,7 +405,7 @@ i18n.use(initReactI18next).init({
           "Discover the latest in funding trends, entrepreneurial tips, and updates on our tools. Our blog is designed to provide you with the information and motivation needed at every stage of your entrepreneurial journey.",
         contactfinal: "Contact",
         clientPortalfinal: "Client Portal",
-      },
+       },
     },
     fr: {
       translation: {
