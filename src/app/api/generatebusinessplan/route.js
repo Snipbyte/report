@@ -136,8 +136,11 @@ const generateBusinessPlan = async (request) => {
       });
     }
 
-    if(user.businessPlans.length <= 3 && userPlan === 'started') {
-      
+    if(user.businessPlans.length >= 3 && userPlan === 'started' || userPlan == null) {
+      return NextResponse.json(
+        { message: "You have reached the limit . Please update your Plan" },
+        { status: 403 }
+      );
     }
 
     // Handle null plan or unrecognized plan - show only two years and first three fields
