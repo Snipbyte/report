@@ -406,7 +406,7 @@ i18n.use(initReactI18next).init({
         contactfinal: "Contact",
         clientPortalfinal: "Client Portal",
        },
-    },
+     },
     fr: {
       translation: {
         welcome: "Boostez Vos Chances de Financement avec IziKemp !",
