@@ -75,6 +75,12 @@ const Header = () => {
               {t("dashboard")}
             </Link>
           )}
+           <Link
+            href="/landing-page"
+            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
+          >
+            {t("landingPage")}
+          </Link>
           <Link
             href="/"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
@@ -99,12 +105,18 @@ const Header = () => {
           >
             {t("Blogs")}
           </Link>
-        
+
           <Link
             href="/calculator"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
           >
             {t("calcualte")}
+          </Link>
+          <Link
+            href="/pricingplan"
+            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
+          >
+            {t("pricing")}
           </Link>
         </div>
         <div className="flex gap-4 items-center">
@@ -134,7 +146,7 @@ const Header = () => {
               >
                 {t("login")}
               </Link>
-            
+
               <Link
                 href="/signup"
                 className="text-center text-white border-2 w-full p-2 rounded-lg border-white hover:text-black hover:bg-white duration-700"
@@ -177,6 +189,12 @@ const Header = () => {
               {t("dashboard")}
             </Link>
           )}
+           <Link
+            href="/landing-page"
+            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white"
+          >
+            {t("landingPage")}
+          </Link>
           <Link
             href="/"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white"
@@ -200,6 +218,12 @@ const Header = () => {
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white"
           >
             {t("blogs")}
+          </Link>
+          <Link
+            href="/pricingplan"
+            className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white"
+          >
+            {t("pricing")}
           </Link>
         </div>
       </div>

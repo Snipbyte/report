@@ -6,6 +6,8 @@ i18n.use(initReactI18next).init({
   resources: {
     en: {
       translation: {
+        landingPage: "Landing page",
+        pricing: "Pricing",
         welcome: "Boost Your Funding Prospects with IziKemp!",
         description:
           "Access cutting-edge simulators and instantly generate personalized reports to assess your eligibility with banks and investment funds, accompanied by our expert guidance.",
@@ -405,10 +407,12 @@ i18n.use(initReactI18next).init({
           "Discover the latest in funding trends, entrepreneurial tips, and updates on our tools. Our blog is designed to provide you with the information and motivation needed at every stage of your entrepreneurial journey.",
         contactfinal: "Contact",
         clientPortalfinal: "Client Portal",
-       },
-     },
+      },
+    },
     fr: {
-       translation: {
+      translation: {
+        landingPage: "Page de destination",
+        pricing: "Prix",
         welcome: "Boostez Vos Chances de Financement avec IziKemp !",
         description:
           "Accédez à des simulateurs de pointe et générez instantanément des rapports personnalisés pour évaluer votre éligibilité auprès des banques et fonds d'investissement, avec l'accompagnement de nos experts.",
