@@ -65,7 +65,7 @@ const generateBusinessPlan = async (request) => {
     }
 
     const userPlan = user.currentPlan; 
-    const allowedPlans = ['started', 'unlimited'];
+    const allowedPlans = ['starter', 'unlimited'];
 
     const {
       companyName,
@@ -136,9 +136,9 @@ const generateBusinessPlan = async (request) => {
       });
     }
 
-    if(user.businessPlans.length >= 3 && userPlan === 'started' || userPlan == null) {
+    if(user.businessPlans.length >= 3 &&  userPlan == 'starter') {
       return NextResponse.json(
-        { message: "You have reached the limit . Please update your Plan" },
+        { message: "You have reached the limit of Starter Plan Generation . Please update your Plan" },
         { status: 403 }
       );
     }
