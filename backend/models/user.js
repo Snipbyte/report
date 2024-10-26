@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
   },
   currentPlan: {
     type: String,
-    enum: ['intro', 'base', 'popular', 'enterprise', null],
+    enum: ['starter', 'unlimited', null],
     default: null,
   },
   businessPlans: [{ type: mongoose.Schema.Types.ObjectId, ref: 'BusinessPlan' }],
