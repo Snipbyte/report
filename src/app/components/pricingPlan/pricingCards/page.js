@@ -11,7 +11,7 @@ const PricingCards = ({
   point4 = "Default point 4",
   point5 = "Default point 5",
   productlink = "/",
-  isPopular = false
+  isPopular = false,
 }) => {
   return (
     <div
@@ -22,7 +22,7 @@ const PricingCards = ({
       <p className="text-headingColor font-light">{des}</p>
       <div className="flex items-center gap-1">
         <h2 className="text-headingColor text-3xl font-bold my-2">{num}</h2>
-        <p className="text-sm text-paraColor">/Month</p>
+        {isPopular && <p className="text-sm text-paraColor">/Year</p>}
       </div>
       <p className="text-paraColor text-sm my-3">
         For most businesses that want to optimize web queries
