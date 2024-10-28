@@ -7,7 +7,7 @@ const PricingCards = ({
   num = "0",
   point1 = "Default point 1",
   point2 = "Default point 2",
- 
+
   productlink = "/",
   isPopular = false,
 }) => {
@@ -26,7 +26,7 @@ const PricingCards = ({
         For most businesses that want to optimize web queries
       </p>
       {/** Points Section */}
-      {[point1, point2, point3, point4, point5].map((point, index) => (
+      {[point1, point2].map((point, index) => (
         <div
           key={index}
           className={`flex items-center gap-1 my-4 ${
