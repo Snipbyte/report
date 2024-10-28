@@ -7,9 +7,7 @@ const PricingCards = ({
   num = "0",
   point1 = "Default point 1",
   point2 = "Default point 2",
-  point3 = "Default point 3",
-  point4 = "Default point 4",
-  point5 = "Default point 5",
+ 
   productlink = "/",
   isPopular = false,
 }) => {
