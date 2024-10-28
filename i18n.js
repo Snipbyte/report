@@ -322,7 +322,7 @@ i18n.use(initReactI18next).init({
 
         // for footer
         inquiries:
-          "For any inquiries, contact us at [email/contact]. Follow us on [social media]. Join our community of successful entrepreneurs!",
+          "For any inquiries, contact us at info@izikemp.com. Follow us on [social media]. Join our community of successful entrepreneurs!",
         newsletterSignup: "Newsletter Signup",
         newsletterEmailPlaceholder: "john@doe.com",
         agreeToPrivacy: "I agree to the",
@@ -720,7 +720,7 @@ i18n.use(initReactI18next).init({
           "Expertise Sur Mesure : Bénéficiez de conseils personnalisés de la part de nos experts en banque et en assurance pour chaque décision financière cruciale.",
         // for footer
         inquiries:
-          "Pour toute demande, contactez-nous à [email/contact]. Suivez-nous sur [réseaux sociaux]. Rejoignez notre communauté d'entrepreneurs réussis!",
+          "Pour toute demande, contactez-nous à info@izikemp.com. Suivez-nous sur [réseaux sociaux]. Rejoignez notre communauté d'entrepreneurs réussis!",
         newsletterSignup: "Inscription à la Newsletter",
         newsletterEmailPlaceholder: "john@doe.com",
         agreeToPrivacy: "J'accepte le",
