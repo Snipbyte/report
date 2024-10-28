@@ -22,9 +22,7 @@ const PricingCards = ({
         <h2 className="text-headingColor text-3xl font-bold my-2">{num}</h2>
         {isPopular && <p className="text-sm text-paraColor">/Year</p>}
       </div>
-      <p className="text-paraColor text-sm my-3">
-        For most businesses that want to optimize web queries
-      </p>
+     
       {/** Points Section */}
       {[point1, point2].map((point, index) => (
         <div

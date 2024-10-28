@@ -11,8 +11,8 @@ const PricingPlan = () => {
         <PricingCards
           num="€9.90"
           des="Starter"
-          point1="Report with the possibility of making up to three modifications"
-          point2="Access to an online consultant to assist you in presenting your application"
+          point1="You receive a report with the possibility of making up to three modifications"
+          point2="You also have access to an online consultant to assist you in presenting your application"
           isPopular={false}
           productlink={"https://buy.stripe.com/test_3cs3cgd4Ycnv9i05kr"}
         />
@@ -20,8 +20,8 @@ const PricingPlan = () => {
         <PricingCards
           num="€39.90"
           des="Unlimited"
-          point1="Access to unlimited modifications and reports"
-          point2="Receive three free consultations with our consultants"
+          point1="You have access to unlimited modifications and reports"
+          point2="You receive three free consultations with our consultants"
           isPopular={true}
           productlink={"https://buy.stripe.com/test_8wM5kogha2MV79S5ks"}
         />
