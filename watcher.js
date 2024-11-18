@@ -32,7 +32,7 @@ const restartPM2 = () => {
   });
 };
 
-// Watch for file additions in the directory
+ // Watch for file additions in the directory
 watcher.on('add', (path) => {
   console.log(`File added: ${path}`);
   restartPM2();
