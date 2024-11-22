@@ -1,11 +1,11 @@
 const chokidar = require('chokidar');
 const { exec } = require('child_process');
 
-// Directory to watch
-const watchDirectory = './public/blogthumbnails';
+// Directories to watch
+const watchDirectories = ['./public/blogthumbnails', './public/sectionimages'];
 
 // Initialize the watcher
-const watcher = chokidar.watch(watchDirectory, {
+const watcher = chokidar.watch(watchDirectories, {
   persistent: true,
   ignoreInitial: true,
   awaitWriteFinish: {
@@ -18,7 +18,7 @@ const watcher = chokidar.watch(watchDirectory, {
 
 // Function to restart the PM2 process
 const restartPM2 = () => {
-  console.log('New image detected. Restarting PM2 process...');
+  console.log('New file detected. Restarting PM2 process...');
   exec('pm2 restart report', (error, stdout, stderr) => { // Replace 'report' with your PM2 process name
     if (error) {
       console.error(`Error restarting PM2 process: ${error.message}`);
@@ -32,10 +32,10 @@ const restartPM2 = () => {
   });
 };
 
- // Watch for file additions in the directory
+// Watch for file additions in the directories
 watcher.on('add', (path) => {
   console.log(`File added: ${path}`);
   restartPM2();
 });
 
-console.log(`Watching for changes in: ${watchDirectory}`);
+console.log(`Watching for changes in: ${watchDirectories.join(', ')}`);
