@@ -318,6 +318,7 @@ i18n.use(initReactI18next).init({
         generateReport: "Generate Report",
         payment: "Payment",
         history: "History",
+        contentManage:"Content Management",
         users: "Users",
 
         // for footer
@@ -646,6 +647,7 @@ i18n.use(initReactI18next).init({
         generateReport: "Générer un rapport",
         payment: "Paiement",
         history: "Histoire",
+        contentManage:"Gestion de contenu",
         users: "Utilisateurs",
         //  for homepage
         sentence1: "Allumez votre ambition entrepreneuriale avec IziKemp",

@@ -125,6 +125,14 @@ const CustomSidebar = ({ userRole, toggle, pathname }) => {
             >
               {t("subscribed")}
             </MenuItem>
+            <MenuItem
+              icon={<FiAlertCircle />}
+              active={activeItem === "/admin/content-management"}
+              onClick={() => handleMenuItemClick("/admin/content-management")}
+              component={<Link href="/admin/content-management" />}
+            >
+              {t("contentManage")}
+            </MenuItem>
           </Menu>
         )}
       </Sidebar>
