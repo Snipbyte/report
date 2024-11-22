@@ -6,7 +6,7 @@ import { pipeline } from "stream";
 import Section from "../../../../../../backend/models/section";
 import connectDb from "../../../../../../backend/middleware/db"; 
 require("dotenv").config();
-
+ 
 const pump = promisify(pipeline);
 
 const generateSlug = (text) => {
@@ -68,5 +68,5 @@ const createSectionHandler = async (request) => {
     );
   }
 };
-
+ 
 export const POST = connectDb(createSectionHandler);

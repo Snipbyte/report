@@ -1,97 +1,211 @@
-import Image from 'next/image';
-import React, { useState } from 'react';
-import { AiOutlineClose } from 'react-icons/ai'; // For close icon
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { AiOutlineClose } from "react-icons/ai";
+import {
+  createSection,
+  updateSection,
+  getSections,
+} from "@/app/utils/contentManagement/api";
 
 const HeroSection = () => {
-    const [language, setLanguage] = useState('English');
-    const [file, setFile] = useState(null); // State to store the uploaded image preview
+  const [language, setLanguage] = useState("English");
+  const [file, setFile] = useState(null);
+  const [fileData, setFileData] = useState(null);
+  const [sectionId, setSectionId] = useState(null); // To track if editing an existing section
+  const [loading, setLoading] = useState(true);
 
-    // Language placeholder options
-    const placeholders = language === 'English'
-        ? ['Heading 1', 'Description']
-        : ['Titre 1', 'Description'];
+  const [formData, setFormData] = useState({
+    English: {
+      headings: "",
+      descriptions: "",
+    },
+    French: {
+      headings: "",
+      descriptions: "",
+    },
+  });
 
-    // Handle file selection (for upload functionality)
-    const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile) {
-            setFile(URL.createObjectURL(selectedFile)); // Set the file URL for preview, but image doesn't change in hero section
+  const {
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  // Fetch existing section data on component mount
+  useEffect(() => {
+    const fetchSection = async () => {
+      try {
+        const data = await getSections("landing");
+        if (data.sections && data.sections.length > 0) {
+          const section = data.sections[0]; // Assuming only one section
+          setSectionId(section._id); // Set ID for editing
+          setFormData({
+            English: {
+              headings: section.headings[0].en || "",
+              descriptions: section.descriptions[0].en || "",
+            },
+            French: {
+              headings: section.headings[0].fr || "",
+              descriptions: section.descriptions[0].fr || "",
+            },
+          });
+          if (section.images && section.images.length > 0) {
+            setFile(`${section.images[section.images.length - 1]}`); 
+          }
         }
+      } catch (error) {
+        console.error("Failed to fetch section:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSection();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [language]: {
+        ...prev[language],
+        [name]: value,
+      },
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setFileData(reader.result.split(",")[1]);
+        setFile(URL.createObjectURL(selectedFile));
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  const removeFile = () => {
+    setFile(null);
+    setFileData(null);
+  };
+
+  const onSubmit = async () => {
+    const formattedData = {
+      page: "landing",
+      headings: {
+        en: formData.English.headings,
+        fr: formData.French.headings,
+      },
+      descriptions: {
+        en: formData.English.descriptions,
+        fr: formData.French.descriptions,
+      },
+      images: fileData ? [`data:image/png;base64,${fileData}`] : [],
     };
 
-    // Remove the selected file
-    const removeFile = () => {
-        setFile(null); // Reset the preview when the user removes the image
-    };
+    try {
+      if (sectionId) {
+        // Edit existing section
+        const response = await updateSection({ sectionId, ...formattedData });
+        alert("Section updated successfully!");
+      } else {
+        // Create new section
+        const response = await createSection(formattedData);
+        alert("Section created successfully!");
+      }
+    } catch (error) {
+      console.error("Error saving section:", error);
+      alert("Failed to save section.");
+    }
+  };
 
-    return (
-        <div className='flex flex-col items-center gap-4 p-4 border-2 my-2'>
-            {/* Language Toggle Buttons */}
-            <div className='flex gap-2'>
-                <button
-                    onClick={() => setLanguage('English')}
-                    className={`p-2 rounded-md ${language === 'English' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
-                >
-                    English
-                </button>
-                <button
-                    onClick={() => setLanguage('French')}
-                    className={`p-2 rounded-md ${language === 'French' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
-                >
-                    French
-                </button>
+  if (loading) return <p>Loading...</p>;
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col items-center gap-6 p-4 border-2 rounded-md my-4"
+    >
+      {/* Language Toggle */}
+      <div className="flex gap-4">
+        {["English", "French"].map((lang) => (
+          <button
+            key={lang}
+            type="button"
+            onClick={() => setLanguage(lang)}
+            className={`px-4 py-2 rounded-md ${
+              language === lang
+                ? "bg-blue-600 text-white"
+                : "bg-blue-300 text-black hover:bg-blue-500"
+            }`}
+          >
+            {lang}
+          </button>
+        ))}
+      </div>
+
+      {/* Form Fields */}
+      <div className="flex flex-col w-full lg:flex-row gap-6 items-start">
+        <div className="flex flex-col flex-1">
+          <input
+            name="headings"
+            value={formData[language].headings}
+            onChange={handleInputChange}
+            className="outline-none p-3 border rounded-md mb-2"
+            type="text"
+            placeholder={`Heading (${language})`}
+          />
+          {errors.headings && (
+            <span className="text-red-500">{`${language} heading is required.`}</span>
+          )}
+
+          <textarea
+            name="descriptions"
+            value={formData[language].descriptions}
+            onChange={handleInputChange}
+            className="outline-none p-3 border rounded-md mb-2"
+            rows={3}
+            placeholder={`Description (${language})`}
+          />
+          {errors.descriptions && (
+            <span className="text-red-500">{`${language} description is required.`}</span>
+          )}
+
+          <input
+            className="outline-none p-3 border rounded-md mb-2"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+          {file && (
+            <div className="relative w-24 h-24 mt-2">
+              <Image
+                src={file}
+                alt="Preview"
+                layout="fill"
+                className="rounded-md border"
+              />
+              <button
+                type="button"
+                onClick={removeFile}
+                className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+              >
+                <AiOutlineClose />
+              </button>
             </div>
-
-            {/* Input Fields with Dynamic Placeholders */}
-            <div className='flex gap-2 items-center w-full'>
-                <div className='flex flex-col w-full lg:w-[50%]'>
-                    {placeholders.map((placeholder, index) => (
-                        <input
-                            key={index}
-                            className='outline-none p-2 border my-2'
-                            type='text'
-                            placeholder={placeholder}
-                        />
-                    ))}
-
-                    {/* File upload input */}
-                    <div className='relative my-2'>
-                        <input 
-                            className='outline-none p-2 border w-full' 
-                            type='file' 
-                            accept="image/*" 
-                            onChange={handleFileChange} 
-                        />
-                        {file && (
-                            <div className='relative mt-2'>
-                                <Image
-                                    src={file}
-                                    alt="Preview"
-                                    width={100}
-                                    height={100}
-                                    className="rounded-md border"
-                                />
-                                <button onClick={removeFile} className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1">
-                                    <AiOutlineClose />
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Fixed Hero Image (Does not change) */}
-                <div className='w-[50%]'>
-                    <Image 
-                        src="/images/landingpage1.jpg" // Always show the default image, no change
-                        alt="Hero Section Image" 
-                        width={1000} 
-                        height={1000} 
-                        className="rounded-md" 
-                    />
-                </div>
-            </div>
+          )}
         </div>
-    );
-}
+      </div>
+
+      <button
+        type="submit"
+        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500"
+      >
+        {sectionId ? "Update Section" : "Create Section"}
+      </button>
+    </form>
+  );
+};
 
 export default HeroSection;

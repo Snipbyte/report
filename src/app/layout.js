@@ -11,16 +11,20 @@ export default function RootLayout({ children }) {
   const router = useRouter();
   const [showScroll, setShowScroll] = useState(false);
 
-  // Set the language of i18next based on the current router locale
+  // Set the language of i18next based on the current router locale or stored language
   useEffect(() => {
-    if (router.locale) {
-      i18n.changeLanguage(router.locale);
+    const storedLanguage = localStorage.getItem("language");
+    if (storedLanguage) {
+      i18n.changeLanguage(storedLanguage); // Set language from localStorage if available
+    } else if (router.locale) {
+      i18n.changeLanguage(router.locale); // Fallback to the router locale
     }
   }, [router.locale]);
 
   // Scroll to top functionality
   const handleScroll = () => {
-    if (window.scrollY > 300) {  // Button will appear after scrolling 300px from the top
+    if (window.scrollY > 300) {
+      // Button will appear after scrolling 300px from the top
       setShowScroll(true);
     } else {
       setShowScroll(false);
@@ -41,6 +45,8 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang={i18n.language}>
+      {" "}
+      {/* Dynamically set the lang attribute */}
       <body className="font-poppins relative">
         {children}
         {/* Scroll-to-top button */}

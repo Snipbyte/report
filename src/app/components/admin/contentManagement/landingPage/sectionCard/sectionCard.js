@@ -1,97 +1,201 @@
-import Image from 'next/image';
-import React, { useState } from 'react';
-import { AiOutlineClose } from 'react-icons/ai'; // For close icon
+"use client";
+
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import ReactQuill from "react-quill"; // Rich text editor
+import "react-quill/dist/quill.snow.css";
+import { AiOutlineClose } from "react-icons/ai";
+import {
+  createSection,
+  updateSection,
+  getSections,
+} from "@/app/utils/contentManagement/api";
 
 const SectionCard = () => {
-    const [language, setLanguage] = useState('English');
-    const [file, setFile] = useState(null); // State to store the uploaded image preview
+  const [language, setLanguage] = useState("English");
+  const [description, setDescription] = useState({ English: "", French: "" }); // Rich text data
+  const [file, setFile] = useState(null); // For image preview
+  const [fileData, setFileData] = useState(null); // Base64 image data
+  const [sectionId, setSectionId] = useState(null); // For tracking existing section
+  const [loading, setLoading] = useState(true); // Loading state for fetching
+  const [buttonDisabled, setButtonDisabled] = useState(false); // Button state for submission
+  const [currentEditorContent, setCurrentEditorContent] = useState(""); // Track current editor content
 
-    // Language placeholder options
-    const placeholders = language === 'English' 
-        ? ['Description 1', 'Description 2', 'Description 3'] 
-        : ['Description en français 1', 'Description en français 2', 'Description en français 3'];
-
-    // Handle file selection (for upload functionality)
-    const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile) {
-            setFile(URL.createObjectURL(selectedFile)); // Set the file URL for preview
+  // Fetch existing section data
+  useEffect(() => {
+    const fetchSection = async () => {
+      try {
+        const data = await getSections("section");
+        if (data.sections && data.sections.length > 0) {
+          const section = data.sections[0]; // Assuming one section
+          setSectionId(section._id);
+          setDescription({
+            English: section.descriptions[0]?.en || "",
+            French: section.descriptions[0]?.fr || "",
+          });
+          setCurrentEditorContent(section.descriptions[0]?.en || ""); // Default content for English
+          if (section.images && section.images.length > 0) {
+            setFile(`${section.images[section.images.length - 1]}`);
+          }
         }
+      } catch (error) {
+        console.error("Failed to fetch section:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSection();
+  }, []);
+
+  // Handle language switch
+  const handleLanguageSwitch = (lang) => {
+    // Save current editor content to the appropriate language
+    setDescription((prev) => ({
+      ...prev,
+      [language]: currentEditorContent, // Save the current editor content
+    }));
+    // Update editor content with the selected language's data
+    setCurrentEditorContent(description[lang] || "");
+    setLanguage(lang);
+  };
+
+  // Handle file selection
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setFileData(reader.result.split(",")[1]);
+        setFile(URL.createObjectURL(selectedFile));
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  // Remove file
+  const removeFile = () => {
+    setFile(null);
+    setFileData(null);
+  };
+
+  // Form submission
+  const onSubmit = async () => {
+    // Save current editor content to its language state before submission
+    setDescription((prev) => ({
+      ...prev,
+      [language]: currentEditorContent,
+    }));
+
+    if (!description.English.trim() || !description.French.trim()) {
+      alert("Descriptions in both languages are required.");
+      return;
+    }
+
+    setButtonDisabled(true);
+
+    const formattedData = {
+      page: "section",
+      descriptions: {
+        en: description.English,
+        fr: description.French,
+      },
+      images: fileData ? [`data:image/png;base64,${fileData}`] : [],
     };
 
-    // Remove the selected file
-    const removeFile = () => {
-        setFile(null); // Reset the preview when the user removes the image
-    };
+    try {
+      if (sectionId) {
+        // Update existing section
+        await updateSection({ sectionId, ...formattedData });
+        alert("Section updated successfully!");
+      } else {
+        // Create new section
+        await createSection(formattedData);
+        alert("Section created successfully!");
+      }
+    } catch (error) {
+      console.error("Error saving section:", error);
+      alert("Failed to save section.");
+    } finally {
+      setButtonDisabled(false);
+    }
+  };
 
-    return (
-        <div className='flex flex-col items-center gap-4 p-4 border-2 my-2'>
-            {/* Language Toggle Buttons */}
-            <div className='flex gap-2'>
-                <button
-                    onClick={() => setLanguage('English')}
-                    className={`p-2 rounded-md ${language === 'English' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
-                >
-                    English
-                </button>
-                <button
-                    onClick={() => setLanguage('French')}
-                    className={`p-2 rounded-md ${language === 'French' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
-                >
-                    French
-                </button>
-            </div>
+  if (loading) return <p>Loading...</p>;
 
-            {/* Input Fields with Dynamic Placeholders */}
-            <div className='flex gap-2 items-center w-full'>
-                <div className='flex flex-col w-full lg:w-[50%]'>
-                    {placeholders.map((placeholder, index) => (
-                        <input
-                            key={index}
-                            className='outline-none p-2 border my-2'
-                            type='text'
-                            placeholder={placeholder}
-                        />
-                    ))}
+  return (
+    <div className="flex flex-col items-center gap-6 p-4 border-2 rounded-md my-4">
+      {/* Language Toggle */}
+      <div className="flex gap-4">
+        {["English", "French"].map((lang) => (
+          <button
+            key={lang}
+            type="button"
+            onClick={() => handleLanguageSwitch(lang)}
+            className={`px-4 py-2 rounded-md ${
+              language === lang ? "bg-blue-600 text-white" : "bg-blue-300 text-black hover:bg-blue-500"
+            }`}
+          >
+            {lang}
+          </button>
+        ))}
+      </div>
 
-                    {/* File upload input */}
-                    <div className='relative my-2'>
-                        <input 
-                            className='outline-none p-2 border w-full' 
-                            type='file' 
-                            accept="image/*" 
-                            onChange={handleFileChange} 
-                        />
-                        {file && (
-                            <div className='relative mt-2'>
-                                <Image
-                                    src={file}
-                                    alt="Preview"
-                                    width={100}
-                                    height={100}
-                                    className="rounded-md border"
-                                />
-                                <button onClick={removeFile} className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1">
-                                    <AiOutlineClose />
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </div>
+      {/* Rich Text Editor */}
+      <div className="w-full lg:w-2/3">
+        <ReactQuill
+          value={currentEditorContent}
+          onChange={(value) => setCurrentEditorContent(value)}
+          theme="snow"
+          className="mb-4"
+          placeholder={`Write description in ${language}`}
+        />
+      </div>
 
-                {/* Fixed Hero Image (Does not change) */}
-                <div className='w-[50%]'>
-                    <Image 
-                        src="/images/landingpage3.jpg" // Always show the default image, no change
-                        alt="Section Card Image" 
-                        width={1000} 
-                        height={1000} 
-                        className="rounded-md" 
-                    />
-                </div>
-            </div>
-        </div>
-    );
-}
+      {/* File Upload */}
+      <div className="w-full lg:w-2/3">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="w-full mb-2 border p-2"
+        />
+        {file && (
+          <div className="relative w-24 h-24 mt-2">
+            <Image
+              src={file}
+              alt="Preview"
+              layout="fill"
+              className="rounded-md border"
+            />
+            <button
+              type="button"
+              onClick={removeFile}
+              className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+            >
+              <AiOutlineClose />
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Submit Button */}
+      <button
+        onClick={onSubmit}
+        disabled={buttonDisabled}
+        className={`px-4 py-2 rounded-md ${
+          buttonDisabled
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-blue-600 text-white hover:bg-blue-500"
+        }`}
+      >
+        {buttonDisabled
+          ? "Please wait..."
+          : sectionId
+          ? "Update Section"
+          : "Create Section"}
+      </button>
+    </div>
+  );
+};
 
 export default SectionCard;

@@ -13,6 +13,7 @@ const Header = () => {
   const headerRef = useRef(null); // Reference for the header
   const { t } = useTranslation();
 
+  // Toggle the navigation menu
   const toggleNav = () => {
     setshownav(!shownav);
   };
@@ -27,7 +28,14 @@ const Header = () => {
     }
   };
 
+  // Load the language from localStorage on component mount
   useEffect(() => {
+    // Set initial language from localStorage
+    const storedLanguage = localStorage.getItem("language");
+    if (storedLanguage && storedLanguage !== i18n.language) {
+      i18n.changeLanguage(storedLanguage); // Change language if stored language is different
+    }
+
     document.addEventListener("click", handleClickOutside);
     document.body.style.overflow = shownav ? "hidden" : "auto";
 
@@ -75,7 +83,7 @@ const Header = () => {
               {t("dashboard")}
             </Link>
           )}
-           <Link
+          <Link
             href="/landing-page"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
           >
@@ -105,7 +113,6 @@ const Header = () => {
           >
             {t("Blogs")}
           </Link>
-
           <Link
             href="/calculator"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300"
@@ -189,7 +196,7 @@ const Header = () => {
               {t("dashboard")}
             </Link>
           )}
-           <Link
+          <Link
             href="/landing-page"
             className="hover:underline hover:underline-offset-4 cursor-pointer hover:scale-110 transition ease-out hover:ease-in-out duration-300 text-white"
           >

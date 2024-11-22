@@ -19,8 +19,8 @@ const HomeMainPage = () => {
             <ServiceCard />
             <WorkSection />
             <CalculatorSection />
-            <TestimonialSection />
-            <BlogNews />
+            {/* <TestimonialSection /> */}
+            {/* <BlogNews /> */}
             <ServicesContent />
             <ClientPortal />
             <ContactSection />
