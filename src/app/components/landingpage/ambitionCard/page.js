@@ -31,13 +31,7 @@ const AmbitionCard = () => {
     fetchSectionData();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
+ 
 
   return (
     <div className="lg:flex block my-10">
@@ -60,7 +54,7 @@ const AmbitionCard = () => {
           className="text-headingColor text-lg my-4"
           dangerouslySetInnerHTML={{
             __html:
-              sectionData?.descriptions[0]?.en || t("ambitionDescription"),
+              sectionData?.descriptions[0]?.en ||  t("tryIziKemp"),
           }}
         />
         <div className="flex justify-center">

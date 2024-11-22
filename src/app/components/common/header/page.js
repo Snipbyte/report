@@ -53,6 +53,7 @@ const Header = () => {
   const handleLanguageChange = (language) => {
     i18n.changeLanguage(language); // Change language in i18n
     localStorage.setItem("language", language); // Save the selected language in localStorage
+    window.location.reload();
   };
 
   // Function to handle logout

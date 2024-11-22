@@ -35,14 +35,6 @@ const SectionCard = ({ sectionName }) => {
     fetchSectionData();
   }, [sectionName]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   // Extract content from the fetched section data
   const heading = sectionData?.sections[0]?.headings?.find(
     (heading) => heading[language]

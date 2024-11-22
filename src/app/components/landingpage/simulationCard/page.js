@@ -36,14 +36,6 @@ const SimulationCard = () => {
     fetchSectionData();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   // Determine content based on the language stored in localStorage
   const description = sectionData?.sections[0]?.descriptions?.find(
     (desc) => desc[language]
@@ -60,7 +52,7 @@ const SimulationCard = () => {
           <div className="w-14 h-1.5 bg-btnColor mt-10 mb-20"></div>
           <div className="w-80 h-0.5 bg-white"></div>
           <p className="text-white lg:w-96 w-full text-lg mt-20">
-            {description?.[language] || "Default description"}
+            {description?.[language] || t("description2")}
             {/* Display language-specific description */}
           </p>
         </div>
@@ -79,7 +71,7 @@ const SimulationCard = () => {
         href="/login"
         className="absolute bottom-10 lg:left-[500px] left-4 flex justify-center w-68 text-center p-4 text-lg hover:duration-700 bg-btnColor text-white hover:bg-hoverBtnColor rounded-full"
       >
-        {buttonText?.[language] || "Start Simulation"}{" "}
+        {buttonText?.[language] || t("startSimulation")}{" "}
         {/* Display language-specific button text */}
       </Link>
     </div>

@@ -21,7 +21,11 @@ const WorkCard = () => {
     const fetchSectionData = async () => {
       try {
         const data = await getSections("works"); // Fetch data for the specific section
-        setSectionData(data);
+        if (data?.sections && data.sections.length > 0) {
+          setSectionData(data);
+        } else {
+          setSectionData(null); // Set section data to null if no sections found
+        }
         setLoading(false);
       } catch (err) {
         setError("Error fetching section data");
@@ -40,12 +44,62 @@ const WorkCard = () => {
     }
   }, [sectionData]);
 
+  // Fallback content when no data or an error occurs
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>{error}</div>;
+  if (error || !sectionData) {
+    return (
+      <div className="lg:flex bg-lightCard items-center block my-10">
+        <div className="w-full lg:w-[50%]">
+          <p className="text-4xl font-bold text-headingColor text-center my-6">
+            {t("howItWorks")}
+          </p>
+          <Image
+            className="w-full lg:h-[500px] h-full"
+            src="/images/lp5.jpg"
+            width={1000}
+            height={1000}
+            alt="Fallback Image"
+          />
+        </div>
+        <div className="w-full lg:w-[50%] bg-lightCard p-10">
+          <div className="flex items-center gap-6 bg-blue-200 p-3 rounded-md my-4">
+            <FaTools className="w-12 h-12 border border-white p-2" />
+            <p className="text-headingColor text-md my-4">
+              {t("chooseSimulator")}
+            </p>
+          </div>
+          <div className="flex items-center gap-6 bg-blue-200 p-3 rounded-md my-4">
+            <BsGraphUp className="w-12 h-12 border border-white p-2" />
+            <p className="text-headingColor text-md my-4">
+              {t("enterData")}
+            </p>
+          </div>
+          <div className="flex items-center gap-6 bg-blue-200 p-3 rounded-md my-4">
+            <TbTargetArrow className="w-12 h-12 border border-white p-2" />
+            <p className="text-headingColor text-md my-4">
+              {t("receiveReport")}
+            </p>
+          </div>
+          <div className="flex items-center gap-6 bg-blue-200 p-3 rounded-md my-4">
+            <IoPersonSharp className="w-12 h-12 border border-white p-2" />
+            <p className="text-headingColor text-md my-4">
+              {t("expertConsultation")}
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <Link
+              href="/about"
+              className="w-60 text-center p-4 text-lg hover:duration-700 bg-btnColor text-white hover:bg-hoverBtnColor rounded-full my-4"
+            >
+              {t("aboutUs")}
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // Extract data for current language (English or French)
@@ -73,6 +127,7 @@ const WorkCard = () => {
           src={section?.images[0] || "/images/lp5.jpg"}
           width={1000}
           height={1000}
+          alt="Section Image"
         />
       </div>
       <div className="w-full lg:w-[50%] bg-lightCard p-10">

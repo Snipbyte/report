@@ -2,8 +2,11 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { getSections } from "@/app/utils/contentManagement/api";
+import { useTranslation } from "react-i18next";
 
 const HeroSection = () => {
+  const { t } = useTranslation();
+
   const [sectionData, setSectionData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,10 +39,6 @@ const HeroSection = () => {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   // Determine content based on the language stored in localStorage
   const heading = sectionData?.sections[0]?.headings?.find(
     (heading) => heading[language]
@@ -63,11 +62,11 @@ const HeroSection = () => {
       </div>
       <div className="lg:w-[50%] w-full p-4 bg-white opacity-90">
         <h1 className="lg:text-5xl text-2xl w-full md:w-[500px] font-bold mb-4">
-          {heading?.[language] || "Welcome"}{" "}
+          {heading?.[language] || t("welcome")}{" "}
           {/* Display language-specific heading */}
         </h1>
         <p className="text-lg w-full md:w-[500px]">
-          {description?.[language] || "Description"}{" "}
+          {description?.[language] || t("description")}{" "}
           {/* Display language-specific description */}
         </p>
       </div>

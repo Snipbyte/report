@@ -35,18 +35,44 @@ const ChooseCard = () => {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>{error}</div>;
+  // If no section data or an error occurs, return fallback content
+  if (error || !sectionData) {
+    return (
+      <div className="lg:flex items-center block my-10">
+        <div className="w-full lg:w-[50%] bg-white p-10">
+          <p className="text-4xl font-bold text-headingColor my-6">
+            {t("whyChoose")}
+          </p>
+          <p className="text-headingColor text-lg mt-20 my-4">
+            - {t("accuracyTrust")}
+          </p>
+          <p className="text-headingColor text-lg my-4">
+            - {t("customizationSupport")}
+          </p>
+          <p className="text-headingColor text-lg my-4">
+            - {t("dedicatedSupport")}
+          </p>
+        </div>
+        <div className="relative lg:w-[50%] w-full h-full">
+          <Image
+            width={1000}
+            height={1000}
+            src="/images/lp4.jpg"
+            alt="Analytics Image"
+            className="w-full lg:h-[500px] h-full object-cover opacity-100"
+          />
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent to-white"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="lg:flex items-center block my-10">
       <div className="w-full lg:w-[50%] bg-white p-10">
         <p className="text-4xl font-bold text-headingColor my-6">
-          {sectionData?.headings[0]?.en || t("whyChoose")}{" "}
-          {/* Use the fetched heading or fallback */}
+          {sectionData?.headings[0]?.en || t("whyChoose")}
         </p>
-        {/* Check if the descriptions are available and render */}
         {sectionData?.descriptions?.map((desc, index) => (
           <div
             key={index}
@@ -59,7 +85,6 @@ const ChooseCard = () => {
                 __html: desc.en || t(`description${index + 1}`),
               }}
             />
-            {/* Removed the <p> tag since dangerouslySetInnerHTML is used */}
           </div>
         ))}
       </div>
@@ -67,7 +92,7 @@ const ChooseCard = () => {
         <Image
           width={1000}
           height={1000}
-          src={sectionData?.images[0] || "/images/lp4.jpg"} // Fallback image if not available
+          src={sectionData?.images[0] || "/images/lp4.jpg"}
           alt="Choose Image"
           className="w-full lg:h-[500px] h-full object-cover opacity-100"
         />
