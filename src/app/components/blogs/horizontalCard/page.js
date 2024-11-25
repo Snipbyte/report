@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const HorizontalCard = ({ img, heading, des, tags = [], slug }) => { // Default value for tags
+const HorizontalCard = ({ img, heading, des, tags = [], slug }) => {
+  // Default value for tags
   return (
     <div className="md:flex block bg-white">
       <div className="md:w-1/2 w-full">
@@ -36,7 +37,7 @@ const HorizontalCard = ({ img, heading, des, tags = [], slug }) => { // Default 
         >
           {heading}
         </Link>
-        <p className="text-paraColor my-4">{des}</p>
+        {des && <p className="text-paraColor my-4">{des}</p>}
       </div>
     </div>
   );
