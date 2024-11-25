@@ -16,7 +16,7 @@ const HomeMainPage = () => {
         <div className='p-2'>
             <SimulationCard />
             <ChooseSection />
-            <ServiceCard />
+            {/* <ServiceCard /> */}
             <WorkSection />
             <CalculatorSection />
             {/* <TestimonialSection /> */}

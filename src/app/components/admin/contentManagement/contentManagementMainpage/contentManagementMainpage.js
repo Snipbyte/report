@@ -22,10 +22,8 @@ const ContentManagementMainpage = () => {
                 return <ContactMainPage/>;
             case 'Blogs':
                 return <BlogMainPage/>;
-            case 'CalculatorSection':
-                return 1;
-            case 'Pricing':
-                return 1;
+           
+           
             default:
                 return <LandingMainPage />;
         }

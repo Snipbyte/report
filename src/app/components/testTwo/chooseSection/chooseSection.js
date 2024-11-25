@@ -1,12 +1,6 @@
 "use client";
 
-import Image from "next/image";
 import React from "react";
-import { FaTools } from "react-icons/fa";
-import { BsGraphUp } from "react-icons/bs";
-import { TbTargetArrow } from "react-icons/tb";
-import { FaPerson } from "react-icons/fa6";
-import { IoPersonSharp } from "react-icons/io5";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 

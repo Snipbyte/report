@@ -1,279 +1,95 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import dynamic from "next/dynamic";
-
-// Import ReactQuill dynamically to avoid SSR issues
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-import "react-quill/dist/quill.snow.css"; // Import Quill styles
-
-import { AiOutlineClose } from "react-icons/ai";
-import {
-  createSection,
-  updateSection,
-  getSections,
-} from "@/app/utils/contentManagement/api";
+import Link from "next/link";
+import { useTranslation } from "react-i18next";
+import { getSections } from "@/app/utils/contentManagement/api";
 
 const ChooseSection = () => {
-  const [language, setLanguage] = useState("English");
-  const [heading, setHeading] = useState({ English: "", French: "" });
-  const [shortDescription, setShortDescription] = useState({
-    English: "",
-    French: "",
-  });
-  const [description, setDescription] = useState({ English: "", French: "" });
-  const [buttonText, setButtonText] = useState({ English: "", French: "" });
-  const [file, setFile] = useState(null); // For image preview
-  const [fileData, setFileData] = useState(null); // Base64 image data
-  const [sectionId, setSectionId] = useState(null); // For tracking section (edit mode)
+  const { t } = useTranslation();
+  const [sectionData, setSectionData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [buttonDisabled, setButtonDisabled] = useState(false); // Disable submit button
-  const [currentEditorContent, setCurrentEditorContent] = useState(""); // Current rich text editor content
+  const [language, setLanguage] = useState("en"); // Default to 'en'
 
-  // Fetch data on mount
   useEffect(() => {
-    const fetchSection = async () => {
+    const fetchSectionData = async () => {
       try {
         const data = await getSections("choose-about");
-        if (data.sections && data.sections.length > 0) {
-          const section = data.sections[0];
-          setSectionId(section._id);
-          setHeading({
-            English: section.headings[0]?.en || "",
-            French: section.headings[0]?.fr || "",
-          });
-          setShortDescription({
-            English: section.shortDescriptions?.[0]?.en || "",
-            French: section.shortDescriptions?.[0]?.fr || "",
-          });
-          setDescription({
-            English: section.descriptions[0]?.en || "",
-            French: section.descriptions[0]?.fr || "",
-          });
-          setButtonText({
-            English: section.buttonTexts[0]?.en || "",
-            French: section.buttonTexts[0]?.fr || "",
-          });
-          setFile(section.images?.[0] || null);
-          setCurrentEditorContent(section.descriptions[0]?.en || ""); // Default to English content
-        }
-      } catch (error) {
-        console.error("Failed to fetch section:", error);
-      } finally {
+        setSectionData(data?.sections?.[0] || null);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching section data:", err);
         setLoading(false);
       }
     };
-    fetchSection();
+
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+
+    fetchSectionData();
   }, []);
 
-  // Save current content before switching languages
-  const saveCurrentContent = () => {
-    setDescription((prev) => ({
-      ...prev,
-      [language]: currentEditorContent.trim(), // Save the editor content
-    }));
-  };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  // Handle language switch
-  const handleLanguageSwitch = (lang) => {
-    saveCurrentContent(); // Save current editor content
-    setLanguage(lang);
-    setCurrentEditorContent(description[lang] || ""); // Load new language content
-  };
-
-  // Handle file selection
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setFileData(reader.result.split(",")[1]);
-        setFile(URL.createObjectURL(selectedFile));
-      };
-      reader.readAsDataURL(selectedFile);
-    }
-  };
-
-  // Remove file
-  const removeFile = () => {
-    setFile(null);
-    setFileData(null);
-  };
-
-  // Submit data
-  const onSubmit = async () => {
-    saveCurrentContent(); // Save current editor content before submitting
-
-    if (
-      !heading.English ||
-      !heading.French ||
-      !shortDescription.English ||
-      !shortDescription.French ||
-      !buttonText.English ||
-      !buttonText.French
-    ) {
-      alert("All fields must be filled out.");
-      return;
-    }
-
-    const payload = {
-      page: "choose-about",
-      headings: {
-        en: heading.English,
-        fr: heading.French,
-      },
-      shortDescriptions: {
-        en: shortDescription.English,
-        fr: shortDescription.French,
-      },
-      descriptions: {
-        en: description.English,
-        fr: description.French,
-      },
-      buttonTexts: {
-        en: buttonText.English,
-        fr: buttonText.French,
-      },
-      images: fileData ? [`data:image/png;base64,${fileData}`] : [],
-    };
-
-    setButtonDisabled(true);
-
-    try {
-      if (sectionId) {
-        await updateSection({ sectionId, ...payload });
-        alert("Section updated successfully!");
-      } else {
-        await createSection(payload);
-        alert("Section created successfully!");
-      }
-    } catch (error) {
-      console.error("Error submitting section:", error);
-      alert("Failed to save section.");
-    } finally {
-      setButtonDisabled(false);
-    }
-  };
-
-  if (loading) return <p>Loading...</p>;
+  // Extract content or use defaults
+  const heading =
+    sectionData?.headings?.find((item) => item[language])?.[language] ||
+    t("defaultHeading");
+  const descriptions = sectionData?.descriptions?.map(
+    (desc) => desc[language]
+  ) || [
+    t("defaultDescription1"),
+    t("defaultDescription2"),
+    t("defaultDescription3"),
+  ];
+  const buttonText =
+    sectionData?.buttonTexts?.find((item) => item[language])?.[language] ||
+    t("defaultButtonText");
 
   return (
-    <div className="flex flex-col items-center gap-6 p-4 border-2 rounded-md my-4">
-      {/* Language Toggle */}
-      <div className="flex gap-4">
-        {["English", "French"].map((lang) => (
-          <button
-            key={lang}
-            type="button"
-            onClick={() => handleLanguageSwitch(lang)}
-            className={`px-4 py-2 rounded-md ${
-              language === lang
-                ? "bg-blue-600 text-white"
-                : "bg-blue-300 text-black hover:bg-blue-500"
-            }`}
-          >
-            {lang}
-          </button>
-        ))}
-      </div>
+    <div className="relative bg-lightCard">
+      {/* Section Header */}
+      <div className="lg:flex items-center block my-10">
+        <div className="w-full lg:w-[40%]">
+          <p className="lg:text-5xl text-2xl md:text-4xl font-bold text-headingColor my-6 w-60 mx-auto pt-2">
+            {heading}
+          </p>
+        </div>
 
-      {/* Heading Input */}
-      <div className="w-full lg:w-2/3">
-        <input
-          type="text"
-          value={heading[language]}
-          onChange={(e) =>
-            setHeading((prev) => ({ ...prev, [language]: e.target.value }))
-          }
-          placeholder={`Heading in ${language}`}
-          className="outline-none p-2 border rounded-md w-full mb-4"
-        />
-      </div>
-
-      {/* Short Description Input */}
-      <div className="w-full lg:w-2/3">
-        <input
-          type="text"
-          value={shortDescription[language]}
-          onChange={(e) =>
-            setShortDescription((prev) => ({
-              ...prev,
-              [language]: e.target.value,
-            }))
-          }
-          placeholder={`Short Description in ${language}`}
-          className="outline-none p-2 border rounded-md w-full mb-4"
-        />
-      </div>
-
-      {/* Rich Text Editor */}
-      <div className="w-full lg:w-2/3">
-        <ReactQuill
-          value={currentEditorContent}
-          onChange={(value) => setCurrentEditorContent(value)}
-          theme="snow"
-          className="mb-4"
-          placeholder={`Write description in ${language}`}
-        />
-      </div>
-
-      {/* Button Text Input */}
-      <div className="w-full lg:w-2/3">
-        <input
-          type="text"
-          value={buttonText[language]}
-          onChange={(e) =>
-            setButtonText((prev) => ({ ...prev, [language]: e.target.value }))
-          }
-          placeholder={`Button text in ${language}`}
-          className="outline-none p-2 border rounded-md w-full mb-4"
-        />
-      </div>
-
-      {/* File Upload */}
-      <div className="w-full lg:w-2/3">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="w-full mb-2 border p-2"
-        />
-        {file && (
-          <div className="relative w-24 h-24 mt-2">
-            <Image
-              src={file}
-              alt="Preview"
-              layout="fill"
-              className="rounded-md border"
-            />
-            <button
-              type="button"
-              onClick={removeFile}
-              className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+        {/* Section Content */}
+        <div className="w-full lg:w-[60%] bg-lightCard p-10">
+          {descriptions.map((desc, index) => (
+            <div
+              key={index}
+              className={`bg-${
+                ["blue", "green", "emerald"][index % 3]
+              }-100 border-2 border-white p-3 rounded-md my-4`}
             >
-              <AiOutlineClose />
-            </button>
-          </div>
-        )}
+              <p
+                className="text-headingColor text-md"
+                dangerouslySetInnerHTML={{ __html: desc }}
+              ></p>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Submit Button */}
-      <button
-        onClick={onSubmit}
-        disabled={buttonDisabled}
-        className={`px-4 py-2 rounded-md ${
-          buttonDisabled
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-600 text-white hover:bg-blue-500"
-        }`}
-      >
-        {buttonDisabled
-          ? "Please wait..."
-          : sectionId
-          ? "Update Section"
-          : "Create Section"}
-      </button>
+      {/* Footer */}
+      <div className="flex items-center gap-10 mb-8">
+        <p className="text-headingColor ml-4 lg:ml-20 lg:mb-6 mb-24">
+          {heading}
+        </p>
+        <Link
+          href="/calculator"
+          className="absolute bottom-4 lg:left-[800px] left-4 flex justify-center lg:w-60 w-40 text-center lg:p-4 p-2 lg:text-lg text-sm hover:duration-700 bg-btnColor text-white hover:bg-hoverBtnColor rounded-full"
+        >
+          {buttonText}
+        </Link>
+      </div>
     </div>
   );
 };
