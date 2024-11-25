@@ -18,6 +18,7 @@ const SimulationCard = () => {
     const fetchSectionData = async () => {
       try {
         const data = await getSections("simulation-about"); // Fetch data for simulation-about
+        console.log("data", data);
         setSectionData(data?.sections?.[0] || null);
         setLoading(false);
       } catch (err) {
