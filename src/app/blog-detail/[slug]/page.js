@@ -87,7 +87,8 @@ const BlogDetail = () => {
                 key={blog.slug}
                 img={blog.thumbnailImage || "/images/blog-placeholder.jpg"}
                 heading={blog.title}
-                des={blog.description}
+                des={blog.description.length > 200 ? `${blog.description.slice(0, 200)}...` : blog.description}
+
               />
             ))
           ) : (
