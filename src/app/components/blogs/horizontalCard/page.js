@@ -17,7 +17,7 @@ const HorizontalCard = ({ img, heading, des, tags = [], slug }) => {
       </div>
       <div className="md:w-1/2 w-full p-10">
         {/* Display tags with styling */}
-        <div className="flex flex-wrap space-x-2 my-2">
+        <div className="flex flex-wrap space-x-2 m-2 p-2">
           {Array.isArray(tags) && tags.length > 0 ? ( // Check if tags is an array
             tags.map((tag, index) => (
               <span
