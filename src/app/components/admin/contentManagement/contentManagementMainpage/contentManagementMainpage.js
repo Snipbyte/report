@@ -18,10 +18,7 @@ const ContentManagementMainpage = () => {
                 return <HomeMainPage />;
             case 'About':
                 return <AboutMainPage/>;
-            case 'Contact':
-                return <ContactMainPage/>;
-            case 'Blogs':
-                return <BlogMainPage/>;
+         
            
            
             default:
@@ -33,7 +30,7 @@ const ContentManagementMainpage = () => {
         <div className="flex flex-col items-center my-6">
             {/* Tab navigation */}
             <div className="flex items-center justify-center gap-10 overflow-auto mb-6">
-                {['Landing Page', 'Home', 'About', 'Contact', 'Blogs', 'CalculatorSection', 'Pricing'].map((tab) => (
+                {['Landing Page', 'Home', 'About', ].map((tab) => (
                     <p
                         key={tab}
                         onClick={() => setActiveTab(tab)}
