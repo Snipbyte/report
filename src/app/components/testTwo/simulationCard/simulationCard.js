@@ -51,7 +51,7 @@ const SimulationCard = () => {
   const description =
     sectionData?.descriptions?.find((item) => item[language])?.[language] ||
     "<p>" + t("defaultDescription") + "</p>";
-  const image = sectionData?.images?.[0] || "/images/default.jpg";
+  const image = sectionData?.images?.[0];
   const buttonText =
     sectionData?.buttonTexts?.find((item) => item[language])?.[language] ||
     t("defaultButtonText");
