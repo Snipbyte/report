@@ -1,4 +1,3 @@
-// pages/admin/users.js
 "use client";
 import React, { useEffect, useState } from "react";
 import AdminLayout from "@/app/components/layouts/adminLayout/page";
@@ -16,6 +15,7 @@ const Users = () => {
     email: "",
     currentPlan: "",
   });
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch users from the API on component mount
   useEffect(() => {
@@ -38,7 +38,7 @@ const Users = () => {
     setDeletingUserId(userId);
     try {
       await axios.post("/api/admin/deleteuser", { id: userId });
-      window.location.reload();
+      setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId));
     } catch (error) {
       setError("Error deleting user");
     } finally {
@@ -53,8 +53,12 @@ const Users = () => {
         id: editingUser._id,
         ...editFormData,
       });
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === editingUser._id ? { ...user, ...editFormData } : user
+        )
+      );
       setEditingUser(null);
-      window.location.reload();
     } catch (error) {
       setError("Error editing user");
     }
@@ -67,6 +71,14 @@ const Users = () => {
       [e.target.name]: e.target.value,
     });
   };
+
+  // Filter users based on search term
+  const filteredUsers = users.filter(
+    (user) =>
+      user.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <AdminLayout>
@@ -82,52 +94,85 @@ const Users = () => {
         )}
 
         {!loading && !error && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {users.map((user) => (
-              <div
-                key={user.id}
-                className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-300"
-              >
-                <h2 className="text-xl font-semibold mb-2">
-                  {user.firstname} {user.lastname}
-                </h2>
-                <p className="text-gray-600 mb-4">{user.email}</p>
-                <p className="text-sm text-gray-500">
-                  Plan:{" "}
-                  <span className="font-medium">
-                    {user.currentPlan || "None"}
-                  </span>
-                </p>
-                <button
-                  onClick={() => deleteUser(user._id)}
-                  className={`mt-4 py-2 px-4 rounded transition duration-300 ${
-                    deletingUserId === user._id
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-red-500 hover:bg-red-600"
-                  } text-white`}
-                  disabled={deletingUserId === user._id}
-                >
-                  {deletingUserId === user._id ? "Deleting..." : "Delete User"}
-                </button>
-                <button
-                  onClick={() => {
-                    setEditingUser(user);
-                    setEditFormData({
-                      firstname: user.firstname,
-                      lastname: user.lastname,
-                      email: user.email,
-                      currentPlan: user.currentPlan || "",
-                    });
-                  }}
-                  className="mt-4 mx-2 py-2 px-4 rounded bg-blue-500 hover:bg-blue-600 text-white"
-                >
-                  Edit User
-                </button>
-              </div>
-            ))}
+          <div>
+            {/* Search Bar */}
+            <div className="flex items-center mb-4">
+              <input
+                type="text"
+                placeholder="Search by name or email..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Users Table */}
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-collapse border border-gray-300">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 px-4 py-2 text-left">
+                      Name
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">
+                      Email
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">
+                      Plan
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredUsers.map((user) => (
+                    <tr key={user._id} className="hover:bg-gray-50">
+                      <td className="border border-gray-300 px-4 py-2">
+                        {user.firstname} {user.lastname}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {user.email}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {user.currentPlan || "None"}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">
+                        <button
+                          onClick={() => deleteUser(user._id)}
+                          className={`py-1 px-2 rounded ${
+                            deletingUserId === user._id
+                              ? "bg-gray-400 cursor-not-allowed"
+                              : "bg-red-500 hover:bg-red-600"
+                          } text-white`}
+                          disabled={deletingUserId === user._id}
+                        >
+                          {deletingUserId === user._id ? "Deleting..." : "Delete"}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setEditingUser(user);
+                            setEditFormData({
+                              firstname: user.firstname,
+                              lastname: user.lastname,
+                              email: user.email,
+                              currentPlan: user.currentPlan || "",
+                            });
+                          }}
+                          className="ml-2 py-1 px-2 rounded bg-blue-500 hover:bg-blue-600 text-white"
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
+        {/* Edit User Modal */}
         {editingUser && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-8 rounded-lg shadow-lg">
@@ -165,19 +210,20 @@ const Users = () => {
                 <option value="popular">Popular</option>
                 <option value="enterprise">Enterprise</option>
               </select>
-
-              <button
-                onClick={handleEditUser}
-                className="py-2 px-4 rounded bg-green-500 hover:bg-green-600 text-white"
-              >
-                Save Changes
-              </button>
-              <button
-                onClick={() => setEditingUser(null)}
-                className="ml-4 py-2 px-4 rounded bg-gray-500 hover:bg-gray-600 text-white"
-              >
-                Cancel
-              </button>
+              <div className="flex justify-end">
+                <button
+                  onClick={handleEditUser}
+                  className="py-2 px-4 rounded bg-green-500 hover:bg-green-600 text-white"
+                >
+                  Save Changes
+                </button>
+                <button
+                  onClick={() => setEditingUser(null)}
+                  className="ml-4 py-2 px-4 rounded bg-gray-500 hover:bg-gray-600 text-white"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         )}

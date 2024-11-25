@@ -46,7 +46,7 @@ const Blogs = () => {
         <HorizontalCard
           img={latestBlog.thumbnailImage || "/images/horizontalimage.jpg"}
           heading={latestBlog.title}
-          des={latestBlog.description}
+          des={latestBlog.description.length > 200 ? `${latestBlog.description.slice(0, 200)}...` : latestBlog.description}
           tags={latestBlog.tags || []}
           slug={latestBlog.slug}
         />
@@ -78,7 +78,8 @@ const Blogs = () => {
               key={blog.slug}
               img={blog.thumbnailImage || "/images/blog-placeholder.jpg"}
               heading={blog.title}
-              des={blog.description}
+              des={blog.description.length > 200 ? `${blog.description.slice(0, 200)}...` : blog.description}
+
               slug={blog.slug}
             />
           ))

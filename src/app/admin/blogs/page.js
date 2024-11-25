@@ -3,22 +3,25 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AdminLayout from "@/app/components/layouts/adminLayout/page";
 import UploadBlog from "@/app/components/admin/blogs/uploadBlog/uploadBlog";
-import EditBlog from "@/app/components/admin/blogs/editBlog/editBlog"; // NEW
+import EditBlog from "@/app/components/admin/blogs/editBlog/editBlog";
 import Link from "next/link";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
-  const [showModal, setShowModal] = useState(false); // To toggle the blog pop-up
-  const [showEditModal, setShowEditModal] = useState(false); // NEW: Modal for editing blog
-  const [editBlogData, setEditBlogData] = useState(null); // NEW: Data for the blog being edited
-  const [message, setMessage] = useState(""); // Custom success or error message
-  const [isError, setIsError] = useState(false); // To determine if it's a success or failure
+  const [filteredBlogs, setFilteredBlogs] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editBlogData, setEditBlogData] = useState(null);
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
 
   // Fetch all blogs
   const fetchBlogs = async () => {
     try {
       const response = await axios.post("/api/blogs/all");
       setBlogs(response.data);
+      setFilteredBlogs(response.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
       setMessage("Failed to fetch blogs");
@@ -30,13 +33,26 @@ const Blogs = () => {
     fetchBlogs();
   }, []);
 
+  // Handle search input
+  const handleSearch = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+    setFilteredBlogs(
+      blogs.filter(
+        (blog) =>
+          blog.title.toLowerCase().includes(value) ||
+          blog.description.toLowerCase().includes(value)
+      )
+    );
+  };
+
   // Handle blog deletion
   const handleDelete = async (slug) => {
     try {
       await axios.post("/api/blogs/deleteblog", { slug });
       setMessage("Blog deleted successfully.");
       setIsError(false);
-      fetchBlogs(); // Refresh the blog list after deletion
+      fetchBlogs();
     } catch (error) {
       console.error("Error deleting blog:", error);
       setMessage("Failed to delete blog");
@@ -44,10 +60,10 @@ const Blogs = () => {
     }
   };
 
-  // NEW: Open edit modal and set blog data
+  // Open edit modal
   const handleEdit = (blog) => {
-    setEditBlogData(blog); // Set the blog data to be edited
-    setShowEditModal(true); // Open edit modal
+    setEditBlogData(blog);
+    setShowEditModal(true);
   };
 
   return (
@@ -65,62 +81,92 @@ const Blogs = () => {
       <div className="container mx-auto p-6">
         <h1 className="text-2xl font-bold mb-4">Blogs</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {blogs.map((blog) => (
-            <div
-              key={blog.slug}
-              className="bg-white p-4 shadow-md rounded-lg relative"
-            >
-              <Link
-                href={`/blog-detail/${blog.slug}`}
-                className="text-lg font-bold"
-              >
-                {blog.title}
-              </Link>
-              <p className="text-sm text-gray-500">{blog.description}</p>
-              <div className="flex justify-between items-center mt-4">
-                <button
-                  className="bg-red-500 text-white py-1 px-3 rounded-md"
-                  onClick={() => handleDelete(blog.slug)}
-                >
-                  Delete
-                </button>
-                {/* Edit Button */}
-                <button
-                  className="bg-blue-500 text-white py-1 px-3 rounded-md"
-                  onClick={() => handleEdit(blog)}
-                >
-                  Edit
-                </button>
-              </div>
-            </div>
-          ))}
+        {/* Search Bar */}
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearch}
+          placeholder="Search blogs by title or description..."
+          className="border p-2 w-full mb-4"
+        />
+
+        {/* Blogs Table */}
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full border-collapse border border-gray-200">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="border border-gray-300 px-4 py-2 text-left">
+                  Title
+                </th>
+                <th className="border border-gray-300 px-4 py-2 text-left">
+                  Description
+                </th>
+                <th className="border border-gray-300 px-4 py-2 text-left">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredBlogs.map((blog) => (
+                <tr key={blog.slug} className="hover:bg-gray-50">
+                  <td className="border border-gray-300 px-4 py-2">
+                    <Link
+                      href={`/blog-detail/${blog.slug}`}
+                      className="text-blue-500 hover:underline"
+                    >
+                      {blog.title}
+                    </Link>
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+  {blog.description.length > 200
+    ? `${blog.description.slice(0, 200)}...`
+    : blog.description}
+</td>
+
+                  <td className="border border-gray-300 px-4 py-2">
+                    <button
+                      onClick={() => handleDelete(blog.slug)}
+                      className="bg-red-500 my-2 text-white py-1 px-3 rounded-md mr-2"
+                    >
+                      Delete
+                    </button>
+                    <button
+                      onClick={() => handleEdit(blog)}
+                      className="bg-blue-500 text-white py-1 px-3 rounded-md"
+                    >
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
-        {/* Button to open modal for adding a new blog */}
+        {/* Add New Blog Button */}
         <div className="mt-6">
           <button
-            className="bg-blue-600 text-white py-2 px-4 rounded-md"
             onClick={() => setShowModal(true)}
+            className="bg-blue-600 text-white py-2 px-4 rounded-md"
           >
             Add New Blog
           </button>
         </div>
 
-        {/* Modal for adding a new blog */}
+        {/* Modal for Adding New Blog */}
         {showModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
               <button
-                className="absolute top-2 right-2 text-gray-500"
                 onClick={() => setShowModal(false)}
+                className="absolute top-2 right-2 text-gray-500"
               >
                 &times;
               </button>
               <UploadBlog
                 onSuccess={() => {
                   setShowModal(false);
-                  fetchBlogs(); // Refresh blog list after adding new one
+                  fetchBlogs();
                   setMessage("Blog added successfully.");
                   setIsError(false);
                 }}
@@ -129,13 +175,13 @@ const Blogs = () => {
           </div>
         )}
 
-        {/* Modal for editing a blog */}
+        {/* Modal for Editing Blog */}
         {showEditModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
               <button
-                className="absolute top-2 right-2 text-gray-500"
                 onClick={() => setShowEditModal(false)}
+                className="absolute top-2 right-2 text-gray-500"
               >
                 &times;
               </button>
@@ -143,7 +189,7 @@ const Blogs = () => {
                 blogData={editBlogData}
                 onSuccess={() => {
                   setShowEditModal(false);
-                  fetchBlogs(); // Refresh blog list after editing
+                  fetchBlogs();
                   setMessage("Blog edited successfully.");
                   setIsError(false);
                 }}
