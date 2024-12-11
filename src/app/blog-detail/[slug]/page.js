@@ -67,14 +67,14 @@ const BlogDetail = () => {
           } // Pass the thumbnail image
         />
         <div className="lg:flex block my-10">
-          <div className="lg:w-[85%] w-full">
+          <div className="lg:w-[70%] w-full">
             {blogContent ? (
               <BlogContent content={blogContent} />
             ) : (
               <p>Loading blog content...</p>
             )}
           </div>
-          <div className="hidden lg:block lg:w-[15%] w-full">
+          <div className="hidden lg:block lg:w-[30%] bg-lightCard h-full w-full">
             <BlogSidebar tags={blogContent ? blogContent.tags : []} />
           </div>
         </div>

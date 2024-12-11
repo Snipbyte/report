@@ -14,6 +14,7 @@ const Admins = () => {
     password: "",
   });
   const [showForm, setShowForm] = useState(false); // State to control form visibility
+  const [searchTerm, setSearchTerm] = useState(""); // For searching admins
 
   useEffect(() => {
     const fetchAdmins = async () => {
@@ -80,7 +81,6 @@ const Admins = () => {
       if (response.ok) {
         // Re-fetch admins after deletion
         fetchAdmins();
-       
       } else {
         console.error(data.message);
       }
@@ -89,39 +89,103 @@ const Admins = () => {
     }
   };
 
+  // Filter admins based on search term
+  const filteredAdmins = admins.filter(
+    (admin) =>
+      admin.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      admin.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      admin.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Export to Excel functionality
+  const exportToExcel = () => {
+    // Create a CSV string from table data
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "Name,Email\n"; // Add headers
+
+    // Add admin data to the CSV
+    admins.forEach((admin) => {
+      const row = `${admin.firstname} ${admin.lastname},${admin.email}`;
+      csvContent += row + "\n";
+    });
+
+    // Create a download link
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "admins_data.csv");
+    document.body.appendChild(link); // Required for Firefox
+
+    // Trigger the download
+    link.click();
+    document.body.removeChild(link); // Clean up
+  };
+
   return (
     <AdminLayout>
       <div className="max-w-3xl mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Admins</h1>
+
         {loading ? (
           <p className="text-center text-gray-500">Loading...</p>
         ) : (
           <>
-            <ul className="bg-white shadow-md rounded-lg divide-y divide-gray-200">
-              {admins.map((admin) => (
-                <li
-                  key={admin._id}
-                  className="flex justify-between items-center p-4 hover:bg-gray-100"
-                >
-                  <span className="text-lg">
-                    {admin.firstname} {admin.lastname} - {admin.email}
-                  </span>
-                  <button
-                    onClick={() => handleDeleteAdmin(admin.email)}
-                    className="flex items-center text-red-600 hover:text-red-800 font-semibold transition duration-200"
-                  >
-                    <AiFillDelete className="mr-1" /> Delete
-                  </button>
-                </li>
-              ))}
-            </ul>
+            {/* Search Bar */}
+            <div className="flex items-center justify-between mb-4">
+              <input
+                type="text"
+                placeholder="Search by name or email..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full border border-gray-300 p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                className="w-44 p-2.5 bg-blue-500 hover:bg-blue-600 text-white"
+                onClick={exportToExcel}
+              >
+                Export Excel File
+              </button>
+            </div>
+
+            {/* Admins Table */}
+            <table className="min-w-full border-collapse border border-gray-300 mb-4">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="border border-gray-300 px-4 py-2 text-left">Name</th>
+                  <th className="border border-gray-300 px-4 py-2 text-left">Email</th>
+                  <th className="border border-gray-300 px-4 py-2 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredAdmins.map((admin) => (
+                  <tr key={admin._id} className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2">
+                      {admin.firstname} {admin.lastname}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">{admin.email}</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">
+                      <button
+                        onClick={() => handleDeleteAdmin(admin.email)}
+                        className="py-1 px-2 rounded bg-red-500 hover:bg-red-600 text-white"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Add New Admin Button */}
             <button
               onClick={() => setShowForm((prev) => !prev)} // Toggle form visibility
               className="mt-4 bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition duration-200 flex items-center"
             >
               <MdAdd className="mr-2" /> Add New Admin
             </button>
-            {showForm && ( // Conditional rendering of the form
+
+            {/* Add Admin Form */}
+            {showForm && (
               <form
                 onSubmit={handleAddAdmin}
                 className="bg-white p-4 shadow-md rounded-lg mt-4"

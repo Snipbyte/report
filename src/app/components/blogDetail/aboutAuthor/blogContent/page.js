@@ -10,7 +10,7 @@ const BlogContent = ({ content }) => {
   const sentences = content.description ? content.description.split(".") : [];
 
   return (
-    <div className="lg:w-[950px] w-full">
+    <div className="lg:w-[100%] w-full">
       <p className="md:text-4xl text-2xl text-headingColor font-bold lg:w-[700px] w-full">
         {content.title}
       </p>

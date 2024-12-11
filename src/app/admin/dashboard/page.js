@@ -39,6 +39,47 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
+
+  const exportToExcel = () => {
+    // Simulating your dashboard data
+    const dashboardData = [
+      { companyName: "Tech Corp", revenue: "500K", employees: 120 },
+      { companyName: "Soft Solutions", revenue: "1.2M", employees: 300 },
+      { companyName: "Innovate Inc", revenue: "750K", employees: 200 },
+    ];
+
+    // Filter the data based on the search term
+    const filteredData = searchTerm
+      ? dashboardData.filter((item) =>
+        item.companyName.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      : dashboardData;
+
+    // Create CSV content
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "Company Name,Revenue,Employees\n"; // Headers
+
+    // Add filtered data rows
+    filteredData.forEach((item) => {
+      const row = `${item.companyName},${item.revenue},${item.employees}`;
+      csvContent += row + "\n";
+    });
+
+    // Create a downloadable link for the CSV
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "dashboard_data.csv");
+    document.body.appendChild(link);
+
+    // Trigger the download
+    link.click();
+    document.body.removeChild(link);
+  };
+
+
+
+
   return (
     <AdminLayout>
       <div className="container mx-auto p-6">
@@ -72,9 +113,17 @@ const Dashboard = () => {
                       placeholder="Search by company name..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full border border-gray-300 p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
+                    <button
+                      className="w-32 p-2.5 bg-blue-500 hover:bg-blue-600 text-white"
+                      onClick={exportToExcel}
+                    >
+                      Export File
+                    </button>
                   </div>
+
+
 
                   <div className="overflow-y-auto max-h-[400px] border border-gray-300 rounded-lg">
                     {filteredPlans.length > 0 ? (

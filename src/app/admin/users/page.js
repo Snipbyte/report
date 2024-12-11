@@ -80,6 +80,32 @@ const Users = () => {
       user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+
+  // for export button
+  const exportToExcel = () => {
+    // Create a CSV string from table data
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "Name,Email,Plan\n"; // Add headers
+
+    // Add user data to the CSV
+    users.forEach((user) => {
+      const row = `${user.firstname} ${user.lastname},${user.email},${user.currentPlan || "None"}`;
+      csvContent += row + "\n";
+    });
+
+    // Create a download link
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "users_data.csv");
+    document.body.appendChild(link); // Required for Firefox
+
+    // Trigger the download
+    link.click();
+    document.body.removeChild(link); // Clean up
+  };
+
+
   return (
     <AdminLayout>
       <div className="container mx-auto p-6">
@@ -96,16 +122,24 @@ const Users = () => {
         {!loading && !error && (
           <div>
             {/* Search Bar */}
-            <div className="flex items-center mb-4">
-              <input
-                type="text"
-                placeholder="Search by name or email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-full">
+                <input
+                  type="text"
+                  placeholder="Search by name or email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full border border-gray-300 p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <button
+                className="w-44 p-2.5 bg-blue-500 hover:bg-blue-600 text-white"
+                onClick={exportToExcel}
+              >
+                Export Excel File
+              </button>
 
+            </div>
             {/* Users Table */}
             <div className="overflow-x-auto">
               <table className="min-w-full border-collapse border border-gray-300">
@@ -140,11 +174,10 @@ const Users = () => {
                       <td className="border border-gray-300 px-4 py-2 text-center">
                         <button
                           onClick={() => deleteUser(user._id)}
-                          className={`py-1 px-2 rounded ${
-                            deletingUserId === user._id
-                              ? "bg-gray-400 cursor-not-allowed"
-                              : "bg-red-500 hover:bg-red-600"
-                          } text-white`}
+                          className={`py-1 px-2 rounded ${deletingUserId === user._id
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-red-500 hover:bg-red-600"
+                            } text-white`}
                           disabled={deletingUserId === user._id}
                         >
                           {deletingUserId === user._id ? "Deleting..." : "Delete"}

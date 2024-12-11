@@ -10,7 +10,7 @@ const AboutAuthor = ({
 }) => {
   return (
     <div>
-      <p className="text-5xl text-headingColor font-bold my-3">
+      <p className="lg:text-5xl text-2xl text-headingColor font-bold my-3">
         Welcome to Our Blog!
       </p>
 
@@ -23,27 +23,27 @@ const AboutAuthor = ({
         alt="Blog Thumbnail"
       />
 
-      <div className="md:flex block items-center justify-between mt-3 mb-8">
-        <div>
-          <p className="text-headingColor text-3xl mt-4 font-bold">
-            {postTitle}
-          </p>
-          <p className="text-paraColor text-lg">
-            by {authorName} on {postDate}
-          </p>
-        </div>
+      <div className="md:flex block items-center gap-10 mt-3 mb-8">
         <div className="flex items-center gap-3 mt-2 md:mt-0">
           <Image
-            className="w-10 h-10 rounded-full"
+            className="w-12 h-12 rounded-full"
             src={authorImage}
             width={1000}
             height={1000}
             alt="Author Image"
           />
           <div>
-            <p className="text-paraColor text-md">Written by</p>
-            <p className="text-headingColor text-lg">{authorName}</p>
+            <p className="text-paraColor lg:text-lg text-sm">Written by</p>
+            <p className="text-headingColor lg:text-lg text-sm font-bold">{authorName}</p>
           </div>
+        </div>
+        <div className="lg:border-l lg:pl-10 my-2 lg:my-0">
+          <p className="text-headingColor lg:text-3xl text-2xl font-bold">
+            {postTitle}
+          </p>
+          <p className="text-paraColor lg:text-lg text-sm">
+            by {authorName} on {postDate}
+          </p>
         </div>
       </div>
     </div>
