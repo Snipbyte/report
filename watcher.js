@@ -2,7 +2,7 @@ const chokidar = require('chokidar');
 const { exec } = require('child_process');
 
 // Directories to watch
-const watchDirectories = ['./public/blogthumbnails', './public/sectionimages'];
+ const watchDirectories = ['./public/blogthumbnails', './public/sectionimages'];
 
 // Initialize the watcher
 const watcher = chokidar.watch(watchDirectories, {
