@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaTags } from "react-icons/fa";
@@ -65,7 +66,9 @@ const BlogSidebar = ({ tags = [] }) => {
       )}
 
       {/* Recent Posts Section - Dynamically loaded from API */}
-      <p className="text-headingColor text-xl font-bold mt-8 mb-4">Recent Posts</p>
+      <p className="text-headingColor text-xl font-bold mt-8 mb-4">
+        Recent Posts
+      </p>
       <ul className="space-y-2">
         {recentBlogs.length > 0 ? (
           recentBlogs.map((blog, index) => (
@@ -76,7 +79,9 @@ const BlogSidebar = ({ tags = [] }) => {
                 className="text-btnColor hover:text-hoverBtnColor cursor-pointer"
               >
                 {/* Truncate title to 100 characters */}
-                {blog.title.length > 60 ? `${blog.title.slice(0, 60)}...` : blog.title}
+                {blog.title.length > 60
+                  ? `${blog.title.slice(0, 60)}...`
+                  : blog.title}
               </a>
             </li>
           ))
@@ -86,8 +91,13 @@ const BlogSidebar = ({ tags = [] }) => {
       </ul>
 
       {/* Newsletter Signup Section */}
-      <p className="text-headingColor text-xl font-bold mt-8 mb-4">Newsletter Signup</p>
-      <p className="text-gray-400 mb-4">Stay updated with the latest blog posts and news. Subscribe to our newsletter!</p>
+      <p className="text-headingColor text-xl font-bold mt-8 mb-4">
+        Newsletter Signup
+      </p>
+      <p className="text-gray-400 mb-4">
+        Stay updated with the latest blog posts and news. Subscribe to our
+        newsletter!
+      </p>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 mb-4">
         <input
           type="email"
