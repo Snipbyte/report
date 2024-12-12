@@ -49,6 +49,7 @@ const Plans = () => {
       setMessage("Plan deleted successfully.");
       setIsError(false);
       fetchPlans();
+      window.location.reload();
     } catch (error) {
       console.error("Error deleting plan:", error);
       setMessage("Failed to delete plan");
