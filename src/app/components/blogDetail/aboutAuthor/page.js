@@ -16,7 +16,7 @@ const AboutAuthor = ({
 
       {/* Use the thumbnailImage prop here */}
       <Image
-        className="w-full h-full rounded-3xl my-2 mx-auto"
+        className="w-full h-[350px] rounded-3xl my-2 mx-auto"
         src={thumbnailImage}
         width={1000}
         height={1000}
