@@ -5,15 +5,13 @@ import Link from "next/link";
 const PricingCards = ({
   des = "Default description",
   num = "0",
-  point1 = "Default point 1",
-  point2 = "Default point 2",
-
+  points = [], // Accepts an array of points
   productlink = "/",
   isPopular = false,
 }) => {
   return (
     <div
-      className={`my-4 p-10 w-full h-[500px] md:w-[275px] rounded-lg cursor-pointer mx-2 ${
+      className={`my-4 p-10 w-full md:w-[275px] rounded-lg cursor-pointer mx-2 ${
         isPopular ? "bg-btnColor" : "bg-lightCard"
       }`}
     >
@@ -22,19 +20,22 @@ const PricingCards = ({
         <h2 className="text-headingColor text-3xl font-bold my-2">{num}</h2>
         {isPopular && <p className="text-sm text-paraColor">/Year</p>}
       </div>
-     
-      {/** Points Section */}
-      {[point1, point2].map((point, index) => (
-        <div
-          key={index}
-          className={`flex items-center gap-1 my-4 ${
-            isPopular ? "text-white" : "text-paraColor"
-          }`}
-        >
-          <IoIosCheckmarkCircle />
-          <p className="text-sm font-bold">{point}</p>
-        </div>
-      ))}
+
+      {/** Points Section with scroll functionality */}
+      <div className="h-[250px] overflow-y-auto">
+        {points.map((point, index) => (
+          <div
+            key={index}
+            className={`flex items-center gap-1 my-4 ${
+              isPopular ? "text-white" : "text-paraColor"
+            }`}
+          >
+            <IoIosCheckmarkCircle />
+            <p className="text-sm font-bold">{point}</p>
+          </div>
+        ))}
+      </div>
+
       {/** Button Section */}
       <button
         type="submit"
@@ -44,7 +45,7 @@ const PricingCards = ({
             : "border-2 bg-transparent hover:bg-hoverBtnColor text-btnColor border-btnColor"
         }`}
       >
-        <Link href="/checkout">Choose Plan</Link>
+        <Link href={productlink}>Choose Plan</Link>
       </button>
     </div>
   );

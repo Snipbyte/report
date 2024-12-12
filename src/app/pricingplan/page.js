@@ -1,31 +1,61 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import PricingCards from "../components/pricingPlan/pricingCards/page";
 import Header from "../components/common/header/page";
 import Footer from "../components/common/footer/page";
 
 const PricingPlan = () => {
+  const [plans, setPlans] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Fetch plans data
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const response = await axios.get("/api/admin/plans/getAll");
+        console.log(response.data); // For debugging API response
+        setPlans(response.data.data);
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error fetching plans:", err);
+        setError("Failed to load plans. Please try again later.");
+        setIsLoading(false);
+      }
+    };
+    fetchPlans();
+  }, []);
+
   return (
     <div>
       <Header />
       <div className="flex flex-wrap justify-center items-center">
-        <PricingCards
-          num="€9.90"
-          des="Starter"
-          point1="You receive a report with the possibility of making up to three modifications"
-          point2="You also have access to an online consultant to assist you in presenting your application"
-          isPopular={false}
-          productlink={"https://buy.stripe.com/test_3cs3cgd4Ycnv9i05kr"}
-        />
-        {/* <PricingCards num="$39" des="Base" point1="Everything in Simple" point2="512GB of buisness storage" point3="Unlimited management" point4="Unlimited collaboration" point5="Links with password protection" isPopular={false} productlink={"https://buy.stripe.com/test_7sI28cfd6fzH2TC6oq"} /> */}
-        <PricingCards
-          num="€39.90"
-          des="Unlimited"
-          point1="You have access to unlimited modifications and reports"
-          point2="You receive three free consultations with our consultants"
-          isPopular={true}
-          productlink={"https://buy.stripe.com/test_8wM5kogha2MV79S5ks"}
-        />
-        {/* <PricingCards num="$199" des="Enterprise" point1="Everything is available" point2="no more apologizes" point3="Unlimited packages" point4="store up to unlimited buisness" point5="all awarness" isPopular={false} productlink={"https://buy.stripe.com/test_bIY5kogha5Z765ObIM"} />  */}
+        {isLoading ? (
+          <p>Loading plans...</p>
+        ) : error ? (
+          <p className="text-red-500">{error}</p>
+        ) : (
+          plans.map((plan) => {
+            // Normalize points data
+            const points = Array.isArray(plan.points)
+              ? plan.points.flatMap((p) =>
+                  typeof p === "string" ? p.split(",") : p
+                )
+              : [];
+
+            return (
+              <PricingCards
+                key={plan._id}
+                num={plan.price}
+                des={plan.description}
+                points={points} // Pass all points as a single array
+                isPopular={plan.isPopular}
+                productlink={plan.productLink || "https://example.com"}
+              />
+            );
+          })
+        )}
       </div>
       <Footer />
     </div>

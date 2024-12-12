@@ -4,9 +4,9 @@ import Plan from "../../../../../../backend/models/plans";
 
 const createPlan = async (req) => {
   try {
-    const { price, description, isPopular, points, productLink } = await req.json();
+    const { price, description, isPopular, points } = await req.json();
 
-    if (!price || !description || !points || !productLink) {
+    if (!price || !description || !points) {
       return NextResponse.json({ message: "All fields are required." }, { status: 400 });
     }
 
@@ -15,7 +15,7 @@ const createPlan = async (req) => {
       description,
       isPopular: isPopular || false,
       points,
-      productLink,
+      
     });
 
     return NextResponse.json({ success: true, data: newPlan }, { status: 201 });
