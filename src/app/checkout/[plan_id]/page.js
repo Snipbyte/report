@@ -172,13 +172,12 @@ const PaymentForm = () => {
     }
 
     try {
-      // Step 1: Create Payment Intent on the server
-      const response = await fetch("/api/create-payment-intent", {
+      const response = await fetch("/api/payment/stripe/create-intent", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ amount: 9900 }), // Amount in cents
+        body: JSON.stringify({ amount: 9900 }),
       });
 
       const { clientSecret } = await response.json();
@@ -208,7 +207,22 @@ const PaymentForm = () => {
       }
 
       if (paymentIntent.status === "succeeded") {
-        setSuccess(true);
+        // Step 3: Assign plan to user
+        const assignPlanResponse = await fetch("/api/payment/stripe/payment-success", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ planId: plan_id }),
+        });
+
+        const assignPlanData = await assignPlanResponse.json();
+
+        if (assignPlanData.success) {
+          setSuccess(true);
+        } else {
+          setError("Failed to assign plan to user.");
+        }
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again later.");

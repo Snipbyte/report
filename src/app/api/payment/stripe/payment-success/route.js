@@ -1,14 +1,12 @@
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
 import User from "../../../../../../backend/models/user";
 import Plan from "../../../../../../backend/models/plans";
-import dbConnect from "../../../../../../backend/middleware/db";
+import connectDb from "../../../../../../backend/middleware/db";
+import jwt from "jsonwebtoken";
 
-const assignPlanToUser = async (req) => {
+const assignPlanToUser = async (request) => {
   try {
-    await dbConnect();
-
-    const authHeader = req.headers.get("Authorization");
+    const authHeader = request.headers.get("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return NextResponse.json(
         { message: "Authorization token is required" },
@@ -16,10 +14,8 @@ const assignPlanToUser = async (req) => {
       );
     }
 
-    // Extract token from the Bearer scheme
+    // Extract and verify the token
     const token = authHeader.split(" ")[1];
-
-    // Verify the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.id;
 
@@ -31,7 +27,7 @@ const assignPlanToUser = async (req) => {
     }
 
     // Parse request body
-    const { planId } = await req.json();
+    const { planId } = await request.json();
     if (!planId) {
       return NextResponse.json(
         { message: "Plan ID is required" },
@@ -61,7 +57,14 @@ const assignPlanToUser = async (req) => {
     await user.save();
 
     return NextResponse.json(
-      { success: true, message: "Plan assigned to user successfully" },
+      {
+        success: true,
+        message: "Plan assigned to user successfully",
+        planDetails: {
+          planId: plan._id,
+          planName: plan.name,
+        },
+      },
       { status: 200 }
     );
   } catch (error) {
@@ -73,4 +76,4 @@ const assignPlanToUser = async (req) => {
   }
 };
 
-export const POST = assignPlanToUser;
+export const POST = connectDb(assignPlanToUser);
