@@ -12,4 +12,4 @@ const getAllPlans = async () => {
     }
   };
 
-  export const GET = dbConnect(getAllPlans);
+  export const POST = dbConnect(getAllPlans);

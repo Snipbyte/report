@@ -14,7 +14,7 @@ const PricingPlan = () => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await axios.get("/api/admin/plans/getAll");
+        const response = await axios.post("/api/admin/plans/getAll");
         console.log(response.data); // For debugging API response
         setPlans(response.data.data);
         setIsLoading(false);

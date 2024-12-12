@@ -15,7 +15,7 @@ const Plans = () => {
   // Fetch all plans
   const fetchPlans = async () => {
     try {
-      const response = await axios.get("/api/admin/plans/getAll");
+      const response = await axios.post("/api/admin/plans/getAll");
       setPlans(response.data.data);
       setFilteredPlans(response.data.data);
     } catch (error) {
