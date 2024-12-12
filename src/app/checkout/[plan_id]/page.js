@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { useParams } from "next/navigation";
 import {
@@ -155,10 +155,41 @@ const PaymentForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [planTitle, setPlanTitle] = useState("");
+  const [planPrice, setPlanPrice] = useState(0);
   const { plan_id } = useParams();
   console.log(plan_id);
   const stripe = useStripe();
   const elements = useElements();
+
+  useEffect(() => {
+    const fetchPlanData = async () => {
+      if (plan_id) {
+        try {
+          const response = await fetch(`/api/admin/plans/get`, {
+            method: 'POST', 
+            headers: {
+              'Content-Type': 'application/json', 
+            },
+            body: JSON.stringify({id:plan_id }), 
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            setPlanTitle(data.data.description); 
+            setPlanPrice(parseFloat(data.data.price)); 
+          } else {
+            console.error("Failed to fetch plan data");
+          }
+        } catch (error) {
+          console.error("Error fetching plan data:", error);
+        }
+      }
+    };
+
+    fetchPlanData();
+  }, [plan_id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -207,12 +238,14 @@ const PaymentForm = () => {
       }
 
       if (paymentIntent.status === "succeeded") {
+        const token = localStorage.getItem("token");
         // Step 3: Assign plan to user
         const assignPlanResponse = await fetch("/api/payment/stripe/payment-success", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-          },
+            "Authorization": `Bearer ${token}`, 
+        },
           body: JSON.stringify({ planId: plan_id }),
         });
 
@@ -237,10 +270,10 @@ const PaymentForm = () => {
         <div style={styles.leftPanel}>
           <h2 style={styles.heading}>Plan Summary</h2>
           <p style={styles.text}>
-            <span style={styles.label}> Name:</span> Starter
+            <span style={styles.label}>Name:</span> {planTitle}
           </p>
           <p style={styles.text}>
-            <span style={styles.label}>Price:</span> $99
+            <span style={styles.label}>Price:</span> ${planPrice}
           </p>
         </div>
         <div style={styles.rightPanel}>
@@ -264,7 +297,7 @@ const PaymentForm = () => {
               style={styles.button}
               disabled={loading || !stripe || !elements}
             >
-              {loading ? "Processing..." : "Pay $99"}
+              {loading ? "Processing..." : `Pay $${planPrice}`}
             </button>
           </form>
           {success && (
