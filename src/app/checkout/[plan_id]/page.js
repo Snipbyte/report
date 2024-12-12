@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
+import { useParams } from "next/navigation";
 import {
   Elements,
   useStripe,
@@ -154,7 +155,8 @@ const PaymentForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-
+  const { plan_id } = useParams();
+  console.log(plan_id);
   const stripe = useStripe();
   const elements = useElements();
 
