@@ -9,26 +9,26 @@ const BlogContent = ({ content }) => {
   // Split the description into sentences if content is valid
   const sentences = content.description ? content.description.split(".") : [];
 
+  // Group sentences into chunks of 5
+  const groupedSentences = [];
+  for (let i = 0; i < sentences.length; i += 5) {
+    groupedSentences.push(sentences.slice(i, i + 5).join(". ") + ".");
+  }
+
   return (
     <div className="lg:w-[100%] w-full">
       <p className="md:text-4xl text-2xl text-headingColor font-bold lg:w-[700px] w-full">
         {content.title}
       </p>
       <div className="text-paraColor my-4">
-        {sentences.map((sentence, index) => (
+        {groupedSentences.map((group, index) => (
           <React.Fragment key={index}>
-            <p>
-              {sentence.trim()}
-              {sentence ? "." : ""}
-            </p>
-            {/* Add two line breaks after each sentence except the last one */}
-            {index < sentences.length - 1 && <br />}
-            {index < sentences.length - 1 && <br />}
+            <p>{group.trim()}</p>
+            {index < groupedSentences.length - 1 && <br />}
           </React.Fragment>
         ))}
       </div>
       {/* Add more fields as necessary */}
-      {/* Example: You can map over the sections if your content structure allows it */}
     </div>
   );
 };
