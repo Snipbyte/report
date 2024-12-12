@@ -47,6 +47,7 @@ const PricingPlan = () => {
             return (
               <PricingCards
                 key={plan._id}
+                planId={plan._id}
                 num={plan.price}
                 des={plan.description}
                 points={points} // Pass all points as a single array

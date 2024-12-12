@@ -5,6 +5,7 @@ import Link from "next/link";
 const PricingCards = ({
   des = "Default description",
   num = "0",
+  planId,
   points = [], // Accepts an array of points
   productlink = "/",
   isPopular = false,
@@ -45,7 +46,7 @@ const PricingCards = ({
             : "border-2 bg-transparent hover:bg-hoverBtnColor text-btnColor border-btnColor"
         }`}
       >
-        <Link href={productlink}>Choose Plan</Link>
+        <Link href={`/checkout/${planId}`}>Choose Plan</Link>
       </button>
     </div>
   );
