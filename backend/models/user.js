@@ -31,17 +31,17 @@ const userSchema = new mongoose.Schema({
   },
   blogs: {
     type: [String],
-    default: [],
+    default: []
   },
   currentPlan: {
-    type: String,
-    enum: ['starter', 'unlimited', null],
-    default: null,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Plan', // Reference to the Plan schema
+    default: null
   },
   businessPlans: [{ type: mongoose.Schema.Types.ObjectId, ref: 'BusinessPlan' }],
-  isVerified:{
-    type:Boolean,
-    default:false
+  isVerified: {
+    type: Boolean,
+    default: false
   }
 });
 
