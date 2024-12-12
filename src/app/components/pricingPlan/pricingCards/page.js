@@ -19,7 +19,7 @@ const PricingCards = ({
       <p className="text-headingColor font-light">{des}</p>
       <div className="flex items-center gap-1">
         <h2 className="text-headingColor text-3xl font-bold my-2">{num}</h2>
-        {isPopular && <p className="text-sm text-paraColor">/Year</p>}
+         {isPopular && <p className="text-sm text-paraColor">/Year</p>}
       </div>
 
       {/** Points Section with scroll functionality */}
