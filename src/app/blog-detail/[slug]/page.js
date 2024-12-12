@@ -82,15 +82,21 @@ const BlogDetail = () => {
         <p className="text-headingColor text-4xl font-bold my-4">Latest Blog</p>
         <div className="flex flex-wrap my-5 items-center justify-around">
           {Array.isArray(blogs) && blogs.length > 0 ? (
-            blogs.slice(0, 3).map((blog) => (
-              <VerticalCard
-                key={blog.slug}
-                img={blog.thumbnailImage || "/images/blog-placeholder.jpg"}
-                heading={blog.title}
-                des={blog.description.length > 200 ? `${blog.description.slice(0, 200)}...` : blog.description}
-
-              />
-            ))
+            blogs
+              .slice(0, 3)
+              .map((blog) => (
+                <VerticalCard
+                  key={blog.slug}
+                  img={blog.thumbnailImage || "/images/blog-placeholder.jpg"}
+                  heading={blog.title}
+                  des={
+                    blog.description.length > 200
+                      ? `${blog.description.slice(0, 200)}...`
+                      : blog.description
+                  }
+                  slug={blog.slug}
+                />
+              ))
           ) : (
             <p>No blogs available.</p>
           )}
