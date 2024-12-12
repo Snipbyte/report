@@ -16,7 +16,7 @@ const AboutAuthor = ({
 
       {/* Use the thumbnailImage prop here */}
       <Image
-        className="w-full h-[350px] rounded-3xl my-2 mx-auto"
+        className="md:w-full md:h-[500px] w-[320px] h-[320px] mx-auto rounded-3xl my-2 mx-auto"
         src={thumbnailImage}
         width={1000}
         height={1000}
@@ -34,7 +34,9 @@ const AboutAuthor = ({
           />
           <div>
             <p className="text-paraColor lg:text-lg text-sm">Written by</p>
-            <p className="text-headingColor lg:text-lg text-sm font-bold">{authorName}</p>
+            <p className="text-headingColor lg:text-lg text-sm font-bold">
+              {authorName}
+            </p>
           </div>
         </div>
         <div className="lg:border-l lg:pl-10 my-2 lg:my-0">
