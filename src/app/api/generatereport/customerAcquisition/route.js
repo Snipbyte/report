@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectDb from "../../../../../backend/middleware/db";
 import Project from "../../../../../backend/models/Plan";
+import jwt from "jsonwebtoken";
 
 const getUserIdFromAuthHeader = (request) => {
   const authHeader = request.headers.get('Authorization');
@@ -30,7 +31,6 @@ const createCustomerAcquisition = async (req) => {
       return NextResponse.json({ message: "Authorization required" }, { status: 401 });
     }
 
-    // Basic validation
     if (!planId || !strategyName || !targetAudience || !cost || !channels) {
       return NextResponse.json(
         {
@@ -40,7 +40,6 @@ const createCustomerAcquisition = async (req) => {
       );
     }
 
-    // Find the plan by planId and userId, then push new customer acquisition to the array
     const updatedProject = await Project.findOneAndUpdate(
       { _id: planId, userId },
       {
@@ -71,10 +70,10 @@ const createCustomerAcquisition = async (req) => {
   }
 };
 
-// Get all customer acquisitions from the 'customerAcquisition' array
 const getCustomerAcquisitions = async (req) => {
   try {
-    const { planId } = req.query;
+    const { planId } =
+      await req.json();
     const userId = getUserIdFromAuthHeader(req);
 
     if (!userId) {
@@ -85,7 +84,6 @@ const getCustomerAcquisitions = async (req) => {
       return NextResponse.json({ message: "Plan ID is required" }, { status: 400 });
     }
 
-    // Find the project by planId and userId
     const project = await Project.findOne({ _id: planId, userId });
 
     if (!project) {
@@ -102,7 +100,6 @@ const getCustomerAcquisitions = async (req) => {
   }
 };
 
-// Update a customer acquisition at a specific index in the 'customerAcquisition' array
 const updateCustomerAcquisition = async (req) => {
   try {
     const { planId, customerAcquisitionIndex, strategyName, targetAudience, cost, channels, successRate } =
@@ -114,7 +111,6 @@ const updateCustomerAcquisition = async (req) => {
       return NextResponse.json({ message: "Authorization required" }, { status: 401 });
     }
 
-    // Basic validation
     if (!planId || customerAcquisitionIndex === undefined || !strategyName || !targetAudience || !cost || !channels) {
       return NextResponse.json(
         {
@@ -124,7 +120,6 @@ const updateCustomerAcquisition = async (req) => {
       );
     }
 
-    // Update the customer acquisition at the specific index
     const updatedProject = await Project.findOneAndUpdate(
       { _id: planId, userId },
       {
@@ -155,7 +150,6 @@ const updateCustomerAcquisition = async (req) => {
   }
 };
 
-// Delete a customer acquisition at a specific index in the 'customerAcquisition' array
 const deleteCustomerAcquisition = async (req) => {
   try {
     const { planId, customerAcquisitionIndex } = await req.json();
@@ -166,12 +160,10 @@ const deleteCustomerAcquisition = async (req) => {
       return NextResponse.json({ message: "Authorization required" }, { status: 401 });
     }
 
-    // Basic validation
     if (!planId || customerAcquisitionIndex === undefined) {
       return NextResponse.json({ message: "Plan ID and customer acquisition index are required" }, { status: 400 });
     }
 
-    // Update the project by removing the customer acquisition at the specified index
     const updatedProject = await Project.findOneAndUpdate(
       { _id: planId, userId },
       { $pull: { customerAcquisition: { _id: planId } } },
