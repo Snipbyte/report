@@ -17,11 +17,9 @@ const getUserIdFromAuthHeader = (request) => {
   return decoded.id;
 };
 
-const createCompetitor = async (req) => {
+// Create a competitor (Add competitor information)
+const createCompetitor = async (userId, { planId, competitorName, analysis, strengths, weaknesses }) => {
   try {
-    const userId = getUserIdFromAuthHeader(req); 
-    const { planId, competitorName, analysis, strengths, weaknesses } = await req.json();
-
     if (!planId || !competitorName || !analysis) {
       return NextResponse.json(
         { message: "Plan ID, competitor name, and analysis are required" },
@@ -46,17 +44,13 @@ const createCompetitor = async (req) => {
   }
 };
 
-const getCompetitors = async (req) => {
+// Get competitors (Fetch competitor information)
+const getCompetitors = async (userId, { planId }) => {
   try {
-    const userId = getUserIdFromAuthHeader(req);
-    const { planId } = await req.json(); // Expect planId in the body
-
-    // Basic validation
     if (!planId) {
       return NextResponse.json({ message: "Plan ID is required" }, { status: 400 });
     }
 
-    // Ensure the planId belongs to the user
     const project = await Project.findOne({ _id: planId, userId });
     if (!project) {
       return NextResponse.json({ message: "Plan not found or user is not authorized" }, { status: 404 });
@@ -72,13 +66,13 @@ const getCompetitors = async (req) => {
   }
 };
 
+// Update a competitor (Modify competitor information)
 const updateCompetitor = async (req) => {
   try {
-    const userId = getUserIdFromAuthHeader(req); // Extract userId from token
+    const userId = getUserIdFromAuthHeader(req);
     const { planId, competitorIndex, competitorName, analysis, strengths, weaknesses } =
       await req.json();
 
-    // Basic validation
     if (competitorIndex === undefined || competitorIndex === null || !planId || !competitorName || !analysis) {
       return NextResponse.json(
         { message: "Plan ID, competitor index, competitor name, and analysis are required" },
@@ -86,13 +80,11 @@ const updateCompetitor = async (req) => {
       );
     }
 
-    // Ensure the planId belongs to the user
     const project = await Project.findOne({ _id: planId, userId });
     if (!project) {
       return NextResponse.json({ message: "Plan not found or user is not authorized" }, { status: 404 });
     }
 
-    // Find and update the competitor by index
     const competitor = project.competitor[competitorIndex];
     if (!competitor) {
       return NextResponse.json({ message: "Competitor not found" }, { status: 404 });
@@ -114,29 +106,27 @@ const updateCompetitor = async (req) => {
   }
 };
 
+// Delete a competitor (Remove competitor from the list)
 const deleteCompetitor = async (req) => {
   try {
-    const userId = getUserIdFromAuthHeader(req); // Extract userId from token
+    const userId = getUserIdFromAuthHeader(req);
     const { planId, competitorIndex } = await req.json();
 
-    // Basic validation
     if (competitorIndex === undefined || competitorIndex === null || !planId) {
       return NextResponse.json({ message: "Plan ID and competitor index are required" }, { status: 400 });
     }
 
-    // Ensure the planId belongs to the user
     const project = await Project.findOne({ _id: planId, userId });
     if (!project) {
       return NextResponse.json({ message: "Plan not found or user is not authorized" }, { status: 404 });
     }
 
-    // Remove the competitor from the plan by index
     const competitor = project.competitor[competitorIndex];
     if (!competitor) {
       return NextResponse.json({ message: "Competitor not found" }, { status: 404 });
     }
 
-    project.competitor.splice(competitorIndex, 1);  // Remove competitor by index
+    project.competitor.splice(competitorIndex, 1); // Remove competitor by index
     await project.save();
     return NextResponse.json(project, { status: 200 });
   } catch (error) {
@@ -148,7 +138,32 @@ const deleteCompetitor = async (req) => {
   }
 };
 
-export const POST = connectDb(createCompetitor);
-export const GET = connectDb(getCompetitors);
+// Combined handler for POST requests: Switch between create, fetch, update actions
+const handleCompetitorRequest = async (req) => {
+  try {
+    const { action, planId, competitorIndex, competitorName, analysis, strengths, weaknesses } = await req.json();
+    const userId = getUserIdFromAuthHeader(req);
+
+    switch (action) {
+      case "create":
+        return createCompetitor(userId, { planId, competitorName, analysis, strengths, weaknesses });
+      case "fetch":
+        return getCompetitors(userId, { planId });
+      default:
+        return NextResponse.json(
+          { message: "Action not supported" },
+          { status: 400 }
+        );
+    }
+  } catch (error) {
+    console.error("Error handling competitor request:", error);
+    return NextResponse.json(
+      { message: "Failed to process competitor request" },
+      { status: 500 }
+    );
+  }
+};
+
+export const POST = connectDb(handleCompetitorRequest);
 export const PUT = connectDb(updateCompetitor);
 export const DELETE = connectDb(deleteCompetitor);

@@ -3,7 +3,6 @@ import connectDb from "../../../../../backend/middleware/db";
 import Project from "../../../../../backend/models/Plan";
 import jwt from "jsonwebtoken";
 
-// Extract the user ID from the Authorization header
 const getUserIdFromAuthHeader = (request) => {
   const authHeader = request.headers.get("Authorization");
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -14,26 +13,26 @@ const getUserIdFromAuthHeader = (request) => {
   }
   const token = authHeader.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  return decoded.id; // Assuming `decoded.id` contains the user ID
+  return decoded.id; 
 };
 
 // Create a walk
 const createWalk = async (req) => {
   try {
     const userId = getUserIdFromAuthHeader(req);
-    const { planId, customer, details } = await req.json();
+    const { planId, question, options } = await req.json();
 
     // Basic validation
-    if (!planId || !customer || !details) {
+    if (!planId || !question || !options) {
       return NextResponse.json(
-        { message: "Plan ID, customer, and details are required" },
+        { message: "Plan ID, question, and options are required" },
         { status: 400 }
       );
     }
 
     const updatedProject = await Project.findOneAndUpdate(
       { _id: planId, userId },
-      { $push: { walk: { customer, details } } }, 
+      { $push: { walk: { question, options } } }, 
       { new: true }
     );
 
@@ -83,29 +82,30 @@ const getWalks = async (req) => {
   }
 };
 
-// Update a walk
+// Update a walk using the index
 const updateWalk = async (req) => {
   try {
     const userId = getUserIdFromAuthHeader(req); // Extract user ID
-    const { planId, walkId, customer, details } = await req.json();
+    const { planId, index, question, options } = await req.json();
 
     // Basic validation
-    if (!planId || !walkId || !customer || !details) {
+    if (typeof index !== "number" || !question || !options) {
       return NextResponse.json(
-        { message: "Plan ID, walk ID, customer, and details are required" },
+        { message: "Plan ID, index, question, and options are required" },
         { status: 400 }
       );
     }
 
+    // Find the plan and update the walk at the given index
     const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId, userId, "walk._id": walkId }, // Ensure the walk belongs to the authenticated user's plan
-      { $set: { "walk.$": { customer, details } } }, // Update the specific walk in the array
+      { _id: planId, userId },
+      { $set: { [`walk.${index}.question`]: question, [`walk.${index}.options`]: options } }, 
       { new: true }
     );
 
     if (!updatedProject) {
       return NextResponse.json(
-        { message: "Walk not found or unauthorized" },
+        { message: "Plan not found or unauthorized" },
         { status: 404 }
       );
     }
@@ -117,22 +117,23 @@ const updateWalk = async (req) => {
   }
 };
 
-// Delete a walk
+// Delete a walk using the index
 const deleteWalk = async (req) => {
   try {
     const userId = getUserIdFromAuthHeader(req); // Extract user ID
-    const { planId, walkId } = await req.json();
+    const { planId, index } = await req.json();
 
-    if (!planId || !walkId) {
+    if (typeof index !== "number") {
       return NextResponse.json(
-        { message: "Plan ID and walk ID are required" },
+        { message: "Plan ID and index are required" },
         { status: 400 }
       );
     }
 
+    // Find the plan and remove the walk at the given index
     const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId, userId }, 
-      { $pull: { walk: { _id: walkId } } }, 
+      { _id: planId, userId },
+      { $pull: { walk: { _id: { $eq: null } } } }, 
       { new: true }
     );
 
@@ -153,7 +154,35 @@ const deleteWalk = async (req) => {
   }
 };
 
-export const POST = connectDb(createWalk);
-export const GET = connectDb(getWalks);
+// Handle POST requests (create or fetch actions)
+const handlePost = async (req) => {
+  try {
+    const userId = getUserIdFromAuthHeader(req); 
+    if (!userId) {
+      return NextResponse.json({ message: "Authorization required" }, { status: 401 });
+    }
+    const { action, ...data } = await req.json();
+    let result;
+
+    switch (action) {
+      case "create":
+        result = await createWalk(req); 
+        return NextResponse.json(result, { status: 201 });
+      case "fetch":
+        result = await getWalks(req); 
+        return NextResponse.json(result, { status: 200 });  
+      default:
+        return NextResponse.json({ message: "Invalid action" }, { status: 400 });
+    }
+    
+  } catch (error) {
+    return NextResponse.json(
+      { message: error.message || "Server error" },
+      { status: 500 }
+    );
+  }
+};
+
+export const POST = connectDb(handlePost);
 export const PUT = connectDb(updateWalk);
 export const DELETE = connectDb(deleteWalk);

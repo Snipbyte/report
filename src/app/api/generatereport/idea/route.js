@@ -10,8 +10,8 @@ const authorizeRequest = (req) => {
   }
 
   try {
-    const decoded = jwt.verify(authHeader, process.env.JWT_SECRET); // Replace with your secret
-    return decoded; // Return decoded user info if needed
+    const decoded = jwt.verify(authHeader, process.env.JWT_SECRET); 
+    return decoded; 
   } catch (err) {
     throw new Error("Invalid token");
   }

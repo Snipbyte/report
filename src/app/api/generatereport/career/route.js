@@ -3,146 +3,140 @@ import connectDb from "../../../../../backend/middleware/db";
 import Project from "../../../../../backend/models/Plan";
 import jwt from "jsonwebtoken";
 
-const getUserIdFromAuthHeader = (request) => {
-  const authHeader = request.headers.get("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return NextResponse.json(
-      { message: "Authorization token is required" },
-      { status: 401 }
-    );
+// Authorization function to verify JWT token
+const authorizeRequest = (req) => {
+  const authHeader = req.headers.get("authorization");
+  if (!authHeader) {
+    throw new Error("Unauthorized");
   }
-  const token = authHeader.split(" ")[1];
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  return decoded.id; 
+
+  try {
+    const decoded = jwt.verify(authHeader, process.env.JWT_SECRET); 
+    return decoded; 
+  } catch (err) {
+    throw new Error("Invalid token");
+  }
 };
 
-const createCareer = async (req) => {
-  try {
-    const userId = getUserIdFromAuthHeader(req); 
-    const { questions, otherDetails, planId } = await req.json();
+// Function to create an idea
+const createIdea = async (data) => {
+  const { typeOfActivity, projectName, address, launchDate, planId } = data;
+  if (!typeOfActivity || !projectName || !address || !launchDate || !planId) {
+    throw new Error("Missing required fields for creating an idea");
+  }
 
-    if (!planId) {
-      return NextResponse.json(
-        { message: "Plan ID is required" },
-        { status: 400 }
-      );
+  const project = new Project({
+    planId,
+    idea: { typeOfActivity, projectName, address, launchDate },
+  });
+  const savedProject = await project.save();
+  return savedProject;
+};
+
+// Function to fetch ideas
+const getIdeas = async (data) => {
+  const { planId } = data;
+  if (!planId) {
+    throw new Error("Missing planId");
+  }
+
+  // Correct query using `_id`
+  const ideas = await Project.find({ _id: planId }, "idea");
+  if (!ideas || ideas.length === 0) {
+    throw new Error("No ideas found for the given planId");
+  }
+
+  return ideas;
+};
+
+// POST handler function
+const handlePost = async (req) => {
+  try {
+    const decodedUser = authorizeRequest(req); // Authorization check
+    const { action, ...data } = await req.json();
+
+    let result;
+
+    switch (action) {
+      case "create":
+        result = await createIdea(data); // Call createIdea function
+        return NextResponse.json(result, { status: 201 });
+      case "fetch":
+        result = await getIdeas(data); // Call getIdeas function
+        return NextResponse.json(result, { status: 200 });
+      default:
+        throw new Error("Invalid action");
     }
+  } catch (error) {
+    const status =
+      error.message === "Unauthorized" || error.message === "Invalid token"
+        ? 401
+        : 500;
+    return NextResponse.json(
+      { message: error.message || "Server error" },
+      { status }
+    );
+  }
+};
+
+// PUT handler function to update an idea
+const updateIdea = async (req) => {
+  try {
+    const decodedUser = authorizeRequest(req); // Authorization check
+    const { id, idea, planId } = await req.json();
 
     const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId, userId }, 
-      { career: { questions, otherDetails } },
+      { _id: planId }, // Find the plan by id
+      { idea }, // Update the idea
       { new: true }
     );
 
     if (!updatedProject) {
-      return NextResponse.json({ message: "Plan not found" }, { status: 404 });
+      throw new Error("Idea not found or planId mismatch");
     }
 
     return NextResponse.json(updatedProject, { status: 200 });
   } catch (error) {
+    const status =
+      error.message === "Unauthorized" || error.message === "Invalid token"
+        ? 401
+        : 500;
     return NextResponse.json(
-      { message: error.message || "Failed to save career details" },
-      { status: 500 }
+      { message: error.message || "Failed to update idea" },
+      { status }
     );
   }
 };
 
-const getCareers = async (req) => {
+// DELETE handler function to delete an idea
+const deleteIdea = async (req) => {
   try {
-    const userId = getUserIdFromAuthHeader(req);
-    const { planId } = await req.json();
+    const decodedUser = authorizeRequest(req); // Authorization check
+    const { id, planId } = await req.json();
 
-    if (!planId) {
-      return NextResponse.json(
-        { message: "Plan ID is required" },
-        { status: 400 }
-      );
-    }
+    const deletedProject = await Project.findOneAndDelete({ _id: id, planId });
 
-    const project = await Project.findOne(
-      { _id: planId, userId }, 
-      "career" 
-    );
-
-    if (!project) {
-      return NextResponse.json({ message: "Plan not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(project.career, { status: 200 });
-  } catch (error) {
-    return NextResponse.json(
-      { message: error.message || "Failed to fetch career details" },
-      { status: 500 }
-    );
-  }
-};
-
-const updateCareer = async (req) => {
-  try {
-    const userId = getUserIdFromAuthHeader(req); 
-    const { planId, questions, otherDetails } = await req.json();
-
-    if (!planId) {
-      return NextResponse.json(
-        { message: "Plan ID is required" },
-        { status: 400 }
-      );
-    }
-
-    const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId, userId }, 
-      { career: { questions, otherDetails } },
-      { new: true }
-    );
-
-    if (!updatedProject) {
-      return NextResponse.json({ message: "Plan not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(updatedProject, { status: 200 });
-  } catch (error) {
-    return NextResponse.json(
-      { message: error.message || "Failed to update career details" },
-      { status: 500 }
-    );
-  }
-};
-
-const deleteCareer = async (req) => {
-  try {
-    const userId = getUserIdFromAuthHeader(req);
-    const { planId } = await req.json();
-
-    if (!planId) {
-      return NextResponse.json(
-        { message: "Plan ID is required" },
-        { status: 400 }
-      );
-    }
-
-    const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId, userId }, // Ensure the plan belongs to the authenticated user
-      { $unset: { career: "" } }, // Remove the career field
-      { new: true }
-    );
-
-    if (!updatedProject) {
-      return NextResponse.json({ message: "Plan not found" }, { status: 404 });
+    if (!deletedProject) {
+      throw new Error("Idea not found or planId mismatch");
     }
 
     return NextResponse.json(
-      { message: "Career details deleted successfully" },
+      { message: "Idea deleted successfully" },
       { status: 200 }
     );
   } catch (error) {
+    const status =
+      error.message === "Unauthorized" || error.message === "Invalid token"
+        ? 401
+        : 500;
     return NextResponse.json(
-      { message: error.message || "Failed to delete career details" },
-      { status: 500 }
+      { message: error.message || "Failed to delete idea" },
+      { status }
     );
   }
 };
 
-export const POST = connectDb(createCareer);
-export const GET = connectDb(getCareers);
-export const PUT = connectDb(updateCareer);
-export const DELETE = connectDb(deleteCareer);
+// Export handlers
+export const POST = connectDb(handlePost);
+export const PUT = connectDb(updateIdea);
+export const DELETE = connectDb(deleteIdea);

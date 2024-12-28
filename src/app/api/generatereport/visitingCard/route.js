@@ -28,17 +28,22 @@ const createVisitingCard = async (req) => {
       );
     }
 
-    const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId, userId }, // Ensure the plan belongs to the authenticated user
-      { visitingCard: { firstName, lastName, title, phone, email } },
-      { new: true }
-    );
-
-    if (!updatedProject) {
-      return NextResponse.json({ message: "Plan not found or unauthorized" }, { status: 404 });
+    // Fetch the plan first
+    const plan = await Plan.findById(planId);
+    if (!plan) {
+      return NextResponse.json({ message: "Plan not found" }, { status: 404 });
     }
 
-    return NextResponse.json(updatedProject, { status: 201 });
+    // Ensure that the plan belongs to the authenticated user
+    if (plan.userId.toString() !== userId) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
+    }
+
+    // Update the visitingCard field of the plan
+    plan.visitingCard = { firstName, lastName, title, phone, email };
+    const updatedPlan = await plan.save();
+
+    return NextResponse.json(updatedPlan, { status: 201 });
   } catch (error) {
     return NextResponse.json(
       { message: error.message || "Failed to save visiting card" },
@@ -50,7 +55,7 @@ const createVisitingCard = async (req) => {
 // Fetch visiting cards
 const getVisitingCards = async (req) => {
   try {
-    const userId = getUserIdFromAuthHeader(req); // Extract user ID
+    const userId = getUserIdFromAuthHeader(req); 
     const { planId } = await req.json();
 
     if (!planId) {
@@ -61,7 +66,7 @@ const getVisitingCards = async (req) => {
     }
 
     const project = await Project.findOne(
-      { _id: planId, userId }, // Ensure the plan belongs to the authenticated user
+      { _id: planId, userId }, 
       "visitingCard"
     );
 
@@ -145,7 +150,34 @@ const deleteVisitingCard = async (req) => {
   }
 };
 
-export const POST = connectDb(createVisitingCard);
-export const GET = connectDb(getVisitingCards);
+const handlePost = async (req) => {
+  try {
+    const userId = getUserIdFromAuthHeader(req); 
+    if(!userId) {
+      return NextResponse.json({ message: "Authorization} required" }, { status: 401 });
+      }
+    const { action, ...data } = await req.json();
+    let result;
+
+    switch (action) {
+      case "create":
+        result = await createVisitingCard(req); 
+        return NextResponse.json(result, { status: 201 });
+      case "fetch":
+        result = await getVisitingCards(req); 
+        return NextResponse.json(result, { status: 200 });  // Added return for fetch case
+      default:
+        return NextResponse.json({ message: "Invalid action" }, { status: 400 });
+    }
+    
+  } catch (error) {
+    return NextResponse.json(
+      { message: error.message || "Server error" },
+      { status: 500 }
+    );
+  }
+};
+
+export const POST = connectDb(handlePost);
 export const PUT = connectDb(updateVisitingCard);
 export const DELETE = connectDb(deleteVisitingCard);

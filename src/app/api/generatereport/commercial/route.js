@@ -18,11 +18,8 @@ const getUserIdFromAuthHeader = (request) => {
 };
 
 // Create a commercial (Update the sales pitch)
-const createCommercial = async (req) => {
+const createCommercial = async (userId, { planId, salesPitch }) => {
   try {
-    const userId = getUserIdFromAuthHeader(req);
-    const { planId, salesPitch } = await req.json();
-
     // Basic validation
     if (!planId || !salesPitch) {
       return NextResponse.json(
@@ -51,11 +48,8 @@ const createCommercial = async (req) => {
 };
 
 // Get commercials (Fetch the commercial field)
-const getCommercials = async (req) => {
+const getCommercials = async (userId, { planId }) => {
   try {
-    const userId = getUserIdFromAuthHeader(req);
-    const { planId } = await req.json();
-
     // Basic validation
     if (!planId) {
       return NextResponse.json({ message: "Plan ID is required" }, { status: 400 });
@@ -152,8 +146,33 @@ const deleteCommercial = async (req) => {
   }
 };
 
+// Combined handler for POST requests: Switch between create and get actions
+const handleCommercialRequest = async (req) => {
+  try {
+    const { action, planId, salesPitch } = await req.json();
+    const userId = getUserIdFromAuthHeader(req);  // Get the user ID from the header
+
+    switch (action) {
+      case "create":
+        return createCommercial(userId, { planId, salesPitch });
+      case "fetch":
+        return getCommercials(userId, { planId });
+      default:
+        return NextResponse.json(
+          { message: "Action not supported" },
+          { status: 400 }
+        );
+    }
+  } catch (error) {
+    console.error("Error handling commercial request:", error);
+    return NextResponse.json(
+      { message: "Failed to process commercial request" },
+      { status: 500 }
+    );
+  }
+};
+
 // Export the API methods for POST, GET, PUT, DELETE
-export const POST = connectDb(createCommercial);
-export const GET = connectDb(getCommercials);
+export const POST = connectDb(handleCommercialRequest);
 export const PUT = connectDb(updateCommercial);
 export const DELETE = connectDb(deleteCommercial);

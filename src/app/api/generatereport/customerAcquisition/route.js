@@ -20,10 +20,10 @@ const getUserIdFromAuthHeader = (request) => {
   }
 };
 
-const createCustomerAcquisition = async (req) => {
+// Function to create a customer acquisition
+const createCustomerAcquisition = async (req, body) => {
   try {
-    const { planId, strategyName, targetAudience, cost, channels, successRate } =
-      await req.json();
+    const { planId, strategyName, targetAudience, cost, channels, successRate } = body;
 
     const userId = getUserIdFromAuthHeader(req);
 
@@ -70,10 +70,10 @@ const createCustomerAcquisition = async (req) => {
   }
 };
 
-const getCustomerAcquisitions = async (req) => {
+// Function to get all customer acquisitions for a project
+const getCustomerAcquisitions = async (req, body) => {
   try {
-    const { planId } =
-      await req.json();
+    const { planId } = body;
     const userId = getUserIdFromAuthHeader(req);
 
     if (!userId) {
@@ -100,10 +100,10 @@ const getCustomerAcquisitions = async (req) => {
   }
 };
 
+// Function to update an existing customer acquisition
 const updateCustomerAcquisition = async (req) => {
   try {
-    const { planId, customerAcquisitionIndex, strategyName, targetAudience, cost, channels, successRate } =
-      await req.json();
+    const { planId, customerAcquisitionIndex, strategyName, targetAudience, cost, channels, successRate } = await req.json();
 
     const userId = getUserIdFromAuthHeader(req);
 
@@ -150,6 +150,7 @@ const updateCustomerAcquisition = async (req) => {
   }
 };
 
+// Function to delete an existing customer acquisition
 const deleteCustomerAcquisition = async (req) => {
   try {
     const { planId, customerAcquisitionIndex } = await req.json();
@@ -184,7 +185,27 @@ const deleteCustomerAcquisition = async (req) => {
   }
 };
 
-export const POST = connectDb(createCustomerAcquisition);
-export const GET = connectDb(getCustomerAcquisitions);
+// Main request handler function
+const handleRequest = async (req) => {
+  try {
+    const body = await req.json();  
+    const { action } = body;
+
+    switch (action) {
+      case "create":
+        return await createCustomerAcquisition(req, body);
+      case "fetch":
+        return await getCustomerAcquisitions(req, body);
+      default:
+        return NextResponse.json({ message: "Invalid action" }, { status: 400 });
+    }
+  } catch (error) {
+    console.error("Error handling request:", error);
+    return NextResponse.json({ message: "Failed to parse request body" }, { status: 400 });
+  }
+};
+
+// Exporting POST, PUT, DELETE methods with DB connection
+export const POST = connectDb(handleRequest);
 export const PUT = connectDb(updateCustomerAcquisition);
 export const DELETE = connectDb(deleteCustomerAcquisition);

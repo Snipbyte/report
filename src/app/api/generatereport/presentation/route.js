@@ -3,23 +3,26 @@ import connectDb from "../../../../../backend/middleware/db";
 import Project from "../../../../../backend/models/Plan";
 import jwt from "jsonwebtoken";
 
-// Authorization check function
-const authorizeRequest = (req) => {
-  const authHeader = req.headers.get("authorization");
-  if (!authHeader) {
-    throw new Error("Unauthorized");
+// Function to extract user ID from Bearer token in Authorization header
+const getUserIdFromAuthHeader = (request) => {
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return NextResponse.json(
+      { message: "Authorization token is required" },
+      { status: 401 }
+    );
   }
-
+  const token = authHeader.split(" ")[1];
   try {
-    const decoded = jwt.verify(authHeader, process.env.JWT_SECRET); // Replace with your secret
-    return decoded; // Return decoded user info if needed
-  } catch (err) {
-    throw new Error("Invalid token");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Replace with your secret
+    return decoded.id; // Return user ID from decoded token
+  } catch (error) {
+    return NextResponse.json({ message: "Invalid token" }, { status: 401 });
   }
 };
 
 // Create a new presentation
-const createPresentation = async (data) => {
+const createPresentation = async (data, userId) => {
   const { content, planId } = data;
   if (!content || !planId) {
     throw new Error("Missing required fields for creating a presentation");
@@ -27,6 +30,7 @@ const createPresentation = async (data) => {
 
   const project = new Project({
     planId,
+    userId,  // Associate user ID with the project
     presentation: { details: content }, // Save content in details
   });
   const savedProject = await project.save();
@@ -40,7 +44,7 @@ const getPresentation = async (data) => {
     throw new Error("Missing planId");
   }
 
-  // Correct query using `_id`
+  // Correct query using _id
   const project = await Project.findOne({ _id: planId }, "presentation");
   if (!project || !project.presentation) {
     throw new Error("Presentation not found for the given planId");
@@ -52,14 +56,14 @@ const getPresentation = async (data) => {
 // Handle POST requests
 const handlePost = async (req) => {
   try {
-    authorizeRequest(req); // Authorization check
+    const userId = getUserIdFromAuthHeader(req); // Get user ID from the token
     const { action, ...data } = await req.json();
 
     let result;
 
     switch (action) {
       case "create":
-        result = await createPresentation(data);
+        result = await createPresentation(data, userId); // Pass user ID when creating
         return NextResponse.json(result, { status: 201 });
       case "fetch":
         result = await getPresentation(data);
@@ -82,7 +86,7 @@ const handlePost = async (req) => {
 // Update a presentation
 const updatePresentation = async (req) => {
   try {
-    authorizeRequest(req); // Authorization check
+    const userId = getUserIdFromAuthHeader(req); // Get user ID from the token
 
     const { planId, content } = await req.json();
     if (!planId || !content) {
@@ -90,7 +94,7 @@ const updatePresentation = async (req) => {
     }
 
     const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId },
+      { _id: planId, userId },  // Ensure the userId matches
       { presentation: { details: content } }, // Save updated content in details
       { new: true }
     );
@@ -114,7 +118,7 @@ const updatePresentation = async (req) => {
 // Delete a presentation
 const deletePresentation = async (req) => {
   try {
-    authorizeRequest(req);
+    const userId = getUserIdFromAuthHeader(req); // Get user ID from the token
 
     const { planId } = await req.json();
     if (!planId) {
@@ -122,7 +126,7 @@ const deletePresentation = async (req) => {
     }
 
     const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId },
+      { _id: planId, userId },  // Ensure the userId matches
       { $unset: { presentation: "" } },
       { new: true }
     );
