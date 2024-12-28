@@ -3,113 +3,132 @@ import connectDb from "../../../../../backend/middleware/db";
 import Project from "../../../../../backend/models/Plan";
 import jwt from "jsonwebtoken";
 
-const getUserIdFromAuthHeader = (request) => {
-  const authHeader = request.headers.get("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    throw new Error("Authorization token is required");
+// Authorization check function
+const authorizeRequest = (req) => {
+  const authHeader = req.headers.get("authorization");
+  if (!authHeader) {
+    throw new Error("Unauthorized");
   }
-  const token = authHeader.split(" ")[1];
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  return decoded.id;
-};
 
-const createPresentation = async (req) => {
   try {
-    const userId = getUserIdFromAuthHeader(req); 
-    const { content, planId } = await req.json();
-
-    if (!planId) {
-      return NextResponse.json({ message: "Plan ID is required" }, { status: 400 });
-    }
-
-    const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId, userId },
-      { presentation: { content } },
-      { new: true }
-    );
-
-    if (!updatedProject) {
-      return NextResponse.json({ message: "Plan not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(updatedProject, { status: 200 });
-  } catch (error) {
-    return NextResponse.json(
-      { message: error.message || "Failed to save presentation" },
-      { status: 500 }
-    );
+    const decoded = jwt.verify(authHeader, process.env.JWT_SECRET); // Replace with your secret
+    return decoded; // Return decoded user info if needed
+  } catch (err) {
+    throw new Error("Invalid token");
   }
 };
 
-const getPresentations = async (req) => {
+// Create a new presentation
+const createPresentation = async (data) => {
+  const { content, planId } = data;
+  if (!content || !planId) {
+    throw new Error("Missing required fields for creating a presentation");
+  }
+
+  const project = new Project({
+    planId,
+    presentation: { details: content }, // Save content in details
+  });
+  const savedProject = await project.save();
+  return savedProject;
+};
+
+// Fetch a presentation
+const getPresentation = async (data) => {
+  const { planId } = data;
+  if (!planId) {
+    throw new Error("Missing planId");
+  }
+
+  // Correct query using `_id`
+  const project = await Project.findOne({ _id: planId }, "presentation");
+  if (!project || !project.presentation) {
+    throw new Error("Presentation not found for the given planId");
+  }
+
+  return project.presentation;
+};
+
+// Handle POST requests
+const handlePost = async (req) => {
   try {
-    const userId = getUserIdFromAuthHeader(req);
-    const { planId } = await req.json();
+    authorizeRequest(req); // Authorization check
+    const { action, ...data } = await req.json();
 
-    if (!planId) {
-      return NextResponse.json({ message: "Plan ID is required" }, { status: 400 });
+    let result;
+
+    switch (action) {
+      case "create":
+        result = await createPresentation(data);
+        return NextResponse.json(result, { status: 201 });
+      case "fetch":
+        result = await getPresentation(data);
+        return NextResponse.json(result, { status: 200 });
+      default:
+        throw new Error("Invalid action");
     }
-
-    const project = await Project.findOne({ _id: planId, userId }, "presentation");
-
-    if (!project) {
-      return NextResponse.json({ message: "Plan not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(project.presentation, { status: 200 });
   } catch (error) {
+    const status =
+      error.message === "Unauthorized" || error.message === "Invalid token"
+        ? 401
+        : 500;
     return NextResponse.json(
-      { message: error.message || "Failed to fetch presentation" },
-      { status: 500 }
+      { message: error.message || "Server error" },
+      { status }
     );
   }
 };
 
+// Update a presentation
 const updatePresentation = async (req) => {
   try {
-    const userId = getUserIdFromAuthHeader(req); 
-    const { planId, content } = await req.json();
+    authorizeRequest(req); // Authorization check
 
-    if (!planId) {
-      return NextResponse.json({ message: "Plan ID is required" }, { status: 400 });
+    const { planId, content } = await req.json();
+    if (!planId || !content) {
+      throw new Error("Missing required fields for updating a presentation");
     }
 
     const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId, userId },
-      { presentation: { content } },
+      { _id: planId },
+      { presentation: { details: content } }, // Save updated content in details
       { new: true }
     );
-
     if (!updatedProject) {
-      return NextResponse.json({ message: "Plan not found" }, { status: 404 });
+      throw new Error("Presentation not found or planId mismatch");
     }
 
     return NextResponse.json(updatedProject, { status: 200 });
   } catch (error) {
+    const status =
+      error.message === "Unauthorized" || error.message === "Invalid token"
+        ? 401
+        : 500;
     return NextResponse.json(
       { message: error.message || "Failed to update presentation" },
-      { status: 500 }
+      { status }
     );
   }
 };
 
+// Delete a presentation
 const deletePresentation = async (req) => {
   try {
-    const userId = getUserIdFromAuthHeader(req);
-    const { planId } = await req.json();
+    authorizeRequest(req);
 
+    const { planId } = await req.json();
     if (!planId) {
-      return NextResponse.json({ message: "Plan ID is required" }, { status: 400 });
+      throw new Error("Missing planId for deletion");
     }
 
     const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId, userId },
+      { _id: planId },
       { $unset: { presentation: "" } },
       { new: true }
     );
 
     if (!updatedProject) {
-      return NextResponse.json({ message: "Plan not found" }, { status: 404 });
+      throw new Error("Presentation not found or planId mismatch");
     }
 
     return NextResponse.json(
@@ -117,14 +136,18 @@ const deletePresentation = async (req) => {
       { status: 200 }
     );
   } catch (error) {
+    const status =
+      error.message === "Unauthorized" || error.message === "Invalid token"
+        ? 401
+        : 500;
     return NextResponse.json(
       { message: error.message || "Failed to delete presentation" },
-      { status: 500 }
+      { status }
     );
   }
 };
 
-export const POST = connectDb(createPresentation);
-export const GET = connectDb(getPresentations);
+// Export routes
+export const POST = connectDb(handlePost);
 export const PUT = connectDb(updatePresentation);
 export const DELETE = connectDb(deletePresentation);
