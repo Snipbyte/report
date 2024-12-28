@@ -1,25 +1,46 @@
 import { NextResponse } from "next/server";
 import connectDb from "../../../../../backend/middleware/db";
 import Project from "../../../../../backend/models/Plan";
+import jwt from "jsonwebtoken";
 
+// Helper function to get user ID from the Authorization header
+const getUserIdFromAuthHeader = (request) => {
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return NextResponse.json(
+      { message: "Authorization token is required" },
+      { status: 401 }
+    );
+  }
+  const token = authHeader.split(" ")[1];
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  return decoded.id; 
+};
+
+// Create a commercial (Update the sales pitch)
 const createCommercial = async (req) => {
   try {
-    const { campaignName, budget, startDate, endDate, performance } =
-      await req.json();
+    const userId = getUserIdFromAuthHeader(req);
+    const { planId, salesPitch } = await req.json();
 
     // Basic validation
-    if (!campaignName || !budget || !startDate || !endDate) {
+    if (!planId || !salesPitch) {
       return NextResponse.json(
-        { message: "Campaign name, budget, start date, and end date are required" },
+        { message: "Plan ID and sales pitch are required" },
         { status: 400 }
       );
     }
 
-    const project = new Project({
-      commercial: { campaignName, budget, startDate, endDate, performance },
-    });
-    const savedProject = await project.save();
-    return NextResponse.json(savedProject, { status: 201 });
+    // Ensure the planId belongs to the user
+    const project = await Project.findOne({ _id: planId, userId });
+    if (!project) {
+      return NextResponse.json({ message: "Plan not found or user is not authorized" }, { status: 404 });
+    }
+
+    // Update the sales pitch in the project
+    project.commercial.salesPitch = salesPitch;
+    await project.save();
+    return NextResponse.json(project, { status: 201 });
   } catch (error) {
     console.error("Error creating commercial:", error);
     return NextResponse.json(
@@ -29,9 +50,22 @@ const createCommercial = async (req) => {
   }
 };
 
-const getCommercials = async () => {
+// Get commercials (Fetch the commercial field)
+const getCommercials = async (req) => {
   try {
-    const commercials = await Project.find({}, "commercial");
+    const userId = getUserIdFromAuthHeader(req);
+    const { planId } = await req.json();
+
+    // Basic validation
+    if (!planId) {
+      return NextResponse.json({ message: "Plan ID is required" }, { status: 400 });
+    }
+
+    const commercials = await Project.find({ _id: planId, userId }, "commercial");
+    if (!commercials.length) {
+      return NextResponse.json({ message: "No commercials found or user is not authorized" }, { status: 404 });
+    }
+
     return NextResponse.json(commercials, { status: 200 });
   } catch (error) {
     console.error("Error fetching commercials:", error);
@@ -42,26 +76,34 @@ const getCommercials = async () => {
   }
 };
 
+// Update a commercial (Update the sales pitch)
 const updateCommercial = async (req) => {
   try {
-    const { id, campaignName, budget, startDate, endDate, performance } =
-      await req.json();
+    const userId = getUserIdFromAuthHeader(req);
+    const { planId, salesPitch } = await req.json();
 
     // Basic validation
-    if (!id || !campaignName || !budget || !startDate || !endDate) {
+    if (!planId || !salesPitch) {
       return NextResponse.json(
-        { message: "ID, campaign name, budget, start date, and end date are required" },
+        { message: "Plan ID and sales pitch are required" },
         { status: 400 }
       );
     }
 
-    const updatedProject = await Project.findByIdAndUpdate(
-      id,
-      {
-        commercial: { campaignName, budget, startDate, endDate, performance },
-      },
+    // Ensure the planId belongs to the user
+    const updatedProject = await Project.findOneAndUpdate(
+      { _id: planId, userId },
+      { commercial: { salesPitch } },
       { new: true }
     );
+
+    if (!updatedProject) {
+      return NextResponse.json(
+        { message: "Commercial not found or user is not authorized" },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json(updatedProject, { status: 200 });
   } catch (error) {
     console.error("Error updating commercial:", error);
@@ -72,16 +114,31 @@ const updateCommercial = async (req) => {
   }
 };
 
+// Delete a commercial (Remove the commercial field)
 const deleteCommercial = async (req) => {
   try {
-    const { id } = await req.json();
+    const userId = getUserIdFromAuthHeader(req);
+    const { planId } = await req.json();
 
     // Basic validation
-    if (!id) {
-      return NextResponse.json({ message: "ID is required" }, { status: 400 });
+    if (!planId) {
+      return NextResponse.json({ message: "Plan ID is required" }, { status: 400 });
     }
 
-    await Project.findByIdAndDelete(id);
+    // Ensure the planId belongs to the user
+    const deletedProject = await Project.findOneAndUpdate(
+      { _id: planId, userId },
+      { $unset: { commercial: "" } }, // Removes the commercial field
+      { new: true }
+    );
+
+    if (!deletedProject) {
+      return NextResponse.json(
+        { message: "Commercial not found or user is not authorized" },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json(
       { message: "Commercial deleted successfully" },
       { status: 200 }
@@ -95,6 +152,7 @@ const deleteCommercial = async (req) => {
   }
 };
 
+// Export the API methods for POST, GET, PUT, DELETE
 export const POST = connectDb(createCommercial);
 export const GET = connectDb(getCommercials);
 export const PUT = connectDb(updateCommercial);

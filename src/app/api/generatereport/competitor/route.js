@@ -1,22 +1,40 @@
 import { NextResponse } from "next/server";
 import connectDb from "../../../../../backend/middleware/db";
 import Project from "../../../../../backend/models/Plan";
+import jwt from "jsonwebtoken";
+
+// Function to extract userId from Authorization header
+const getUserIdFromAuthHeader = (request) => {
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return NextResponse.json(
+      { message: "Authorization token is required" },
+      { status: 401 }
+    );
+  }
+  const token = authHeader.split(" ")[1];
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  return decoded.id;
+};
 
 const createCompetitor = async (req) => {
   try {
-    const { competitorName, analysis, strengths, weaknesses } = await req.json();
+    const userId = getUserIdFromAuthHeader(req); 
+    const { planId, competitorName, analysis, strengths, weaknesses } = await req.json();
 
-    // Basic validation
-    if (!competitorName || !analysis) {
+    if (!planId || !competitorName || !analysis) {
       return NextResponse.json(
-        { message: "Competitor name and analysis are required" },
+        { message: "Plan ID, competitor name, and analysis are required" },
         { status: 400 }
       );
     }
 
-    const project = new Project({
-      competitor: { competitorName, analysis, strengths, weaknesses },
-    });
+    const project = await Project.findOne({ _id: planId, userId });
+    if (!project) {
+      return NextResponse.json({ message: "Plan not found or user is not authorized" }, { status: 404 });
+    }
+
+    project.competitor.push({ competitorName, analysis, strengths, weaknesses });
     const savedProject = await project.save();
     return NextResponse.json(savedProject, { status: 201 });
   } catch (error) {
@@ -28,10 +46,23 @@ const createCompetitor = async (req) => {
   }
 };
 
-const getCompetitors = async () => {
+const getCompetitors = async (req) => {
   try {
-    const competitors = await Project.find({}, "competitor");
-    return NextResponse.json(competitors, { status: 200 });
+    const userId = getUserIdFromAuthHeader(req);
+    const { planId } = await req.json(); // Expect planId in the body
+
+    // Basic validation
+    if (!planId) {
+      return NextResponse.json({ message: "Plan ID is required" }, { status: 400 });
+    }
+
+    // Ensure the planId belongs to the user
+    const project = await Project.findOne({ _id: planId, userId });
+    if (!project) {
+      return NextResponse.json({ message: "Plan not found or user is not authorized" }, { status: 404 });
+    }
+
+    return NextResponse.json(project.competitor, { status: 200 });
   } catch (error) {
     console.error("Error fetching competitors:", error);
     return NextResponse.json(
@@ -43,23 +74,37 @@ const getCompetitors = async () => {
 
 const updateCompetitor = async (req) => {
   try {
-    const { id, competitorName, analysis, strengths, weaknesses } =
+    const userId = getUserIdFromAuthHeader(req); // Extract userId from token
+    const { planId, competitorIndex, competitorName, analysis, strengths, weaknesses } =
       await req.json();
 
     // Basic validation
-    if (!id || !competitorName || !analysis) {
+    if (competitorIndex === undefined || competitorIndex === null || !planId || !competitorName || !analysis) {
       return NextResponse.json(
-        { message: "ID, competitor name, and analysis are required" },
+        { message: "Plan ID, competitor index, competitor name, and analysis are required" },
         { status: 400 }
       );
     }
 
-    const updatedProject = await Project.findByIdAndUpdate(
-      id,
-      { competitor: { competitorName, analysis, strengths, weaknesses } },
-      { new: true }
-    );
-    return NextResponse.json(updatedProject, { status: 200 });
+    // Ensure the planId belongs to the user
+    const project = await Project.findOne({ _id: planId, userId });
+    if (!project) {
+      return NextResponse.json({ message: "Plan not found or user is not authorized" }, { status: 404 });
+    }
+
+    // Find and update the competitor by index
+    const competitor = project.competitor[competitorIndex];
+    if (!competitor) {
+      return NextResponse.json({ message: "Competitor not found" }, { status: 404 });
+    }
+
+    competitor.competitorName = competitorName;
+    competitor.analysis = analysis;
+    competitor.strengths = strengths;
+    competitor.weaknesses = weaknesses;
+
+    await project.save();
+    return NextResponse.json(project, { status: 200 });
   } catch (error) {
     console.error("Error updating competitor:", error);
     return NextResponse.json(
@@ -71,18 +116,29 @@ const updateCompetitor = async (req) => {
 
 const deleteCompetitor = async (req) => {
   try {
-    const { id } = await req.json();
+    const userId = getUserIdFromAuthHeader(req); // Extract userId from token
+    const { planId, competitorIndex } = await req.json();
 
     // Basic validation
-    if (!id) {
-      return NextResponse.json({ message: "ID is required" }, { status: 400 });
+    if (competitorIndex === undefined || competitorIndex === null || !planId) {
+      return NextResponse.json({ message: "Plan ID and competitor index are required" }, { status: 400 });
     }
 
-    await Project.findByIdAndDelete(id);
-    return NextResponse.json(
-      { message: "Competitor deleted successfully" },
-      { status: 200 }
-    );
+    // Ensure the planId belongs to the user
+    const project = await Project.findOne({ _id: planId, userId });
+    if (!project) {
+      return NextResponse.json({ message: "Plan not found or user is not authorized" }, { status: 404 });
+    }
+
+    // Remove the competitor from the plan by index
+    const competitor = project.competitor[competitorIndex];
+    if (!competitor) {
+      return NextResponse.json({ message: "Competitor not found" }, { status: 404 });
+    }
+
+    project.competitor.splice(competitorIndex, 1);  // Remove competitor by index
+    await project.save();
+    return NextResponse.json(project, { status: 200 });
   } catch (error) {
     console.error("Error deleting competitor:", error);
     return NextResponse.json(
