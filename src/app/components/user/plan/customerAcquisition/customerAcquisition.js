@@ -8,8 +8,10 @@ const ReactQuill = dynamic(() => import("react-quill"), {
 });
 
 import "react-quill/dist/quill.snow.css";
+import { useRouter } from "next/navigation";
 
 const CustomerAcquisition = () => {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actions, setActions] = useState([]);
   const [currentAction, setCurrentAction] = useState({
@@ -109,6 +111,7 @@ const CustomerAcquisition = () => {
     if (response.ok) {
       // Handle success, e.g., display success message
       console.log("Plan updated successfully:", data);
+      router.push("/user/report-download");
     } else {
       // Handle failure, e.g., display error message
       console.error("Error updating plan:", data.message);
