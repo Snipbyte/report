@@ -1,24 +1,28 @@
 "use client";
-import React, { useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation"; 
+
+import React, { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import PlanMainPage from "@/app/components/user/plan/planMainPage/planMainPage";
 
 const Plan = () => {
-  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const searchParams = useSearchParams();
+  const reportId = searchParams.get("report");
 
   useEffect(() => {
     const initializePlan = async () => {
-      if (searchParams.has("report")) {
+      // If 'report' query parameter exists, skip API initialization
+      if (reportId) {
         console.log("Report query parameter exists. Skipping API call.");
+        setLoading(false);
         return;
       }
 
       try {
         const token = localStorage.getItem("token"); // Retrieve token from localStorage
         if (!token) {
-          console.error("Authorization token not found in localStorage");
-          return;
+          throw new Error("Authorization token not found in localStorage.");
         }
 
         const response = await fetch("/api/generatereport/initialize", {
@@ -31,8 +35,7 @@ const Plan = () => {
 
         if (!response.ok) {
           const errorData = await response.json();
-          console.error("Error creating plan:", errorData.message);
-          return;
+          throw new Error(errorData.message || "Failed to create plan.");
         }
 
         const responseData = await response.json();
@@ -43,14 +46,42 @@ const Plan = () => {
         localStorage.setItem("planId", planId);
 
         // Redirect to the URL with the report query parameter
-        router.push(`/user/plan?report=${planId}`);
+        window.location.href = `/user/plan?report=${planId}`;
       } catch (error) {
+        setError(error.message);
         console.error("Failed to initialize plan:", error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     initializePlan();
-  }, [searchParams, router]); // Include dependencies
+  }, [reportId]); // Include reportId as a dependency
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <div className="text-xl text-gray-700">Initializing plan...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-red-100 text-red-800">
+        <div className="max-w-md w-full p-6 rounded-lg shadow-md text-center">
+          <h1 className="text-2xl font-bold mb-4">Initialization Failed</h1>
+          <p className="mb-4">{error}</p>
+          <a
+            href="/"
+            className="mt-4 inline-block text-blue-600 hover:underline"
+          >
+            Go to Home
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -59,4 +90,16 @@ const Plan = () => {
   );
 };
 
-export default Plan;
+const PlanWithSuspense = () => (
+  <Suspense
+    fallback={
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <div className="text-xl text-gray-700">Loading...</div>
+      </div>
+    }
+  >
+    <Plan />
+  </Suspense>
+);
+
+export default PlanWithSuspense;
