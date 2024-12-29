@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+
 // Dynamically import ReactQuill to ensure it runs only on the client
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -8,13 +9,53 @@ const ReactQuill = dynamic(() => import("react-quill"), {
 import "react-quill/dist/quill.snow.css";
 
 const Commercial = ({ goToNext }) => {
+  const [salesPitch, setSalesPitch] = useState(""); // For storing the sales pitch description
+
+  // Load saved sales pitch from localStorage if it exists
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+    const planId = localStorage.getItem("planId");
+
+    if (planId) {
+      const savedPitch = storedData.salesPitches
+        ? storedData.salesPitches[planId]
+        : "";
+      setSalesPitch(savedPitch);
+    }
+  }, []);
+
+  // Function to save the sales pitch to localStorage
+  const saveSalesPitchToLocalStorage = (newPitch) => {
+    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+    const planId = localStorage.getItem("planId");
+
+    if (planId) {
+      storedData.salesPitches = storedData.salesPitches || {};
+      storedData.salesPitches[planId] = newPitch; // Save new sales pitch
+
+      localStorage.setItem("planData", JSON.stringify(storedData)); // Save the updated data
+    }
+  };
+
+  const handleSalesPitchChange = (value) => {
+    setSalesPitch(value);
+    saveSalesPitchToLocalStorage(value); // Save the updated sales pitch to localStorage
+  };
+
   return (
     <div className="p-4">
-      <p className="text-headingColor text-2xl font-bold mb-4">Your sales pitch</p>
-      <p className="text-paraColor my-2 text-sm">How will you approach your customers? What is your sales strategy? What will you tell them?</p>
+      <p className="text-headingColor text-2xl font-bold mb-4">
+        Your sales pitch
+      </p>
+      <p className="text-paraColor my-2 text-sm">
+        How will you approach your customers? What is your sales strategy? What
+        will you tell them?
+      </p>
       <ReactQuill
         theme="snow"
         className="w-full mb-4"
+        value={salesPitch}
+        onChange={handleSalesPitchChange} // Update the sales pitch on change
         placeholder={`Description`}
       />
       <button

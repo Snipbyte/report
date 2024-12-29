@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import Image from "next/image";
 import { FaEdit } from "react-icons/fa";
 import CustomModal from "../customModal/customModal";
@@ -22,67 +21,45 @@ const Idea = ({ goToNext }) => {
   } = useForm();
 
   useEffect(() => {
-    const fetchIdea = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const planId = localStorage.getItem("planId");
+    // Get the idea from localStorage, if it exists
+    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+    const idea = storedData.idea;
 
-        if (!token || !planId) {
-          console.error("Missing token or planId");
-          return;
-        }
+    if (idea) {
+      const { typeOfActivity, projectName, address, launchDate } = idea;
 
-        setLoading(true);
-        const response = await axios.post(
-          "/api/generatereport/idea",
-          { action: "fetch", planId },
-          { headers: { authorization: token } }
-        );
+      // Set form values from localStorage data
+      reset({
+        typeOfActivity,
+        projectName,
+        address,
+        launchDate: launchDate ? launchDate.split("T")[0] : "",
+      });
 
-        if (response.data && response.data[0]?.idea) {
-          const { typeOfActivity, projectName, address, launchDate } =
-            response.data[0].idea;
-          reset({
-            typeOfActivity,
-            projectName,
-            address,
-            launchDate: launchDate.split("T")[0],
-          });
-          setSelectedSubcategory(typeOfActivity);
-        }
-      } catch (error) {
-        console.error("Failed to fetch idea:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchIdea();
+      // Set selected subcategory based on type of activity
+      setSelectedSubcategory(typeOfActivity || "Street trading");
+    }
   }, [reset]);
 
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     try {
-      const token = localStorage.getItem("token");
-      const planId = localStorage.getItem("planId");
+      const storedData = JSON.parse(localStorage.getItem("planData")) || {};
 
-      if (!token || !planId) {
-        console.error("Missing token or planId");
-        return;
-      }
+      // Append the idea data to the existing data
+      storedData.idea = {
+        ...data,
+        typeOfActivity: selectedSubcategory,
+      };
 
-      setLoading(true);
-      const response = await axios.put(
-        "/api/generatereport/idea",
-        { planId, idea: { ...data, typeOfActivity: selectedSubcategory } },
-        { headers: { Authorization: token } }
-      );
+      // Store the updated plan data in localStorage
+      localStorage.setItem("planData", JSON.stringify(storedData));
 
-      console.log("Idea updated successfully:", response.data);
+      console.log("Idea saved in localStorage:", storedData);
+
+      // Proceed to the next step
       goToNext();
     } catch (error) {
-      console.error("Failed to update idea:", error);
-    } finally {
-      setLoading(false);
+      console.error("Failed to save idea in localStorage:", error);
     }
   };
 

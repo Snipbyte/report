@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { FaHandPointDown, FaEdit, FaTrash } from "react-icons/fa";
 // Dynamically import ReactQuill to ensure it runs only on the client
@@ -12,10 +12,49 @@ import "react-quill/dist/quill.snow.css";
 const CustomerAcquisition = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actions, setActions] = useState([]);
-  const [currentAction, setCurrentAction] = useState({ id: null, name: "", description: "" });
+  const [currentAction, setCurrentAction] = useState({
+    id: null,
+    name: "",
+    description: "",
+  });
   const [isPopupOpen, setIsPopupOpen] = useState(false); // State for popup
+  const [token, setToken] = useState(null); // Token state
+  const [planData, setPlanData] = useState(null); // Plan data state
 
-  const handleOpenModal = (action = { id: null, name: "", description: "" }) => {
+  // Load saved actions from localStorage if they exist
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+    const planId = localStorage.getItem("planId");
+
+    if (planId && storedData.customerAcquisitionActions) {
+      setActions(storedData.customerAcquisitionActions[planId] || []);
+    }
+
+    // Retrieve token and plan data from localStorage
+    const storedToken = localStorage.getItem("token");
+    const storedPlanData = JSON.parse(localStorage.getItem("planData"));
+
+    setToken(storedToken);
+    setPlanData(storedPlanData);
+  }, []);
+
+  // Function to save actions to localStorage
+  const saveActionsToLocalStorage = (newActions) => {
+    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+    const planId = localStorage.getItem("planId");
+
+    if (planId) {
+      storedData.customerAcquisitionActions =
+        storedData.customerAcquisitionActions || {};
+      storedData.customerAcquisitionActions[planId] = newActions;
+
+      localStorage.setItem("planData", JSON.stringify(storedData)); // Save the updated actions
+    }
+  };
+
+  const handleOpenModal = (
+    action = { id: null, name: "", description: "" }
+  ) => {
     setCurrentAction(action);
     setIsModalOpen(true);
   };
@@ -23,31 +62,57 @@ const CustomerAcquisition = () => {
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleSaveAction = () => {
+    let updatedActions = [];
+
     if (currentAction.id) {
       // Update existing action
-      setActions((prevActions) =>
-        prevActions.map((action) =>
-          action.id === currentAction.id ? currentAction : action
-        )
+      updatedActions = actions.map((action) =>
+        action.id === currentAction.id ? currentAction : action
       );
     } else {
       // Add new action
-      setActions((prevActions) => [
-        ...prevActions,
-        { ...currentAction, id: Date.now() },
-      ]);
+      updatedActions = [...actions, { ...currentAction, id: Date.now() }];
     }
+
+    setActions(updatedActions);
+    saveActionsToLocalStorage(updatedActions); // Save to localStorage
     setIsModalOpen(false);
     setCurrentAction({ id: null, name: "", description: "" });
   };
 
   const handleRemoveAction = (id) => {
-    setActions((prevActions) => prevActions.filter((action) => action.id !== id));
+    const updatedActions = actions.filter((action) => action.id !== id);
+    setActions(updatedActions);
+    saveActionsToLocalStorage(updatedActions); // Save to localStorage
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Show the popup when Submit is clicked
     setIsPopupOpen(true);
+
+    const planId = localStorage.getItem("planId");
+
+    // Make API request to update the plan
+    const response = await fetch("/api/generatereport/update-report", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Include the token
+      },
+      body: JSON.stringify({
+        planId,
+        planData, // Send the plan data from state
+      }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      // Handle success, e.g., display success message
+      console.log("Plan updated successfully:", data);
+    } else {
+      // Handle failure, e.g., display error message
+      console.error("Error updating plan:", data.message);
+    }
   };
 
   const handleClosePopup = () => {
@@ -68,7 +133,9 @@ const CustomerAcquisition = () => {
 
   return (
     <div className="p-4">
-      <p className="text-2xl text-headingColor mb-4 font-bold">Customer Acquisition</p>
+      <p className="text-2xl text-headingColor mb-4 font-bold">
+        Customer Acquisition
+      </p>
       {/* Add product/customer button */}
       <button
         className="px-4 py-2 bg-btnColor bg-opacity-20 text-btnColor hover:bg-opacity-100 hover:text-white duration-500 rounded hover:bg-btnColor-dark transition"
@@ -197,7 +264,10 @@ const CustomerAcquisition = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-96 p-6">
             <h2 className="text-xl font-bold mb-4">Action Submitted!</h2>
-            <p className="text-gray-700">Your customer acquisition actions have been successfully submitted.</p>
+            <p className="text-gray-700">
+              Your customer acquisition actions have been successfully
+              submitted.
+            </p>
             <div className="flex justify-end gap-2 mt-4">
               <button
                 onClick={handleClosePopup}

@@ -1,13 +1,15 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { FaEdit, FaTrashAlt } from "react-icons/fa"; // For edit and delete icons
+
 // Dynamically import ReactQuill to ensure it runs only on the client
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
 });
 
 import "react-quill/dist/quill.snow.css";
+
 const Offer = ({ goToNext }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [service, setService] = useState(null); // To store the added service
@@ -19,10 +21,25 @@ const Offer = ({ goToNext }) => {
 
   // Function to handle adding the service
   const handleAddService = () => {
-    setService({
+    const newService = {
       name: serviceName,
       description: serviceDescription,
-    });
+    };
+    setService(newService);
+
+    // Retrieve existing plan data from localStorage
+    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+    const planId = localStorage.getItem("planId");
+
+    if (planId) {
+      // Update the services for the current planId
+      storedData.services = storedData.services || {};
+      storedData.services[planId] = newService;
+
+      // Store the updated plan data in localStorage
+      localStorage.setItem("planData", JSON.stringify(storedData));
+    }
+
     toggleModal(); // Close the modal after adding the service
   };
 
@@ -36,11 +53,32 @@ const Offer = ({ goToNext }) => {
   // Function to handle deleting the service
   const handleDeleteService = () => {
     setService(null); // Clear the service state
+
+    // Remove service from localStorage
+    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+    const planId = localStorage.getItem("planId");
+
+    if (planId && storedData.services) {
+      delete storedData.services[planId];
+      localStorage.setItem("planData", JSON.stringify(storedData));
+    }
   };
+
+  // Load service data from localStorage when the component mounts
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+    const planId = localStorage.getItem("planId");
+
+    if (planId && storedData.services && storedData.services[planId]) {
+      setService(storedData.services[planId]);
+    }
+  }, []);
 
   return (
     <div className="p-4">
-      <p className="text-2xl text-headingColor mb-4 font-bold">Add your first product/service</p>
+      <p className="text-2xl text-headingColor mb-4 font-bold">
+        Add your first product/service
+      </p>
 
       {/* Add product/service button */}
       <button
@@ -54,7 +92,9 @@ const Offer = ({ goToNext }) => {
       {/* Conditionally hide image if service is added */}
       {!service && (
         <div className="w-full border my-4">
-          <p className="text-paraColor text-center mt-1">No Product/Service Added</p>
+          <p className="text-paraColor text-center mt-1">
+            No Product/Service Added
+          </p>
           <div className="flex items-center justify-end">
             <Image
               className="w-96 mr-10"
@@ -70,9 +110,7 @@ const Offer = ({ goToNext }) => {
       {/* Display Service if added */}
       {service && (
         <div className="border p-4 mt-4 rounded-md">
-          <h3 className="text-lg font-bold">
-            {service.name} (Service)
-          </h3>
+          <h3 className="text-lg font-bold">{service.name} (Service)</h3>
           <div
             className="service-description"
             dangerouslySetInnerHTML={{ __html: service.description }} // Render description HTML
@@ -106,7 +144,9 @@ const Offer = ({ goToNext }) => {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg w-full lg:w-[80%]">
-            <h2 className="text-xl font-bold text-btnColor mb-4">Product/Service</h2>
+            <h2 className="text-xl font-bold text-btnColor mb-4">
+              Product/Service
+            </h2>
             <div className="flex items-center gap-4 my-2">
               <div className="flex items-center gap-2">
                 <input type="radio" id="service" name="business-leader" />

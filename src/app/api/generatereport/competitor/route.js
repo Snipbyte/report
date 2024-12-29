@@ -3,167 +3,185 @@ import connectDb from "../../../../../backend/middleware/db";
 import Project from "../../../../../backend/models/Plan";
 import jwt from "jsonwebtoken";
 
-// Function to extract userId from Authorization header
-const getUserIdFromAuthHeader = (request) => {
-  const authHeader = request.headers.get("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return NextResponse.json(
-      { message: "Authorization token is required" },
-      { status: 401 }
-    );
+// Authorization check function
+const authorizeRequest = (req) => {
+  const authHeader = req.headers.get("authorization");
+  if (!authHeader) {
+    throw new Error("Unauthorized");
   }
-  const token = authHeader.split(" ")[1];
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  return decoded.id;
+
+  try {
+    const decoded = jwt.verify(authHeader, process.env.JWT_SECRET);
+    return decoded.id; // Extract and return the user ID
+  } catch (err) {
+    throw new Error("Invalid token");
+  }
 };
 
 // Create a competitor (Add competitor information)
-const createCompetitor = async (userId, { planId, competitorName, analysis, strengths, weaknesses }) => {
-  try {
-    if (!planId || !competitorName || !analysis) {
-      return NextResponse.json(
-        { message: "Plan ID, competitor name, and analysis are required" },
-        { status: 400 }
-      );
-    }
-
-    const project = await Project.findOne({ _id: planId, userId });
-    if (!project) {
-      return NextResponse.json({ message: "Plan not found or user is not authorized" }, { status: 404 });
-    }
-
-    project.competitor.push({ competitorName, analysis, strengths, weaknesses });
-    const savedProject = await project.save();
-    return NextResponse.json(savedProject, { status: 201 });
-  } catch (error) {
-    console.error("Error creating competitor:", error);
-    return NextResponse.json(
-      { message: "Failed to save competitor" },
-      { status: 500 }
-    );
+const createCompetitor = async (data) => {
+  const { planId, competitorName, analysis, strengths, weaknesses } = data;
+  if (!planId || !competitorName || !analysis) {
+    throw new Error("Plan ID, competitor name, and analysis are required");
   }
+
+  const project = await Project.findOne({ _id: planId });
+  if (!project) {
+    throw new Error("Plan not found or user is not authorized");
+  }
+
+  project.competitor.push({ competitorName, analysis, strengths, weaknesses });
+  const savedProject = await project.save();
+  return savedProject;
 };
 
 // Get competitors (Fetch competitor information)
-const getCompetitors = async (userId, { planId }) => {
-  try {
-    if (!planId) {
-      return NextResponse.json({ message: "Plan ID is required" }, { status: 400 });
-    }
-
-    const project = await Project.findOne({ _id: planId, userId });
-    if (!project) {
-      return NextResponse.json({ message: "Plan not found or user is not authorized" }, { status: 404 });
-    }
-
-    return NextResponse.json(project.competitor, { status: 200 });
-  } catch (error) {
-    console.error("Error fetching competitors:", error);
-    return NextResponse.json(
-      { message: "Failed to fetch competitors" },
-      { status: 500 }
-    );
+const getCompetitors = async (data) => {
+  const { planId } = data;
+  if (!planId) {
+    throw new Error("Plan ID is required");
   }
+
+  const project = await Project.findOne({ _id: planId });
+  if (!project) {
+    throw new Error("Plan not found or user is not authorized");
+  }
+
+  return project.competitor;
 };
 
 // Update a competitor (Modify competitor information)
-const updateCompetitor = async (req) => {
-  try {
-    const userId = getUserIdFromAuthHeader(req);
-    const { planId, competitorIndex, competitorName, analysis, strengths, weaknesses } =
-      await req.json();
-
-    if (competitorIndex === undefined || competitorIndex === null || !planId || !competitorName || !analysis) {
-      return NextResponse.json(
-        { message: "Plan ID, competitor index, competitor name, and analysis are required" },
-        { status: 400 }
-      );
-    }
-
-    const project = await Project.findOne({ _id: planId, userId });
-    if (!project) {
-      return NextResponse.json({ message: "Plan not found or user is not authorized" }, { status: 404 });
-    }
-
-    const competitor = project.competitor[competitorIndex];
-    if (!competitor) {
-      return NextResponse.json({ message: "Competitor not found" }, { status: 404 });
-    }
-
-    competitor.competitorName = competitorName;
-    competitor.analysis = analysis;
-    competitor.strengths = strengths;
-    competitor.weaknesses = weaknesses;
-
-    await project.save();
-    return NextResponse.json(project, { status: 200 });
-  } catch (error) {
-    console.error("Error updating competitor:", error);
-    return NextResponse.json(
-      { message: "Failed to update competitor" },
-      { status: 500 }
+const updateCompetitor = async (data) => {
+  const {
+    planId,
+    competitorIndex,
+    competitorName,
+    analysis,
+    strengths,
+    weaknesses,
+  } = data;
+  if (
+    competitorIndex === undefined ||
+    !planId ||
+    !competitorName ||
+    !analysis
+  ) {
+    throw new Error(
+      "Plan ID, competitor index, competitor name, and analysis are required"
     );
   }
+
+  const project = await Project.findOne({ _id: planId });
+  if (!project) {
+    throw new Error("Plan not found or user is not authorized");
+  }
+
+  const competitor = project.competitor[competitorIndex];
+  if (!competitor) {
+    throw new Error("Competitor not found");
+  }
+
+  competitor.competitorName = competitorName;
+  competitor.analysis = analysis;
+  competitor.strengths = strengths;
+  competitor.weaknesses = weaknesses;
+
+  await project.save();
+  return project;
 };
 
 // Delete a competitor (Remove competitor from the list)
-const deleteCompetitor = async (req) => {
-  try {
-    const userId = getUserIdFromAuthHeader(req);
-    const { planId, competitorIndex } = await req.json();
-
-    if (competitorIndex === undefined || competitorIndex === null || !planId) {
-      return NextResponse.json({ message: "Plan ID and competitor index are required" }, { status: 400 });
-    }
-
-    const project = await Project.findOne({ _id: planId, userId });
-    if (!project) {
-      return NextResponse.json({ message: "Plan not found or user is not authorized" }, { status: 404 });
-    }
-
-    const competitor = project.competitor[competitorIndex];
-    if (!competitor) {
-      return NextResponse.json({ message: "Competitor not found" }, { status: 404 });
-    }
-
-    project.competitor.splice(competitorIndex, 1); // Remove competitor by index
-    await project.save();
-    return NextResponse.json(project, { status: 200 });
-  } catch (error) {
-    console.error("Error deleting competitor:", error);
-    return NextResponse.json(
-      { message: "Failed to delete competitor" },
-      { status: 500 }
-    );
+const deleteCompetitor = async (data) => {
+  const { planId, competitorIndex } = data;
+  if (competitorIndex === undefined || !planId) {
+    throw new Error("Plan ID and competitor index are required");
   }
+
+  const project = await Project.findOne({ _id: planId });
+  if (!project) {
+    throw new Error("Plan not found or user is not authorized");
+  }
+
+  const competitor = project.competitor[competitorIndex];
+  if (!competitor) {
+    throw new Error("Competitor not found");
+  }
+
+  project.competitor.splice(competitorIndex, 1); // Remove competitor by index
+  await project.save();
+  return project;
 };
 
 // Combined handler for POST requests: Switch between create, fetch, update actions
-const handleCompetitorRequest = async (req) => {
+const handlePost = async (req) => {
   try {
-    const { action, planId, competitorIndex, competitorName, analysis, strengths, weaknesses } = await req.json();
-    const userId = getUserIdFromAuthHeader(req);
+    const userId = authorizeRequest(req); // Authorization check
+    const { action, ...data } = await req.json();
+
+    let result;
 
     switch (action) {
       case "create":
-        return createCompetitor(userId, { planId, competitorName, analysis, strengths, weaknesses });
+        result = await createCompetitor(data);
+        return NextResponse.json(result, { status: 201 });
       case "fetch":
-        return getCompetitors(userId, { planId });
+        result = await getCompetitors(data);
+        return NextResponse.json(result, { status: 200 });
       default:
-        return NextResponse.json(
-          { message: "Action not supported" },
-          { status: 400 }
-        );
+        throw new Error("Invalid action");
     }
   } catch (error) {
-    console.error("Error handling competitor request:", error);
+    const status =
+      error.message === "Unauthorized" || error.message === "Invalid token"
+        ? 401
+        : 500;
     return NextResponse.json(
-      { message: "Failed to process competitor request" },
-      { status: 500 }
+      { message: error.message || "Server error" },
+      { status }
     );
   }
 };
 
-export const POST = connectDb(handleCompetitorRequest);
-export const PUT = connectDb(updateCompetitor);
-export const DELETE = connectDb(deleteCompetitor);
+// Update competitor
+const handleUpdate = async (req) => {
+  try {
+    const userId = authorizeRequest(req); // Authorization check
+    const { action, ...data } = await req.json();
+    const updatedProject = await updateCompetitor(data);
+
+    return NextResponse.json(updatedProject, { status: 200 });
+  } catch (error) {
+    const status =
+      error.message === "Unauthorized" || error.message === "Invalid token"
+        ? 401
+        : 500;
+    return NextResponse.json(
+      { message: error.message || "Failed to update competitor" },
+      { status }
+    );
+  }
+};
+
+// Delete competitor
+const handleDelete = async (req) => {
+  try {
+    const userId = authorizeRequest(req); // Authorization check
+    const { action, ...data } = await req.json();
+    const deletedProject = await deleteCompetitor(data);
+
+    return NextResponse.json(deletedProject, { status: 200 });
+  } catch (error) {
+    const status =
+      error.message === "Unauthorized" || error.message === "Invalid token"
+        ? 401
+        : 500;
+    return NextResponse.json(
+      { message: error.message || "Failed to delete competitor" },
+      { status }
+    );
+  }
+};
+
+export const POST = connectDb(handlePost);
+export const PUT = connectDb(handleUpdate);
+export const DELETE = connectDb(handleDelete);

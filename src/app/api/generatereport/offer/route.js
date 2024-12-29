@@ -3,6 +3,7 @@ import connectDb from "../../../../../backend/middleware/db";
 import Project from "../../../../../backend/models/Plan";
 import jwt from "jsonwebtoken";
 
+// Authorization function to verify JWT token
 const authorizeRequest = (req) => {
   const authHeader = req.headers.get("authorization");
   if (!authHeader) {
@@ -11,42 +12,44 @@ const authorizeRequest = (req) => {
 
   try {
     const decoded = jwt.verify(authHeader, process.env.JWT_SECRET);
-
-    return decoded.id;
+    return decoded;
   } catch (err) {
     throw new Error("Invalid token");
   }
 };
 
-const createIdea = async (data) => {
-  const { typeOfActivity, projectName, address, launchDate, planId } = data;
-  if (!typeOfActivity || !projectName || !address || !launchDate || !planId) {
-    throw new Error("Missing required fields for creating an idea");
+// Function to create an offer
+const createOffer = async (data) => {
+  const { Category, title, description, planId } = data;
+  if (!Category || !title || !description || !planId) {
+    throw new Error("Missing required fields for creating an offer");
   }
 
   const project = new Project({
     planId,
-    idea: { typeOfActivity, projectName, address, launchDate },
+    offer: { Category, title, description },
   });
+
   const savedProject = await project.save();
   return savedProject;
 };
 
-const getIdeas = async (data) => {
+// Function to fetch offers
+const getOffers = async (data) => {
   const { planId } = data;
   if (!planId) {
     throw new Error("Missing planId");
   }
 
-  // Correct query using `_id`
-  const ideas = await Project.find({ _id: planId }, "idea");
-  if (!ideas || ideas.length === 0) {
-    throw new Error("No ideas found for the given planId");
+  const offers = await Project.find({ _id: planId }, "offer");
+  if (!offers || offers.length === 0) {
+    throw new Error("No offers found for the given planId");
   }
 
-  return ideas;
+  return offers;
 };
 
+// POST handler function
 const handlePost = async (req) => {
   try {
     authorizeRequest(req); // Authorization check
@@ -56,10 +59,10 @@ const handlePost = async (req) => {
 
     switch (action) {
       case "create":
-        result = await createIdea(data);
+        result = await createOffer(data); // Call createOffer function
         return NextResponse.json(result, { status: 201 });
       case "fetch":
-        result = await getIdeas(data);
+        result = await getOffers(data); // Call getOffers function
         return NextResponse.json(result, { status: 200 });
       default:
         throw new Error("Invalid action");
@@ -76,20 +79,22 @@ const handlePost = async (req) => {
   }
 };
 
-const updateIdea = async (req) => {
+// PUT handler function to update an offer
+const updateOffer = async (req) => {
   try {
     authorizeRequest(req); // Authorization check
+    const { id, offer, planId } = await req.json();
 
-    const { id, idea, planId } = await req.json();
     const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId },
-      { idea },
+      { _id: planId }, // Find the plan by ID
+      { offer }, // Update the offer field
       { new: true }
     );
-    const ideas = await Project.find({ _id: planId }, "idea");
+
     if (!updatedProject) {
-      throw new Error("Idea not found or planId mismatch");
+      throw new Error("Offer not found or planId mismatch");
     }
+
     return NextResponse.json(updatedProject, { status: 200 });
   } catch (error) {
     const status =
@@ -97,23 +102,26 @@ const updateIdea = async (req) => {
         ? 401
         : 500;
     return NextResponse.json(
-      { message: error.message || "Failed to update idea" },
+      { message: error.message || "Failed to update offer" },
       { status }
     );
   }
 };
 
-const deleteIdea = async (req) => {
+// DELETE handler function to delete an offer
+const deleteOffer = async (req) => {
   try {
-    authorizeRequest(req);
-
+    authorizeRequest(req); // Authorization check
     const { id, planId } = await req.json();
+
     const deletedProject = await Project.findOneAndDelete({ _id: id, planId });
+
     if (!deletedProject) {
-      throw new Error("Idea not found or planId mismatch");
+      throw new Error("Offer not found or planId mismatch");
     }
+
     return NextResponse.json(
-      { message: "Idea deleted successfully" },
+      { message: "Offer deleted successfully" },
       { status: 200 }
     );
   } catch (error) {
@@ -122,12 +130,13 @@ const deleteIdea = async (req) => {
         ? 401
         : 500;
     return NextResponse.json(
-      { message: error.message || "Failed to delete idea" },
+      { message: error.message || "Failed to delete offer" },
       { status }
     );
   }
 };
 
+// Export handlers
 export const POST = connectDb(handlePost);
-export const PUT = connectDb(updateIdea);
-export const DELETE = connectDb(deleteIdea);
+export const PUT = connectDb(updateOffer);
+export const DELETE = connectDb(deleteOffer);

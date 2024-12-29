@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 
 const Competitors = ({ goToNext }) => {
@@ -7,6 +7,19 @@ const Competitors = ({ goToNext }) => {
   const [competitors, setCompetitors] = useState([]);
   const [competitorName, setCompetitorName] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
+
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+    const planId = localStorage.getItem("planId");
+
+    if (planId) {
+      // Load competitors data for the current planId
+      const savedCompetitors = storedData.competitors || {};
+      const savedPlanCompetitors = savedCompetitors[planId] || [];
+
+      setCompetitors(savedPlanCompetitors);
+    }
+  }, []);
 
   const handleOpenModal = () => {
     setCompetitorName("");
@@ -19,10 +32,15 @@ const Competitors = ({ goToNext }) => {
 
   const handleSaveCompetitor = () => {
     if (competitorName) {
-      setCompetitors((prev) => [
-        ...prev,
-        { name: competitorName, priceStatus: selectedPrice || "aligned" },
-      ]);
+      const newCompetitor = {
+        name: competitorName,
+        priceStatus: selectedPrice || "aligned",
+      };
+      setCompetitors((prev) => {
+        const updatedCompetitors = [...prev, newCompetitor];
+        saveCompetitorsToLocalStorage(updatedCompetitors); // Save to localStorage
+        return updatedCompetitors;
+      });
       setIsModalOpen(false);
     } else {
       alert("Please enter a competitor name!");
@@ -30,15 +48,30 @@ const Competitors = ({ goToNext }) => {
   };
 
   const handlePriceChange = (index, value) => {
-    setCompetitors((prev) =>
-      prev.map((comp, i) =>
-        i === index ? { ...comp, priceStatus: value } : comp
-      )
+    const updatedCompetitors = competitors.map((competitor, i) =>
+      i === index ? { ...competitor, priceStatus: value } : competitor
     );
+    setCompetitors(updatedCompetitors);
+    saveCompetitorsToLocalStorage(updatedCompetitors); // Save to localStorage
   };
 
   const handleRemoveCompetitor = (index) => {
-    setCompetitors((prev) => prev.filter((_, i) => i !== index));
+    const updatedCompetitors = competitors.filter((_, i) => i !== index);
+    setCompetitors(updatedCompetitors);
+    saveCompetitorsToLocalStorage(updatedCompetitors); // Save to localStorage
+  };
+
+  const saveCompetitorsToLocalStorage = (updatedCompetitors) => {
+    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+    const planId = localStorage.getItem("planId");
+
+    if (planId) {
+      // Update competitors data for the current planId
+      storedData.competitors = storedData.competitors || {};
+      storedData.competitors[planId] = updatedCompetitors;
+
+      localStorage.setItem("planData", JSON.stringify(storedData)); // Save the updated data
+    }
   };
 
   return (
@@ -46,7 +79,6 @@ const Competitors = ({ goToNext }) => {
       <p className="text-2xl text-headingColor mb-4 font-bold">
         Who are your competitors?
       </p>
-      {/* Add competitor button */}
       <button
         className="px-4 py-2 bg-btnColor bg-opacity-20 text-btnColor hover:bg-opacity-100 hover:text-white duration-500 rounded hover:bg-btnColor-dark transition"
         onClick={handleOpenModal}
@@ -54,17 +86,21 @@ const Competitors = ({ goToNext }) => {
         + Add a competitor
       </button>
 
-      {/* Competitor List */}
       <div className="w-full border my-4">
         {competitors.length > 0 ? (
           competitors.map((competitor, index) => (
-            <div key={index} className="flex items-center justify-between gap-2 p-2 border-b">
+            <div
+              key={index}
+              className="flex items-center justify-between gap-2 p-2 border-b"
+            >
               <p className="text-paraColor">
                 Compared to{" "}
-                <span className="font-bold text-btnColor">{competitor.name}</span> I am:
+                <span className="font-bold text-btnColor">
+                  {competitor.name}
+                </span>{" "}
+                I am:
               </p>
 
-              {/* Radio Buttons */}
               <div className="flex items-center gap-4">
                 <label className="flex items-center gap-1">
                   <input
@@ -95,7 +131,6 @@ const Competitors = ({ goToNext }) => {
                 </label>
               </div>
 
-              {/* Remove Button */}
               <FaTimes
                 className="text-red-500 cursor-pointer hover:text-red-700"
                 onClick={() => handleRemoveCompetitor(index)}
@@ -125,7 +160,6 @@ const Competitors = ({ goToNext }) => {
         Next
       </button>
 
-      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-full lg:w-[80%] p-6">

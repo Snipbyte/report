@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const PlanSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, 
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   idea: {
     typeOfActivity: { type: String, required: true },
     projectName: { type: String, required: true },
@@ -9,65 +9,86 @@ const PlanSchema = new mongoose.Schema({
     launchDate: { type: Date, required: true },
   },
   presentation: {
-    details: { type: String, required: true },
+    type: Map,
+    of: String, // Store dynamic keys with HTML content
   },
   visitingCard: {
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    title: { type: String, required: true },
-    phone: { type: String, required: true },
-    email: { type: String, required: true },
-  },
-  career: {
-    questions: {
-      confidentToRunBusiness: { type: Boolean, required: true },
-      industryExperience: { type: Boolean, required: true },
-      timeAndEnergy: { type: Boolean, required: true },
-    },
-    otherDetails: { type: String },
-  },
-  offer: {
-    title: { type: String, required: true },
-    description: { type: String, required: true },
-  },
-  walk: [
-    {
-      question: { type: String, required: true },
-      options: {
-        neutral: { type: Boolean, required: true },
-        negative: { type: Boolean, required: true },
-        positive: { type: Boolean, required: true },
+    type: Map,
+    of: new mongoose.Schema({
+      firstName: { type: String, required: true },
+      lastName: { type: String, required: true },
+      title: { type: String, required: true },
+      contact: { type: String, required: true },
+      email: { type: String, required: true },
+      selectedCountry: {
+        code: { type: String, required: true },
+        flag: { type: String, required: true },
+        name: { type: String, required: true },
       },
-    },
-  ],
-  competitor: [
-    {
-      competitorName: { type: String, required: true },
-      pricingComparison: {
-        cheaper: { type: Boolean, required: true },
-        moreExpensive: { type: Boolean, required: true },
-        aligned: { type: Boolean, required: true },
-      },
-    },
-  ],
-  customer: [
-    {
-      customerType: { type: String, enum: ['Professional B2B', 'Private B2C'], required: true },
-      description: { type: String, required: true },
-    },
-  ],
-  commercial: {
-    salesPitch: { type: String, required: true },
+    }),
   },
-  customerAcquisition: [
-    {
-      actionName: { type: String, required: true },
+  carrier: {
+    type: Map,
+    of: new mongoose.Schema({
+      businessLeader: { type: String, required: true },
+      industryExperience: { type: String, required: true },
+      familySituation: { type: String, required: true },
+      editorContent: { type: String, required: true },
+    }),
+  },
+  services: {
+    type: Map,
+    of: new mongoose.Schema({
+      name: { type: String, required: true },
       description: { type: String, required: true },
-    },
-  ],
+    }),
+  },
+  market: {
+    type: Map,
+    of: new mongoose.Schema({
+      marketDescription: { type: String, required: true },
+      responses: {
+        row1: { type: String, required: true },
+        row2: { type: String, required: true },
+        row3: { type: String, required: true },
+        row4: { type: String, required: true },
+        row5: { type: String, required: true },
+      },
+    }),
+  },
+  competitors: {
+    type: Map,
+    of: [
+      new mongoose.Schema({
+        name: { type: String, required: true },
+        priceStatus: { type: String, required: true },
+      }),
+    ],
+  },
+  customers: {
+    type: Map,
+    of: new mongoose.Schema({
+      name: { type: String, required: true },
+      description: { type: String, required: true },
+      type: { type: String, enum: ['Private - BtoC'], required: true },
+    }),
+  },
+  salesPitches: {
+    type: Map,
+    of: String, // Store dynamic sales pitch content
+  },
+  customerAcquisitionActions: {
+    type: Map,
+    of: [
+      new mongoose.Schema({
+        id: { type: Number, required: true },
+        name: { type: String, required: true },
+        description: { type: String, required: true },
+      }),
+    ],
+  },
   createdAt: { type: Date, default: Date.now },
 });
-
 
 const Plan = mongoose.models.Plan || mongoose.model("Plan", PlanSchema);
 

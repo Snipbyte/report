@@ -5,14 +5,14 @@ import jwt from "jsonwebtoken";
 
 // Function to extract userId from Authorization header
 const getUserIdFromAuthHeader = (request) => {
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return NextResponse.json(
       { message: "Authorization token is required" },
       { status: 401 }
     );
   }
-  const token = authHeader.split(' ')[1];
+  const token = authHeader.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   const userId = decoded.id;
   return userId;
@@ -33,71 +33,75 @@ const createPlan = async (req) => {
         launchDate: new Date(),
       },
       presentation: {
-        details: "Placeholder Presentation Details",
+        "6770cc9a588fc3dbba11c8a0": "<p>Placeholder Presentation Details</p>",
       },
       visitingCard: {
-        firstName: "Placeholder",
-        lastName: "Name",
-        title: "Placeholder Title",
-        phone: "0000000000",
-        email: "placeholder@example.com",
-      },
-      career: {
-        questions: {
-          confidentToRunBusiness: false,
-          industryExperience: false,
-          timeAndEnergy: false,
-        },
-        otherDetails: "Placeholder Career Details",
-      },
-      offer: {
-        title: "Placeholder Offer Title",
-        description: "Placeholder Offer Description",
-      },
-      walk: [
-        {
-          question: "Dummy question for walk",
-          options: {
-            positive: true,  // Changed to Boolean
-            negative: false, // Changed to Boolean
-            neutral: true,   // Changed to Boolean
+        "6770cc9a588fc3dbba11c8a0": {
+          firstName: "Placeholder",
+          lastName: "Name",
+          title: "Placeholder Title",
+          contact: "0000000000",
+          email: "placeholder@example.com",
+          selectedCountry: {
+            code: "+33",
+            flag: "🇫🇷",
+            name: "France",
           },
         },
-      ],
-      competitor: [
-        {
-          competitorName: "Dummy Competitor",
-          analysis: "Dummy competitor analysis",
-          strengths: "Dummy strengths",
-          weaknesses: "Dummy weaknesses",
-          pricingComparison: {
-            aligned: false,
-            moreExpensive: true,
-            cheaper: false,
+      },
+      carrier: {
+        "6770cc9a588fc3dbba11c8a0": {
+          businessLeader: "yes",
+          industryExperience: "no",
+          familySituation: "no",
+          editorContent: "<p>Placeholder career details</p>",
+        },
+      },
+      services: {
+        "6770cc9a588fc3dbba11c8a0": {
+          name: "Placeholder Service",
+          description: "<p>Placeholder Service Description</p>",
+        },
+      },
+      market: {
+        "6770cc9a588fc3dbba11c8a0": {
+          marketDescription: "<p>Placeholder market description</p>",
+          responses: {
+            row1: "Positive",
+            row2: "Negative",
+            row3: "Positive",
+            row4: "Neutral",
+            row5: "Positive",
           },
         },
-      ],
-      customer: [
-        {
-          customerName: "Dummy Customer",
-          description: "Dummy customer description",
-          customerType: "Professional B2B",  // Valid enum value
-          feedback: "Placeholder feedback",
-        },
-      ],
-      commercial: {
-        salesPitch: "Placeholder Sales Pitch",
-        targetMarket: "Dummy target market",
-        competitorsAnalysis: "Dummy competitors analysis",
       },
-      customerAcquisition: [
-        {
-          description: "Dummy acquisition description",
-          actionName: "Dummy action name",
-          strategy: "Dummy strategy details",
-          outcome: "Dummy outcome details",
+      competitors: {
+        "6770cc9a588fc3dbba11c8a0": [
+          {
+            name: "Placeholder Competitor",
+            priceStatus: "more-expensive",
+          },
+        ],
+      },
+      customers: {
+        "6770cc9a588fc3dbba11c8a0": {
+          name: "Placeholder Customer",
+          description: "<p>Placeholder Customer Description</p>",
+          type: "Private - BtoC",
         },
-      ],
+      },
+      salesPitches: {
+        "6770cc9a588fc3dbba11c8a0": "<p>Placeholder Sales Pitch</p>",
+      },
+      customerAcquisitionActions: {
+        "6770cc9a588fc3dbba11c8a0": [
+          {
+            id: Date.now(),
+            name: "Placeholder Action",
+            description: "<p>Placeholder Description</p>",
+          },
+        ],
+      },
     });
 
     const savedPlan = await newPlan.save();
@@ -105,7 +109,9 @@ const createPlan = async (req) => {
   } catch (error) {
     return NextResponse.json(
       { message: error.message || "Failed to create plan" },
-      { status: error.message === "Authorization token is required" ? 401 : 500 }
+      {
+        status: error.message === "Authorization token is required" ? 401 : 500,
+      }
     );
   }
 };
@@ -120,14 +126,22 @@ const deletePlan = async (req) => {
     const deletedPlan = await Plan.findOneAndDelete({ _id: planId, userId });
 
     if (!deletedPlan) {
-      return NextResponse.json({ message: "Plan not found or not authorized" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Plan not found or not authorized" },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json({ message: "Plan deleted successfully" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Plan deleted successfully" },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json(
       { message: error.message || "Failed to delete plan" },
-      { status: error.message === "Authorization token is required" ? 401 : 500 }
+      {
+        status: error.message === "Authorization token is required" ? 401 : 500,
+      }
     );
   }
 };

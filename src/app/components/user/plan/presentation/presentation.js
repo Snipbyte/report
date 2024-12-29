@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
 import dynamic from "next/dynamic";
 
 // Dynamically import ReactQuill to ensure it runs only on the client
@@ -26,57 +25,42 @@ const Presentation = ({ goToNext }) => {
   } = useForm();
 
   useEffect(() => {
-    const fetchPresentation = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const planId = localStorage.getItem("planId");
+    // Retrieve the plan data from localStorage
+    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+    const planId = localStorage.getItem("planId");
 
-        if (!token || !planId) {
-          console.error("Missing token or planId");
-          return;
-        }
-
-        setLoading(true);
-        const response = await axios.post(
-          "/api/generatereport/presentation",
-          { action: "fetch", planId },
-          { headers: { authorization: token } }
-        );
-        console.log(response.data.details);
-        if (response.data && response.data.details) {
-          setPresentationContent(response.data.details); // Update to use `details`
-        }
-      } catch (error) {
-        console.error("Failed to fetch presentation:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPresentation();
+    if (planId && storedData.presentation && storedData.presentation[planId]) {
+      setPresentationContent(storedData.presentation[planId]);
+    }
   }, []);
 
   const onSubmit = async (data) => {
     try {
-      const token = localStorage.getItem("token");
       const planId = localStorage.getItem("planId");
 
-      if (!token || !planId) {
-        console.error("Missing token or planId");
+      if (!planId) {
+        console.error("Missing planId");
         return;
       }
 
       setLoading(true);
-      const response = await axios.put(
-        "/api/generatereport/presentation",
-        { planId, content: data.content }, // PUT expects these fields
-        { headers: { Authorization: token } }
-      );
 
-      console.log("Presentation updated successfully:", response.data);
+      // Retrieve existing plan data from localStorage
+      const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+
+      // Append or update the presentation content for the current planId
+      storedData.presentation = {
+        ...storedData.presentation,
+        [planId]: data.content,
+      };
+
+      // Store the updated plan data in localStorage
+      localStorage.setItem("planData", JSON.stringify(storedData));
+
+      console.log("Presentation saved successfully:", storedData);
       goToNext();
     } catch (error) {
-      console.error("Failed to update presentation:", error);
+      console.error("Failed to save presentation in localStorage:", error);
     } finally {
       setLoading(false);
     }

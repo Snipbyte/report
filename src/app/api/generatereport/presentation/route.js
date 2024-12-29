@@ -4,20 +4,17 @@ import Project from "../../../../../backend/models/Plan";
 import jwt from "jsonwebtoken";
 
 // Function to extract user ID from Bearer token in Authorization header
-const getUserIdFromAuthHeader = (request) => {
-  const authHeader = request.headers.get("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return NextResponse.json(
-      { message: "Authorization token is required" },
-      { status: 401 }
-    );
+const getUserIdFromAuthHeader = (req) => {
+  const authHeader = req.headers.get("authorization");
+  if (!authHeader) {
+    throw new Error("Unauthorized");
   }
-  const token = authHeader.split(" ")[1];
+
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Replace with your secret
-    return decoded.id; // Return user ID from decoded token
-  } catch (error) {
-    return NextResponse.json({ message: "Invalid token" }, { status: 401 });
+    const decoded = jwt.verify(authHeader, process.env.JWT_SECRET);
+    return decoded.id;
+  } catch (err) {
+    throw new Error("Invalid token");
   }
 };
 
@@ -30,7 +27,7 @@ const createPresentation = async (data, userId) => {
 
   const project = new Project({
     planId,
-    userId,  // Associate user ID with the project
+    userId, // Associate user ID with the project
     presentation: { details: content }, // Save content in details
   });
   const savedProject = await project.save();
@@ -94,7 +91,7 @@ const updatePresentation = async (req) => {
     }
 
     const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId, userId },  // Ensure the userId matches
+      { _id: planId, userId }, // Ensure the userId matches
       { presentation: { details: content } }, // Save updated content in details
       { new: true }
     );
@@ -126,7 +123,7 @@ const deletePresentation = async (req) => {
     }
 
     const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId, userId },  // Ensure the userId matches
+      { _id: planId, userId }, // Ensure the userId matches
       { $unset: { presentation: "" } },
       { new: true }
     );

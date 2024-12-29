@@ -3,139 +3,141 @@ import connectDb from "../../../../../backend/middleware/db";
 import Project from "../../../../../backend/models/Plan";
 import jwt from "jsonwebtoken";
 
-const getUserIdFromAuthHeader = (request) => {
-  const authHeader = request.headers.get("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return NextResponse.json(
-      { message: "Authorization token is required" },
-      { status: 401 }
-    );
+const authorizeRequest = (req) => {
+  const authHeader = req.headers.get("authorization");
+  if (!authHeader) {
+    throw new Error("Unauthorized");
   }
-  const token = authHeader.split(" ")[1];
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  return decoded.id; 
-};
 
-const createVisitingCard = async (req) => {
   try {
-    const userId = getUserIdFromAuthHeader(req); 
-    const { firstName, lastName, title, phone, email, planId } = await req.json();
-
-    if (!planId || !firstName || !lastName || !phone || !email) {
-      return NextResponse.json(
-        { message: "All fields (planId, firstName, lastName, phone, email) are required" },
-        { status: 400 }
-      );
-    }
-
-    // Fetch the plan first
-    const plan = await Plan.findById(planId);
-    if (!plan) {
-      return NextResponse.json({ message: "Plan not found" }, { status: 404 });
-    }
-
-    // Ensure that the plan belongs to the authenticated user
-    if (plan.userId.toString() !== userId) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
-    }
-
-    // Update the visitingCard field of the plan
-    plan.visitingCard = { firstName, lastName, title, phone, email };
-    const updatedPlan = await plan.save();
-
-    return NextResponse.json(updatedPlan, { status: 201 });
-  } catch (error) {
-    return NextResponse.json(
-      { message: error.message || "Failed to save visiting card" },
-      { status: 500 }
-    );
+    const decoded = jwt.verify(authHeader, process.env.JWT_SECRET);
+    return decoded.id;
+  } catch (err) {
+    throw new Error("Invalid token");
   }
 };
 
-// Fetch visiting cards
-const getVisitingCards = async (req) => {
+const createVisitingCard = async (data) => {
+  const { planId, firstName, lastName, title, phone, email } = data;
+  if (!planId || !firstName || !lastName || !phone || !email) {
+    throw new Error(
+      "All fields (planId, firstName, lastName, phone, email) are required"
+    );
+  }
+
+  const plan = await Project.findById(planId);
+  if (!plan) {
+    throw new Error("Plan not found");
+  }
+
+  plan.visitingCard = { firstName, lastName, title, phone, email };
+  const updatedPlan = await plan.save();
+  return updatedPlan;
+};
+
+const getVisitingCards = async (data) => {
+  const { planId } = data;
+  if (!planId) {
+    throw new Error("Plan ID is required");
+  }
+
+  const project = await Project.findOne(
+    { _id: planId },
+    "visitingCard"
+  );
+
+  if (!project) {
+    throw new Error("Plan not found or unauthorized");
+  }
+
+  if (!project.visitingCard) {
+    throw new Error("No visiting card found");
+  }
+
+  return project.visitingCard;
+};
+
+const handlePost = async (req) => {
   try {
-    const userId = getUserIdFromAuthHeader(req); 
-    const { planId } = await req.json();
+    authorizeRequest(req);
+    const { action, ...data } = await req.json();
 
-    if (!planId) {
-      return NextResponse.json(
-        { message: "Plan ID is required" },
-        { status: 400 }
-      );
+    let result;
+
+    switch (action) {
+      case "create":
+        result = await createVisitingCard(data);
+        return NextResponse.json(result, { status: 201 });
+      case "fetch":
+        result = await getVisitingCards(data);
+        return NextResponse.json(result, { status: 200 });
+      default:
+        throw new Error("Invalid action");
     }
-
-    const project = await Project.findOne(
-      { _id: planId, userId }, 
-      "visitingCard"
-    );
-
-    if (!project) {
-      return NextResponse.json({ message: "Plan not found or unauthorized" }, { status: 404 });
-    }
-
-    return NextResponse.json(project.visitingCard, { status: 200 });
   } catch (error) {
+    const status =
+      error.message === "Unauthorized" || error.message === "Invalid token"
+        ? 401
+        : 500;
     return NextResponse.json(
-      { message: error.message || "Failed to fetch visiting cards" },
-      { status: 500 }
+      { message: error.message || "Server error" },
+      { status }
     );
   }
 };
 
-// Update a visiting card
 const updateVisitingCard = async (req) => {
   try {
-    const userId = getUserIdFromAuthHeader(req); // Extract user ID
+    authorizeRequest(req);
     const { planId, firstName, lastName, title, phone, email } = await req.json();
 
     if (!planId || !firstName || !lastName || !phone || !email) {
-      return NextResponse.json(
-        { message: "All fields (planId, firstName, lastName, phone, email) are required" },
-        { status: 400 }
+      throw new Error(
+        "All fields (planId, firstName, lastName, phone, email) are required"
       );
     }
 
-    const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId, userId }, // Ensure the plan belongs to the authenticated user
+    const updatedPlan = await Project.findOneAndUpdate(
+      { _id: planId },
       { visitingCard: { firstName, lastName, title, phone, email } },
       { new: true }
     );
 
-    if (!updatedProject) {
-      return NextResponse.json({ message: "Plan not found or unauthorized" }, { status: 404 });
+    if (!updatedPlan) {
+      throw new Error("Plan not found or unauthorized");
     }
 
-    return NextResponse.json(updatedProject, { status: 200 });
+    return NextResponse.json(updatedPlan, { status: 200 });
   } catch (error) {
+    const status =
+      error.message === "Unauthorized" || error.message === "Invalid token"
+        ? 401
+        : 500;
     return NextResponse.json(
       { message: error.message || "Failed to update visiting card" },
-      { status: 500 }
+      { status }
     );
   }
 };
 
-// Delete a visiting card
 const deleteVisitingCard = async (req) => {
   try {
-    const userId = getUserIdFromAuthHeader(req); // Extract user ID
+    authorizeRequest(req);
+
     const { planId } = await req.json();
 
     if (!planId) {
-      return NextResponse.json(
-        { message: "Plan ID is required" },
-        { status: 400 }
-      );
+      throw new Error("Plan ID is required");
     }
 
-    const updatedProject = await Project.findOneAndUpdate(
-      { _id: planId, userId }, // Ensure the plan belongs to the authenticated user
-      { $unset: { visitingCard: "" } }, // Remove the visitingCard field
+    const updatedPlan = await Project.findOneAndUpdate(
+      { _id: planId },
+      { $unset: { visitingCard: "" } },
       { new: true }
     );
 
-    if (!updatedProject) {
-      return NextResponse.json({ message: "Plan not found or unauthorized" }, { status: 404 });
+    if (!updatedPlan) {
+      throw new Error("Plan not found or unauthorized");
     }
 
     return NextResponse.json(
@@ -143,37 +145,13 @@ const deleteVisitingCard = async (req) => {
       { status: 200 }
     );
   } catch (error) {
+    const status =
+      error.message === "Unauthorized" || error.message === "Invalid token"
+        ? 401
+        : 500;
     return NextResponse.json(
       { message: error.message || "Failed to delete visiting card" },
-      { status: 500 }
-    );
-  }
-};
-
-const handlePost = async (req) => {
-  try {
-    const userId = getUserIdFromAuthHeader(req); 
-    if(!userId) {
-      return NextResponse.json({ message: "Authorization} required" }, { status: 401 });
-      }
-    const { action, ...data } = await req.json();
-    let result;
-
-    switch (action) {
-      case "create":
-        result = await createVisitingCard(req); 
-        return NextResponse.json(result, { status: 201 });
-      case "fetch":
-        result = await getVisitingCards(req); 
-        return NextResponse.json(result, { status: 200 });  // Added return for fetch case
-      default:
-        return NextResponse.json({ message: "Invalid action" }, { status: 400 });
-    }
-    
-  } catch (error) {
-    return NextResponse.json(
-      { message: error.message || "Server error" },
-      { status: 500 }
+      { status }
     );
   }
 };

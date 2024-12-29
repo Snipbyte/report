@@ -19,7 +19,6 @@ const components = {
     Carrier,
     Offer,
     Walk,
-    Partners,
     Competitors,
     Customers,
     Commercial,

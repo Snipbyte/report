@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { FaEdit, FaTrashAlt } from "react-icons/fa"; // For edit and delete icons
 
@@ -12,38 +12,68 @@ import "react-quill/dist/quill.snow.css";
 
 const Customer = ({ goToNext }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [customer, setcustomer] = useState(null); // To store the added customer
-  const [customerName, setcustomerName] = useState(""); // For customer name input
-  const [customerDescription, setcustomerDescription] = useState(""); // For customer description input
+  const [customer, setCustomer] = useState(null); // To store the added customer
+  const [customerName, setCustomerName] = useState(""); // For customer name input
+  const [customerDescription, setCustomerDescription] = useState(""); // For customer description input
   const [selectedRadioType, setSelectedRadioType] = useState(""); // For storing the selected radio type
 
-  // Function to toggle modal visibility
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+    const planId = localStorage.getItem("planId");
+
+    if (planId) {
+      // Load customer data for the current planId
+      const savedCustomers = storedData.customers || {};
+      const savedPlanCustomer = savedCustomers[planId] || null;
+
+      setCustomer(savedPlanCustomer);
+    }
+  }, []);
+
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
-  // Function to handle adding the customer
-  const handleAddcustomer = () => {
-    setcustomer({
+  const handleAddCustomer = () => {
+    const newCustomer = {
       name: customerName,
       description: customerDescription,
-    });
+      type: selectedRadioType,
+    };
+    setCustomer(newCustomer);
+    saveCustomerToLocalStorage(newCustomer); // Save customer to localStorage
     toggleModal(); // Close the modal after adding the customer
   };
 
-  // Function to handle editing the customer
-  const handleEditcustomer = () => {
-    setcustomerName(customer.name);
-    setcustomerDescription(customer.description);
+  const handleEditCustomer = () => {
+    setCustomerName(customer.name);
+    setCustomerDescription(customer.description);
+    setSelectedRadioType(customer.type);
     toggleModal(); // Open modal to edit customer
   };
 
-  // Function to handle deleting the customer
-  const handleDeletecustomer = () => {
-    setcustomer(null); // Clear the customer state
+  const handleDeleteCustomer = () => {
+    setCustomer(null); // Clear the customer state
+    saveCustomerToLocalStorage(null); // Remove the customer from localStorage
   };
 
-  // Handle radio button change
   const handleRadioChange = (e) => {
     setSelectedRadioType(e.target.value);
+  };
+
+  const saveCustomerToLocalStorage = (newCustomer) => {
+    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+    const planId = localStorage.getItem("planId");
+
+    if (planId) {
+      // Update customer data for the current planId
+      storedData.customers = storedData.customers || {};
+      if (newCustomer) {
+        storedData.customers[planId] = newCustomer;
+      } else {
+        delete storedData.customers[planId]; // Remove customer for this planId
+      }
+
+      localStorage.setItem("planData", JSON.stringify(storedData)); // Save the updated data
+    }
   };
 
   return (
@@ -88,13 +118,13 @@ const Customer = ({ goToNext }) => {
           />
           <div className="flex justify-end gap-4 mt-2">
             <button
-              onClick={handleEditcustomer}
+              onClick={handleEditCustomer}
               className="text-yellow-500 hover:text-yellow-600"
             >
               <FaEdit />
             </button>
             <button
-              onClick={handleDeletecustomer}
+              onClick={handleDeleteCustomer}
               className="text-red-500 hover:text-red-600"
             >
               <FaTrashAlt />
@@ -153,7 +183,7 @@ const Customer = ({ goToNext }) => {
                 type="text"
                 placeholder="Give this category a name"
                 value={customerName}
-                onChange={(e) => setcustomerName(e.target.value)}
+                onChange={(e) => setCustomerName(e.target.value)}
                 className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
               />
             </div>
@@ -166,14 +196,14 @@ const Customer = ({ goToNext }) => {
               </label>
               <ReactQuill
                 value={customerDescription}
-                onChange={setcustomerDescription} // Update description state on change
+                onChange={setCustomerDescription} // Update description state on change
                 placeholder="Write the description of your product/customer"
                 className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
               />
             </div>
             <div className="flex justify-end gap-4">
               <button
-                onClick={handleAddcustomer}
+                onClick={handleAddCustomer}
                 className="px-4 py-2 bg-btnColor text-white rounded hover:bg-btnColor-dark"
               >
                 Save
