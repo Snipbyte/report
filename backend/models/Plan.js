@@ -70,7 +70,7 @@ const PlanSchema = new mongoose.Schema({
     of: new mongoose.Schema({
       name: { type: String, required: true },
       description: { type: String, required: true },
-      type: { type: String, enum: ['Private - BtoC'], required: true },
+      type: { type: String, enum: ['Private - BtoC','Proffesional - BtoB'], required: true },
     }),
   },
   salesPitches: {
@@ -93,3 +93,4 @@ const PlanSchema = new mongoose.Schema({
 const Plan = mongoose.models.Plan || mongoose.model("Plan", PlanSchema);
 
 export default Plan;
+
