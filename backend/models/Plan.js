@@ -87,6 +87,15 @@ const PlanSchema = new mongoose.Schema({
       }),
     ],
   },
+  financials: {
+    revenue: { type: Number, default: 0 },
+    productCosts: { type: Number, default: 0 },
+    charges: { type: Number, default: 0 },
+    salaries: { type: Number, default: 0 },
+    cashFlow: { type: Number, default: 0 },
+    debtService: { type: Number, default: 0 },
+    marketPotentialIndex: { type: Number, default: 0 },
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

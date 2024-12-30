@@ -16,44 +16,47 @@ const calculateMetricsForPlan = async (req) => {
       return NextResponse.json({ message: "Plan not found" }, { status: 404 });
     }
 
-    // Extracting the required fields based on the updated schema
-    const { 
+    const {
       idea,
       market,
       competitors,
       customers,
       salesPitches,
-      customerAcquisitionActions 
+      customerAcquisitionActions,
+      financials
     } = project;
 
-    const revenue = parseFloat(project?.revenue || 0);
-    const productCosts = parseFloat(project?.productCosts || 0);
-    const charges = parseFloat(project?.charges || 0);
-    const salaries = parseFloat(project?.salaries || 0);
-    const cashFlow = parseFloat(project?.cashFlow || 0);
-    const debtService = parseFloat(project?.debtService || 0);
-    const marketPotentialIndex = parseFloat(project?.marketPotentialIndex || 0);
+    const revenue = parseFloat(financials?.revenue || 0);
+    const productCosts = parseFloat(financials?.productCosts || 0);
+    const charges = parseFloat(financials?.charges || 0);
+    const salaries = parseFloat(financials?.salaries || 0);
+    const cashFlow = parseFloat(financials?.cashFlow || 0);
+    const debtService = parseFloat(financials?.debtService || 0);
+    const marketPotentialIndex = parseFloat(financials?.marketPotentialIndex || 0);
 
-    // Calculating metrics
+    // Calculating Profitability, Gross Margin, Added Value, and EBITDA
+    const grossMargin = revenue - productCosts;
+    const addedValue = grossMargin - charges;
+    const ebitda = addedValue - salaries;
     const profitability = revenue - (productCosts + charges + salaries);
-    const ebitda = revenue - (productCosts + charges + salaries);
+
+    // Calculating EBITDA Margin and Debt Coverage Ratio
     const ebitdaMargin = revenue > 0 ? (ebitda / revenue) * 100 : 0;
     const debtCoverageRatio = debtService > 0 ? cashFlow / debtService : 0;
+
+    // Scoring Formula
     const score = (ebitdaMargin * 50) + (debtCoverageRatio * 30) + (marketPotentialIndex * 20);
 
     return NextResponse.json(
       {
         projectName: idea?.projectName || "Unknown",
         profitability,
+        grossMargin,
+        addedValue,
         ebitda,
         ebitdaMargin: `${ebitdaMargin.toFixed(2)}%`,
         debtCoverageRatio: debtCoverageRatio.toFixed(2),
         score,
-        marketDescription: market?.get("marketDescription") || "Not available",
-        competitors: Array.from(competitors?.values() || []).map((competitor) => competitor.name),
-        customers: Array.from(customers?.values() || []).map((customer) => customer.name),
-        salesPitches: Array.from(salesPitches?.values() || []),
-        customerAcquisitionActions: Array.from(customerAcquisitionActions?.values() || []).map((action) => action.name),
       },
       { status: 200 }
     );
