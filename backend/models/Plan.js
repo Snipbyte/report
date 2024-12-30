@@ -30,9 +30,9 @@ const PlanSchema = new mongoose.Schema({
   carrier: {
     type: Map,
     of: new mongoose.Schema({
-      businessLeader: { type: String, required: true },
+      businessLeader: { type: String},
       industryExperience: { type: String, required: true },
-      familySituation: { type: String, required: true },
+      familySituation: { type: String},
       editorContent: { type: String, required: true },
     }),
   },
@@ -70,7 +70,7 @@ const PlanSchema = new mongoose.Schema({
     of: new mongoose.Schema({
       name: { type: String, required: true },
       description: { type: String, required: true },
-      type: { type: String, enum: ['Private - BtoC'], required: true },
+      type: { type: String, enum: ['Private - BtoC','Proffesional - BtoB'], required: true },
     }),
   },
   salesPitches: {
@@ -87,9 +87,19 @@ const PlanSchema = new mongoose.Schema({
       }),
     ],
   },
+  financials: {
+    revenue: { type: Number, default: 0 },
+    productCosts: { type: Number, default: 0 },
+    charges: { type: Number, default: 0 },
+    salaries: { type: Number, default: 0 },
+    cashFlow: { type: Number, default: 0 },
+    debtService: { type: Number, default: 0 },
+    marketPotentialIndex: { type: Number, default: 0 },
+  },
   createdAt: { type: Date, default: Date.now },
 });
 
 const Plan = mongoose.models.Plan || mongoose.model("Plan", PlanSchema);
 
 export default Plan;
+

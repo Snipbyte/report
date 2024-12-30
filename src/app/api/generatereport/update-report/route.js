@@ -40,6 +40,7 @@ const createOrUpdatePlan = async (req) => {
         plan.customers = planData.customers;
         plan.salesPitches = planData.salesPitches;
         plan.customerAcquisitionActions = planData.customerAcquisitionActions;
+        plan.financials = planData.financials;
         plan = await plan.save(); // Save the updated plan
       } else {
         return NextResponse.json(

@@ -10,8 +10,7 @@ const ReportPage = () => {
 
   useEffect(() => {
     const fetchReportData = async () => {
-      const planId = localStorage.getItem("planId"); // Retrieve planId from localStorage
-
+      const planId = localStorage.getItem("planId");
       if (!planId) {
         setError("No Plan Id Found");
         setLoading(false);
@@ -19,27 +18,25 @@ const ReportPage = () => {
       }
 
       try {
-        const token = localStorage.getItem("token"); // Retrieve token from localStorage
+        const token = localStorage.getItem("token");
         if (!token) {
-          setError("UnAuthorized , Please Log in First");
+          setError("Unauthorized. Please log in first.");
           setLoading(false);
           return;
         }
 
         const response = await axios.post(
           "/api/generatereport/result",
-          { planId }, // Pass the planId in the request body
+          { planId },
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Add the token to the Authorization header
+              Authorization: `Bearer ${token}`,
             },
           }
         );
-
         setReportData(response.data);
       } catch (err) {
         setError(err.response?.data?.message || "Failed to fetch report data.");
-        console.error("Error fetching report data:", err);
       } finally {
         setLoading(false);
       }
@@ -73,43 +70,138 @@ const ReportPage = () => {
     );
   }
 
-  if (!reportData) {
-    return (
-      <p className="text-center mt-10 text-gray-500">
-        No report data available.
-      </p>
-    );
-  }
+  const renderSection = (title, content) => (
+    <div className="mb-6">
+      <h2 className="text-xl font-semibold text-gray-700 mb-2">{title}</h2>
+      <div className="bg-white shadow-md p-4 rounded-lg">{content}</div>
+    </div>
+  );
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Report</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">Detailed Report</h1>
 
-      {/* Report Data Rendering */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-700 mb-2">Idea</h2>
-        <div className="bg-white shadow-md p-4 rounded-lg">
+      {/* General Information */}
+      {renderSection(
+        "General Information",
+        <>
           <p>
             <strong>Project Name:</strong> {reportData.projectName || "N/A"}
           </p>
           <p>
-            <strong>Profitability:</strong> {reportData.profitability || "N/A"}
+            <strong>Type of Activity:</strong>{" "}
+            {reportData.typeOfActivity || "N/A"}
           </p>
           <p>
-            <strong>EBITDA:</strong> {reportData.ebitda || "N/A"}
+            <strong>Address:</strong> {reportData.address || "N/A"}
           </p>
           <p>
-            <strong>EBITDA Margin:</strong> {reportData.ebitdaMargin || "N/A"}
+            <strong>Launch Date:</strong>{" "}
+            {new Date(reportData.launchDate).toLocaleDateString() || "N/A"}
           </p>
-          <p>
-            <strong>Debt Coverage Ratio:</strong>{" "}
-            {reportData.debtCoverageRatio || "N/A"}
-          </p>
-          <p>
-            <strong>Score:</strong> {reportData.score || "N/A"}
-          </p>
-        </div>
-      </div>
+        </>
+      )}
+
+      {/* Financials */}
+      {reportData.financials &&
+        renderSection(
+          "Financials",
+          <>
+            {Object.entries(reportData.financials).map(([key, value]) => (
+              <p key={key}>
+                <strong>{key.replace(/([A-Z])/g, " $1")}: </strong>
+                {value}
+              </p>
+            ))}
+          </>
+        )}
+
+      {/* Visiting Cards */}
+      {reportData.visitingCard &&
+        renderSection(
+          "Visiting Cards",
+          Object.values(reportData.visitingCard).map((card, index) => (
+            <div key={index} className="mb-4">
+              <p>
+                <strong>Name:</strong> {`${card.firstName} ${card.lastName}`}
+              </p>
+              <p>
+                <strong>Title:</strong> {card.title}
+              </p>
+              <p>
+                <strong>Contact:</strong> {card.contact}
+              </p>
+              <p>
+                <strong>Email:</strong> {card.email}
+              </p>
+              <p>
+                <strong>Country:</strong> {card.selectedCountry?.name || "N/A"}
+              </p>
+            </div>
+          ))
+        )}
+
+      {/* Competitors */}
+      {reportData.competitors &&
+        renderSection(
+          "Competitors",
+          Object.values(reportData.competitors).flatMap(
+            (competitorList, index) =>
+              competitorList.map((competitor, subIndex) => (
+                <div key={`${index}-${subIndex}`} className="mb-4">
+                  <p>
+                    <strong>Name:</strong> {competitor.name}
+                  </p>
+                  <p>
+                    <strong>Price Status:</strong> {competitor.priceStatus}
+                  </p>
+                </div>
+              ))
+          )
+        )}
+
+      {/* Customers */}
+      {reportData.customers &&
+        renderSection(
+          "Customers",
+          Object.values(reportData.customers).map((customer, index) => (
+            <div key={index} className="mb-4">
+              <p>
+                <strong>Name:</strong> {customer.name}
+              </p>
+              <p>
+                <strong>Type:</strong> {customer.type}
+              </p>
+              <p>
+                <strong>Description:</strong>{" "}
+                <div
+                  dangerouslySetInnerHTML={{ __html: customer.description }}
+                />
+              </p>
+            </div>
+          ))
+        )}
+
+      {/* Market */}
+      {reportData.market &&
+        renderSection(
+          "Market Analysis",
+          Object.values(reportData.market).map((market, index) => (
+            <div key={index} className="mb-4">
+              <p>
+                <strong>Description:</strong>{" "}
+                <div
+                  dangerouslySetInnerHTML={{ __html: market.marketDescription }}
+                />
+              </p>
+              <p>
+                <strong>Responses:</strong> {JSON.stringify(market.responses)}
+              </p>
+            </div>
+          ))
+        )}
+
+      {/* More sections as needed */}
     </div>
   );
 };

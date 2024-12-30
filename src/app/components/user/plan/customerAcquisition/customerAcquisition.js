@@ -10,7 +10,7 @@ const ReactQuill = dynamic(() => import("react-quill"), {
 import "react-quill/dist/quill.snow.css";
 import { useRouter } from "next/navigation";
 
-const CustomerAcquisition = () => {
+const CustomerAcquisition = ({ goToNext }) => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actions, setActions] = useState([]);
@@ -91,31 +91,7 @@ const CustomerAcquisition = () => {
   const handleSubmit = async () => {
     // Show the popup when Submit is clicked
     setIsPopupOpen(true);
-
-    const planId = localStorage.getItem("planId");
-
-    // Make API request to update the plan
-    const response = await fetch("/api/generatereport/update-report", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Include the token
-      },
-      body: JSON.stringify({
-        planId,
-        planData, // Send the plan data from state
-      }),
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      // Handle success, e.g., display success message
-      console.log("Plan updated successfully:", data);
-      router.push("/user/report-download");
-    } else {
-      // Handle failure, e.g., display error message
-      console.error("Error updating plan:", data.message);
-    }
+    goToNext();
   };
 
   const handleClosePopup = () => {
@@ -287,7 +263,7 @@ const CustomerAcquisition = () => {
         className="mt-4 px-4 py-2 bg-btnColor text-white rounded hover:bg-btnColor-dark transition"
         onClick={handleSubmit}
       >
-        Submit
+        Next
       </button>
     </div>
   );
