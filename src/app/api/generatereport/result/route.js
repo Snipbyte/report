@@ -1,55 +1,78 @@
 import { NextResponse } from "next/server";
 import connectDb from "../../../../../backend/middleware/db";
-import Project from "../../../../../backend/models/Plan";
+import Plan from "../../../../../backend/models/Plan";
 
-const calculateMetricsForPlan = async (req) => {
+// Function to get the full plan data and calculate financial metrics
+const getPlanData = async (req) => {
   try {
     const { planId } = await req.json();
 
+    // Ensure the planId is provided
     if (!planId) {
       return NextResponse.json({ message: "planId is required" }, { status: 400 });
     }
 
-    const project = await Project.findById(planId);
+    // Find the plan by ID
+    const project = await Plan.findById(planId);
 
+    // If the plan is not found, return a 404 error
     if (!project) {
       return NextResponse.json({ message: "Plan not found" }, { status: 404 });
     }
 
+    // Destructure the financials object
     const {
-      idea,
-      market,
-      competitors,
-      customers,
-      salesPitches,
-      customerAcquisitionActions,
-      financials
-    } = project;
+      revenue = 0,
+      productCosts = 0,
+      charges = 0,
+      salaries = 0,
+      cashFlow = 0,
+      debtService = 0,
+      marketPotentialIndex = 0
+    } = project.financials || {};
 
-    const revenue = parseFloat(financials?.revenue || 0);
-    const productCosts = parseFloat(financials?.productCosts || 0);
-    const charges = parseFloat(financials?.charges || 0);
-    const salaries = parseFloat(financials?.salaries || 0);
-    const cashFlow = parseFloat(financials?.cashFlow || 0);
-    const debtService = parseFloat(financials?.debtService || 0);
-    const marketPotentialIndex = parseFloat(financials?.marketPotentialIndex || 0);
+    // Financial Calculations
+    const revenueValue = parseFloat(revenue);
+    const productCostsValue = parseFloat(productCosts);
+    const chargesValue = parseFloat(charges);
+    const salariesValue = parseFloat(salaries);
+    const cashFlowValue = parseFloat(cashFlow);
+    const debtServiceValue = parseFloat(debtService);
+    const marketPotentialIndexValue = parseFloat(marketPotentialIndex);
 
     // Calculating Profitability, Gross Margin, Added Value, and EBITDA
-    const grossMargin = revenue - productCosts;
-    const addedValue = grossMargin - charges;
-    const ebitda = addedValue - salaries;
-    const profitability = revenue - (productCosts + charges + salaries);
+    const grossMargin = revenueValue - productCostsValue;
+    const addedValue = grossMargin - chargesValue;
+    const ebitda = addedValue - salariesValue;
+    const profitability = revenueValue - (productCostsValue + chargesValue + salariesValue);
 
     // Calculating EBITDA Margin and Debt Coverage Ratio
-    const ebitdaMargin = revenue > 0 ? (ebitda / revenue) * 100 : 0;
-    const debtCoverageRatio = debtService > 0 ? cashFlow / debtService : 0;
+    const ebitdaMargin = revenueValue > 0 ? (ebitda / revenueValue) * 100 : 0;
+    const debtCoverageRatio = debtServiceValue > 0 ? cashFlowValue / debtServiceValue : 0;
 
     // Scoring Formula
-    const score = (ebitdaMargin * 50) + (debtCoverageRatio * 30) + (marketPotentialIndex * 20);
+    const score = (ebitdaMargin * 50) + (debtCoverageRatio * 30) + (marketPotentialIndexValue * 20);
 
+    // Return full plan data and financial metrics
     return NextResponse.json(
       {
-        projectName: idea?.projectName || "Unknown",
+        projectName: project.idea?.projectName || "Unknown",
+        typeOfActivity: project.idea?.typeOfActivity || "Unknown",
+        address: project.idea?.address || "Unknown",
+        launchDate: project.idea?.launchDate || "Unknown",
+        presentation: project.presentation || {},
+        visitingCard: project.visitingCard || {},
+        carrier: project.carrier || {},
+        services: project.services || {},
+        market: project.market || {},
+        competitors: project.competitors || {},
+        customers: project.customers || {},
+        salesPitches: project.salesPitches || {},
+        customerAcquisitionActions: project.customerAcquisitionActions || {},
+        financials: project.financials || {},
+        createdAt: project.createdAt || "Unknown",
+
+        // Calculated financial metrics
         profitability,
         grossMargin,
         addedValue,
@@ -62,8 +85,9 @@ const calculateMetricsForPlan = async (req) => {
     );
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "Failed to calculate metrics" }, { status: 500 });
+    return NextResponse.json({ message: "Failed to fetch plan data" }, { status: 500 });
   }
 };
 
-export const POST = connectDb(calculateMetricsForPlan);
+// Export the POST method for API request handling
+export const POST = connectDb(getPlanData);
