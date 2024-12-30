@@ -22,7 +22,7 @@ const Plan = () => {
       try {
         const token = localStorage.getItem("token"); // Retrieve token from localStorage
         if (!token) {
-          throw new Error("Authorization token not found in localStorage.");
+          throw new Error("UnAuthorized , Please Log in First");
         }
 
         const response = await fetch("/api/generatereport/initialize", {
