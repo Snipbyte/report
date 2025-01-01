@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectDb from "../../../../../backend/middleware/db";
 import Plan from "../../../../../backend/models/Plan";
+import Finance from "../../../../../backend/models/finanicialModel";
 import jwt from "jsonwebtoken";
 
 // Function to extract userId from Authorization header
@@ -40,7 +41,22 @@ const createOrUpdatePlan = async (req) => {
         plan.customers = planData.customers;
         plan.salesPitches = planData.salesPitches;
         plan.customerAcquisitionActions = planData.customerAcquisitionActions;
-        plan.financials = planData.financials;
+
+        // Handle financial data
+        if (planData.financialData) {
+          let finance = await Finance.findById(plan.financialData);
+          if (finance) {
+            // Update existing financial data
+            finance.set(planData.financialData.data);
+            await finance.save();
+          } else {
+            // Create new financial data
+            finance = new Finance(planData.financialData.data);
+            await finance.save();
+            plan.financialData = finance._id;
+          }
+        }
+
         plan = await plan.save(); // Save the updated plan
       } else {
         return NextResponse.json(
@@ -50,6 +66,12 @@ const createOrUpdatePlan = async (req) => {
       }
     } else {
       // If no planId, create a new plan
+      let finance;
+      if (planData.financialData) {
+        finance = new Finance(planData.financialData.data);
+        await finance.save();
+      }
+
       plan = new Plan({
         userId,
         idea: planData.idea,
@@ -62,9 +84,13 @@ const createOrUpdatePlan = async (req) => {
         customers: planData.customers,
         salesPitches: planData.salesPitches,
         customerAcquisitionActions: planData.customerAcquisitionActions,
+        financialData: finance ? finance._id : undefined,
       });
       plan = await plan.save(); // Save the new plan
     }
+
+    // Populate the financialData field
+    plan = await plan.populate('financialData'); 
 
     return NextResponse.json(plan, { status: 200 });
   } catch (error) {

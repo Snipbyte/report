@@ -1,96 +1,156 @@
 import { NextResponse } from "next/server";
 import connectDb from "../../../../../backend/middleware/db";
 import Plan from "../../../../../backend/models/Plan";
+import Finance from "../../../../../backend/models/finanicialModel";
 
-// Function to get the full plan data and calculate financial metrics
+// Function to fetch plan and finance data
 const getPlanData = async (req) => {
   try {
     const { planId } = await req.json();
 
-    // Ensure the planId is provided
     if (!planId) {
-      return NextResponse.json(
-        { message: "planId is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "planId is required" }, { status: 400 });
     }
 
-    // Find the plan by ID
     const project = await Plan.findById(planId);
-
-    // If the plan is not found, return a 404 error
     if (!project) {
       return NextResponse.json({ message: "Plan not found" }, { status: 404 });
     }
 
-    // Destructure the financials object
-    const {
-      revenue = 0,
-      productCosts = 0,
-      charges = 0,
-      salaries = 0,
-      cashFlow = 0,
-      debtService = 0,
-      marketPotentialIndex = 0
-    } = project.financials || {};
+    const financialData = project.financialData;
+    const finance = await Finance.findById(financialData);
+    console.log(finance.financialResults)
+    if (!finance) {
+      return NextResponse.json({ message: "Finance data not found" }, { status: 404 });
+    }
 
-    // Financial Calculations
-    const revenueValue = parseFloat(revenue);
-    const productCostsValue = parseFloat(productCosts);
-    const chargesValue = parseFloat(charges);
-    const salariesValue = parseFloat(salaries);
-    const cashFlowValue = parseFloat(cashFlow);
-    const debtServiceValue = parseFloat(debtService);
-    const marketPotentialIndexValue = parseFloat(marketPotentialIndex);
+    const period = finance.revenue.period;
 
-    // Calculating Profitability, Gross Margin, Added Value, and EBITDA
-    const grossMargin = revenueValue - productCostsValue;
-    const addedValue = grossMargin - chargesValue;
-    const ebitda = addedValue - salariesValue;
-    const profitability = revenueValue - (productCostsValue + chargesValue + salariesValue);
+    // Revenue calculation
+    const revenueResults = finance.revenue.productLines.map((product) => {
+      let totalRevenue = 0;
+      let yearlyRevenue = [];
 
-    // Calculating EBITDA Margin and Debt Coverage Ratio
-    const ebitdaMargin = revenueValue > 0 ? (ebitda / revenueValue) * 100 : 0;
-    const debtCoverageRatio = debtServiceValue > 0 ? cashFlowValue / debtServiceValue : 0;
+      for (let year = period.startYear; year <= period.endYear; year++) {
+        const revenueYear = product.unitPrice * product.volume;
+        yearlyRevenue.push(revenueYear);
+        totalRevenue += revenueYear;
 
-    // Scoring Formula
-    const score = (ebitdaMargin * 50) + (debtCoverageRatio * 30) + (marketPotentialIndexValue * 20);
+        // Apply annual growth rate to unit price for next year
+        product.unitPrice *= (1 + product.annualGrowthRate / 100);
+      }
 
-    // Return full plan data and financial metrics
-    return NextResponse.json(
-      {
-        projectName: project.idea?.projectName || "Unknown",
-        typeOfActivity: project.idea?.typeOfActivity || "Unknown",
-        address: project.idea?.address || "Unknown",
-        launchDate: project.idea?.launchDate || "Unknown",
-        presentation: project.presentation || {},
-        visitingCard: project.visitingCard || {},
-        carrier: project.carrier || {},
-        services: project.services || {},
-        market: project.market || {},
-        competitors: project.competitors || {},
-        customers: project.customers || {},
-        salesPitches: project.salesPitches || {},
-        customerAcquisitionActions: project.customerAcquisitionActions || {},
-        financials: project.financials || {},
-        createdAt: project.createdAt || "Unknown",
+      return { product: product.name, yearlyRevenue, totalRevenue };
+    });
 
-        // Calculated financial metrics
-        profitability,
-        grossMargin,
-        addedValue,
-        ebitda,
-        ebitdaMargin: `${ebitdaMargin.toFixed(2)}%`,
-        debtCoverageRatio: debtCoverageRatio.toFixed(2),
-        score,
+    // Expenses calculation
+    const expenseResults = Object.keys(finance.expenses).map((category) => {
+      const expenseData = finance.expenses[category];
+      let totalExpense = 0;
+      let yearlyExpense = [];
+
+      for (let year = period.startYear; year <= period.endYear; year++) {
+        const yearlyCost = expenseData.cost * 12 * (1 + expenseData.annualGrowthRate / 100);
+        yearlyExpense.push(yearlyCost);
+        totalExpense += yearlyCost;
+
+        // Apply annual growth rate to cost for next year
+        expenseData.cost *= (1 + expenseData.annualGrowthRate / 100);
+      }
+
+      return { category, yearlyExpense, totalExpense };
+    });
+
+    const totalProductCosts = finance.expenses.productCosts.cost * period.endYear;
+
+    const totalRevenue = revenueResults.reduce((acc, product) => acc + product.totalRevenue, 0);
+
+    const grossMargin = totalRevenue - totalProductCosts;
+
+    const totalExpenses = expenseResults.reduce((acc, cat) => acc + (cat.totalExpense || 0), 0);
+
+    const totalSalaries = finance.expenses.salaries.cost * (1 + finance.expenses.salaries.annualGrowthRate / 100);
+
+    const addedValue = grossMargin - totalExpenses;
+
+    const EBITDA = addedValue - totalSalaries;
+
+    const EBITDA_MARGIN = EBITDA / totalRevenue * 100;
+
+    const cashFlow = totalRevenue - totalExpenses;  
+    const Principal = finance.Principal; 
+    const Interest = finance.Interest;  
+    const debtService = Principal - Interest;
+    const debtCoverageRatio = cashFlow / debtService;
+
+    const marketPotentialScore = 40 ; // estimate karo 
+    let fundingRecommendation = '';
+    if (marketPotentialScore > 80) {
+      fundingRecommendation = 'Highly likely to secure funding';
+    } else if (marketPotentialScore > 50) {
+      fundingRecommendation = 'Moderately likely to secure funding';
+    } else {
+      fundingRecommendation = 'Unlikely to secure funding';
+    }
+      
+     finance.financialResults = {
+      totalRevenue,
+      totalProductCosts,
+      grossMargin,
+      totalCharges: totalExpenses,
+      addedValue,
+      totalSalaries,
+      EBITDA,
+      profitability: {
+        isProfitable: EBITDA > 0,
+        EBITDAMargin: EBITDA_MARGIN,
+        debtCoverageRatio,
       },
-      { status: 200 }
-    );
+      scoring: {
+        marketPotentialIndex: marketPotentialScore,
+        recommendation: fundingRecommendation,
+      },
+    }
+
+    await finance.save(); 
+
+    return NextResponse.json({
+      projectName: project.idea?.projectName || "Unknown",
+      typeOfActivity: project.idea?.typeOfActivity || "Unknown",
+      address: project.idea?.address || "Unknown",
+      launchDate: project.idea?.launchDate || "Unknown",
+      presentation: project.presentation || {},
+      visitingCard: project.visitingCard || {},
+      carrier: project.carrier || {},
+      services: project.services || {},
+      market: project.market || {},
+      competitors: project.competitors || {},
+      customers: project.customers || {},
+      salesPitches: project.salesPitches || {},
+      customerAcquisitionActions: project.customerAcquisitionActions || {},
+      financialResults: {
+        totalRevenue,
+        totalProductCosts,
+        grossMargin,
+        totalCharges: totalExpenses,
+        addedValue,
+        totalSalaries,
+        EBITDA,
+        profitability: {
+          isProfitable: EBITDA > 0,
+          EBITDAMargin: EBITDA_MARGIN,
+          debtCoverageRatio,
+        },
+        scoring: {
+          marketPotentialIndex: marketPotentialScore,
+          recommendation: fundingRecommendation,
+        },
+      },
+    }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Failed to fetch plan data" }, { status: 500 });
   }
 };
 
-// Export the POST method for API request handling
 export const POST = connectDb(getPlanData);

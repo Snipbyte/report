@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import connectDb from "../../../../../backend/middleware/db";
 import Plan from "../../../../../backend/models/Plan";
+import Finance from "../../../../../backend/models/finanicialModel";
 import jwt from "jsonwebtoken";
 
-// Function to extract userId from Authorization header
 const getUserIdFromAuthHeader = (request) => {
   const authHeader = request.headers.get("Authorization");
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -18,13 +18,11 @@ const getUserIdFromAuthHeader = (request) => {
   return userId;
 };
 
-// Create Plan with dummy data for all arrays
 const createPlan = async (req) => {
   try {
     const userId = getUserIdFromAuthHeader(req);
 
-    // Create new plan with dummy data added to all arrays
-    const newPlan = new Plan({
+    const hardcodedPlanData = {
       userId,
       idea: {
         typeOfActivity: "Placeholder Activity",
@@ -102,9 +100,21 @@ const createPlan = async (req) => {
           },
         ],
       },
-    });
+    };
 
+    const newFinance = new Finance({
+      revenue: { productLines: [], period: { startYear: 2024, endYear: 2026 } },
+      expenses: { generalExpenses: { cost: 1000, annualGrowthRate: 5, frequency: "monthly" } },
+      investments: { investments: [] },
+      financialResults: { totalRevenue: 50000, totalProductCosts: 20000, grossMargin: 30000, EBITDA: 15000, profitability: { isProfitable: true, EBITDAMargin: 25, debtCoverageRatio: 1.5 }, scoring: { marketPotentialIndex: 80, recommendation: "High Potential" } },
+    });
+    await newFinance.save();
+
+    hardcodedPlanData.financialData = newFinance._id;
+
+    const newPlan = new Plan(hardcodedPlanData);
     const savedPlan = await newPlan.save();
+
     return NextResponse.json(savedPlan, { status: 201 });
   } catch (error) {
     return NextResponse.json(
@@ -116,36 +126,4 @@ const createPlan = async (req) => {
   }
 };
 
-// Delete Plan by ID
-const deletePlan = async (req) => {
-  try {
-    const userId = getUserIdFromAuthHeader(req);
-    const { planId } = await req.json();
-
-    // Find the plan by ID and userId
-    const deletedPlan = await Plan.findOneAndDelete({ _id: planId, userId });
-
-    if (!deletedPlan) {
-      return NextResponse.json(
-        { message: "Plan not found or not authorized" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(
-      { message: "Plan deleted successfully" },
-      { status: 200 }
-    );
-  } catch (error) {
-    return NextResponse.json(
-      { message: error.message || "Failed to delete plan" },
-      {
-        status: error.message === "Authorization token is required" ? 401 : 500,
-      }
-    );
-  }
-};
-
-// Exports for handling the API routes
-export const POST = connectDb(createPlan); // Handles creating the plan
-export const DELETE = connectDb(deletePlan); // Handles deleting the plan
+export const POST = connectDb(createPlan);
