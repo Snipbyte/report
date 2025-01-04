@@ -45,10 +45,13 @@ const Idea = ({ goToNext }) => {
     try {
       const storedData = JSON.parse(localStorage.getItem("planData")) || {};
 
-      // Append the idea data to the existing data
-      storedData.idea = {
-        ...data,
-        typeOfActivity: selectedSubcategory,
+      // Append the idea data inside the planData
+      storedData.planData = {
+        ...storedData.planData,
+        idea: {
+          ...data,
+          typeOfActivity: selectedSubcategory,
+        },
       };
 
       // Store the updated plan data in localStorage

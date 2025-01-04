@@ -104,9 +104,26 @@ const createPlan = async (req) => {
 
     const newFinance = new Finance({
       revenue: { productLines: [], period: { startYear: 2024, endYear: 2026 } },
-      expenses: { generalExpenses: { cost: 1000, annualGrowthRate: 5, frequency: "monthly" } },
+      expenses: {
+        generalExpenses: {
+          cost: 1000,
+          annualGrowthRate: 5,
+          frequency: "monthly",
+        },
+      },
       investments: { investments: [] },
-      financialResults: { totalRevenue: 50000, totalProductCosts: 20000, grossMargin: 30000, EBITDA: 15000, profitability: { isProfitable: true, EBITDAMargin: 25, debtCoverageRatio: 1.5 }, scoring: { marketPotentialIndex: 80, recommendation: "High Potential" } },
+      financialResults: {
+        totalRevenue: 50000,
+        totalProductCosts: 20000,
+        grossMargin: 30000,
+        EBITDA: 15000,
+        profitability: {
+          isProfitable: true,
+          EBITDAMargin: 25,
+          debtCoverageRatio: 1.5,
+        },
+        scoring: { marketPotentialIndex: 80, recommendation: "High Potential" },
+      },
     });
     await newFinance.save();
 
@@ -114,6 +131,7 @@ const createPlan = async (req) => {
 
     const newPlan = new Plan(hardcodedPlanData);
     const savedPlan = await newPlan.save();
+    console.log("s", savedPlan);
 
     return NextResponse.json(savedPlan, { status: 201 });
   } catch (error) {

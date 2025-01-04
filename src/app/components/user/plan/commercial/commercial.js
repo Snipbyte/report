@@ -17,29 +17,37 @@ const Commercial = ({ goToNext }) => {
     const planId = localStorage.getItem("planId");
 
     if (planId) {
-      const savedPitch = storedData.salesPitches
-        ? storedData.salesPitches[planId]
-        : "";
+      // Get the sales pitch from inside planData.salesPitches[planId]
+      const savedPitch = storedData.planData?.salesPitches?.[planId] || "";
       setSalesPitch(savedPitch);
     }
   }, []);
 
-  // Function to save the sales pitch to localStorage
+  // Function to save the sales pitch to localStorage inside planData
   const saveSalesPitchToLocalStorage = (newPitch) => {
     const storedData = JSON.parse(localStorage.getItem("planData")) || {};
     const planId = localStorage.getItem("planId");
 
     if (planId) {
-      storedData.salesPitches = storedData.salesPitches || {};
-      storedData.salesPitches[planId] = newPitch; // Save new sales pitch
+      // Ensure planData exists inside the storedData
+      storedData.planData = storedData.planData || {};
 
-      localStorage.setItem("planData", JSON.stringify(storedData)); // Save the updated data
+      // Ensure salesPitches exists inside planData
+      storedData.planData.salesPitches = storedData.planData.salesPitches || {};
+
+      // Save the new sales pitch inside planData.salesPitches[planId]
+      storedData.planData.salesPitches[planId] = newPitch;
+
+      // Save the updated storedData back to localStorage
+      localStorage.setItem("planData", JSON.stringify(storedData));
+    } else {
+      console.error("No planId found. Cannot save sales pitch.");
     }
   };
 
   const handleSalesPitchChange = (value) => {
     setSalesPitch(value);
-    saveSalesPitchToLocalStorage(value); // Save the updated sales pitch to localStorage
+    saveSalesPitchToLocalStorage(value); // Save the updated sales pitch to localStorage inside planData
   };
 
   return (

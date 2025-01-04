@@ -49,23 +49,24 @@ const Walk = ({ goToNext }) => {
     }
   }, []);
 
-  // Function to handle saving the form data
-  const handleSaveData = () => {
-    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
-    const planId = localStorage.getItem("planId");
+// Function to handle saving the form data
+const handleSaveData = () => {
+  const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+  const planId = localStorage.getItem("planId");
 
-    if (planId) {
-      // Update the market data for the current planId
-      storedData.market = storedData.market || {};
-      storedData.market[planId] = {
-        marketDescription,
-        responses,
-      };
+  if (planId) {
+    // Ensure the market data exists within the planData
+    storedData.planData = storedData.planData || {}; // Ensure planData exists
+    storedData.planData.market = storedData.planData.market || {}; // Ensure market exists under planData
+    storedData.planData.market[planId] = {
+      marketDescription,
+      responses,
+    };
 
-      // Store the updated data in localStorage
-      localStorage.setItem("planData", JSON.stringify(storedData));
-    }
-  };
+    // Store the updated data in localStorage
+    localStorage.setItem("planData", JSON.stringify(storedData));
+  }
+};
 
   return (
     <div className="p-4">

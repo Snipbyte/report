@@ -12,7 +12,6 @@ const Plan = () => {
 
   useEffect(() => {
     const initializePlan = async () => {
-      // If 'report' query parameter exists, skip API initialization
       if (reportId) {
         console.log("Report query parameter exists. Skipping API call.");
         setLoading(false);
@@ -20,16 +19,16 @@ const Plan = () => {
       }
 
       try {
-        const token = localStorage.getItem("token"); // Retrieve token from localStorage
+        const token = localStorage.getItem("token");
         if (!token) {
-          throw new Error("UnAuthorized , Please Log in First");
+          throw new Error("UnAuthorized, Please Log in First");
         }
 
         const response = await fetch("/api/generatereport/initialize", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Add the token to the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -39,11 +38,24 @@ const Plan = () => {
         }
 
         const responseData = await response.json();
-        const planId = responseData._id; // Assuming the API response includes the plan's ID
-        console.log("Plan created successfully:", planId);
+        const planId = responseData._id; // Plan ID from API response
+        const financialDataId = responseData.financialData; // Financial Data ID from API response
 
-        // Store the plan ID in localStorage
+        console.log("Plan created successfully:", planId);
         localStorage.setItem("planId", planId);
+        // Construct the updated payload structure
+        const updatedPlanData = {
+          planId,
+          planData: {
+            financialData: {
+              id: financialDataId,
+              data: {}, // Placeholder for further financial data
+            },
+          },
+        };
+
+        // Save the updated payload to localStorage
+        localStorage.setItem("planData", JSON.stringify(updatedPlanData));
 
         // Redirect to the URL with the report query parameter
         window.location.href = `/user/plan?report=${planId}`;
@@ -56,7 +68,7 @@ const Plan = () => {
     };
 
     initializePlan();
-  }, [reportId]); // Include reportId as a dependency
+  }, [reportId]);
 
   if (loading) {
     return (

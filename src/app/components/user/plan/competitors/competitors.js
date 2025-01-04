@@ -11,15 +11,15 @@ const Competitors = ({ goToNext }) => {
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("planData")) || {};
     const planId = localStorage.getItem("planId");
-
+  
     if (planId) {
-      // Load competitors data for the current planId
-      const savedCompetitors = storedData.competitors || {};
-      const savedPlanCompetitors = savedCompetitors[planId] || [];
-
-      setCompetitors(savedPlanCompetitors);
+      // Retrieve the competitors under the planId within the planData object
+      const savedCompetitors = storedData.planData?.competitors?.[planId] || [];
+  
+      setCompetitors(savedCompetitors);
     }
   }, []);
+  
 
   const handleOpenModal = () => {
     setCompetitorName("");
@@ -38,7 +38,7 @@ const Competitors = ({ goToNext }) => {
       };
       setCompetitors((prev) => {
         const updatedCompetitors = [...prev, newCompetitor];
-        saveCompetitorsToLocalStorage(updatedCompetitors); // Save to localStorage
+        saveCompetitorsToLocalStorage(updatedCompetitors);
         return updatedCompetitors;
       });
       setIsModalOpen(false);
@@ -52,27 +52,35 @@ const Competitors = ({ goToNext }) => {
       i === index ? { ...competitor, priceStatus: value } : competitor
     );
     setCompetitors(updatedCompetitors);
-    saveCompetitorsToLocalStorage(updatedCompetitors); // Save to localStorage
+    saveCompetitorsToLocalStorage(updatedCompetitors);
   };
 
   const handleRemoveCompetitor = (index) => {
     const updatedCompetitors = competitors.filter((_, i) => i !== index);
     setCompetitors(updatedCompetitors);
-    saveCompetitorsToLocalStorage(updatedCompetitors); // Save to localStorage
+    saveCompetitorsToLocalStorage(updatedCompetitors);
   };
+// Function to save the competitors to localStorage
+const saveCompetitorsToLocalStorage = (updatedCompetitors) => {
+  const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+  const planId = localStorage.getItem("planId");
 
-  const saveCompetitorsToLocalStorage = (updatedCompetitors) => {
-    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
-    const planId = localStorage.getItem("planId");
+  if (planId) {
+    // Ensure 'planData' exists
+    storedData.planData = storedData.planData || {};
 
-    if (planId) {
-      // Update competitors data for the current planId
-      storedData.competitors = storedData.competitors || {};
-      storedData.competitors[planId] = updatedCompetitors;
+    // Ensure 'competitors' exists within 'planData'
+    storedData.planData.competitors = storedData.planData.competitors || {};
 
-      localStorage.setItem("planData", JSON.stringify(storedData)); // Save the updated data
-    }
-  };
+    // Save the updated competitors under the planId in 'planData'
+    storedData.planData.competitors[planId] = updatedCompetitors;
+
+    // Save the updated planData back to localStorage
+    localStorage.setItem("planData", JSON.stringify(storedData));
+  }
+};
+
+
 
   return (
     <div className="p-4">

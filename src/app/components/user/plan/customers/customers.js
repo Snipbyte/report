@@ -22,11 +22,10 @@ const Customer = ({ goToNext }) => {
     const planId = localStorage.getItem("planId");
 
     if (planId) {
-      // Load customer data for the current planId
-      const savedCustomers = storedData.customers || {};
-      const savedPlanCustomer = savedCustomers[planId] || null;
+      // Retrieve the customers under the planId within the planData object
+      const savedCustomer = storedData.planData?.customers?.[planId] || {};
 
-      setCustomer(savedPlanCustomer);
+      setCustomer(savedCustomer);
     }
   }, []);
 
@@ -58,27 +57,32 @@ const Customer = ({ goToNext }) => {
   const handleRadioChange = (e) => {
     setSelectedRadioType(e.target.value);
   };
-
   const saveCustomerToLocalStorage = (newCustomer) => {
     const storedData = JSON.parse(localStorage.getItem("planData")) || {};
     const planId = localStorage.getItem("planId");
 
     if (planId) {
-      // Update customer data for the current planId
-      storedData.customers = storedData.customers || {};
-      if (newCustomer) {
-        storedData.customers[planId] = newCustomer;
-      } else {
-        delete storedData.customers[planId]; // Remove customer for this planId
-      }
+      // Ensure 'planData' exists
+      storedData.planData = storedData.planData || {};
 
-      localStorage.setItem("planData", JSON.stringify(storedData)); // Save the updated data
+      // Ensure 'customers' exists within 'planData'
+      storedData.planData.customers = storedData.planData.customers || {};
+
+      // Save the new customer under the specific planId
+      storedData.planData.customers[planId] = newCustomer;
+
+      // Save the updated planData back to localStorage
+      localStorage.setItem("planData", JSON.stringify(storedData));
+    } else {
+      console.error("No planId found. Cannot save customer.");
     }
   };
 
   return (
     <div className="p-4">
-      <p className="text-2xl text-headingColor mb-4 font-bold">Who are your customers?</p>
+      <p className="text-2xl text-headingColor mb-4 font-bold">
+        Who are your customers?
+      </p>
       <div className="flex items-center gap-2 my-4">
         <p>Your Customer (Persons)</p>
         {/* Add product/customer button */}
@@ -145,8 +149,12 @@ const Customer = ({ goToNext }) => {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg w-full lg:w-[80%]">
-            <h2 className="text-xl font-bold text-btnColor mb-4">Customer Category (Person)</h2>
-            <p className="text-xl font-bold text-headingColor mb-4">Customer Type</p>
+            <h2 className="text-xl font-bold text-btnColor mb-4">
+              Customer Category (Person)
+            </h2>
+            <p className="text-xl font-bold text-headingColor mb-4">
+              Customer Type
+            </p>
             <div className="flex items-center gap-10 my-2">
               <div className="flex items-center gap-2">
                 <input

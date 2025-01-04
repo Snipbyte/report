@@ -28,8 +28,8 @@ const CustomerAcquisition = ({ goToNext }) => {
     const storedData = JSON.parse(localStorage.getItem("planData")) || {};
     const planId = localStorage.getItem("planId");
 
-    if (planId && storedData.customerAcquisitionActions) {
-      setActions(storedData.customerAcquisitionActions[planId] || []);
+    if (planId && storedData.planData?.customerAcquisitionActions) {
+      setActions(storedData.planData.customerAcquisitionActions[planId] || []);
     }
 
     // Retrieve token and plan data from localStorage
@@ -40,17 +40,24 @@ const CustomerAcquisition = ({ goToNext }) => {
     setPlanData(storedPlanData);
   }, []);
 
-  // Function to save actions to localStorage
+  // Function to save actions to localStorage inside planData
   const saveActionsToLocalStorage = (newActions) => {
     const storedData = JSON.parse(localStorage.getItem("planData")) || {};
     const planId = localStorage.getItem("planId");
 
     if (planId) {
-      storedData.customerAcquisitionActions =
-        storedData.customerAcquisitionActions || {};
-      storedData.customerAcquisitionActions[planId] = newActions;
+      // Ensure planData exists inside the storedData
+      storedData.planData = storedData.planData || {};
 
-      localStorage.setItem("planData", JSON.stringify(storedData)); // Save the updated actions
+      // Ensure customerAcquisitionActions exists inside planData
+      storedData.planData.customerAcquisitionActions =
+        storedData.planData.customerAcquisitionActions || {};
+
+      // Save the new actions inside planData.customerAcquisitionActions[planId]
+      storedData.planData.customerAcquisitionActions[planId] = newActions;
+
+      // Save the updated storedData back to localStorage
+      localStorage.setItem("planData", JSON.stringify(storedData));
     }
   };
 
@@ -77,7 +84,7 @@ const CustomerAcquisition = ({ goToNext }) => {
     }
 
     setActions(updatedActions);
-    saveActionsToLocalStorage(updatedActions); // Save to localStorage
+    saveActionsToLocalStorage(updatedActions); // Save to localStorage inside planData
     setIsModalOpen(false);
     setCurrentAction({ id: null, name: "", description: "" });
   };
@@ -85,7 +92,7 @@ const CustomerAcquisition = ({ goToNext }) => {
   const handleRemoveAction = (id) => {
     const updatedActions = actions.filter((action) => action.id !== id);
     setActions(updatedActions);
-    saveActionsToLocalStorage(updatedActions); // Save to localStorage
+    saveActionsToLocalStorage(updatedActions); // Save to localStorage inside planData
   };
 
   const handleSubmit = async () => {

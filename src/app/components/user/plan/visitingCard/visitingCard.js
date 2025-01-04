@@ -53,29 +53,32 @@ const VisitingCard = ({ goToNext }) => {
   const handleSave = () => {
     try {
       const planId = localStorage.getItem("planId");
-
+  
       if (!planId) {
         console.error("Missing planId");
         return;
       }
-
+  
       setLoading(true);
-
+  
       // Retrieve existing plan data from localStorage
       const storedData = JSON.parse(localStorage.getItem("planData")) || {};
-
-      // Save or update the visiting card data in localStorage for the current planId
-      storedData.visitingCard = {
-        ...storedData.visitingCard,
-        [planId]: {
-          ...formData,
-          selectedCountry, // Save selected country
+  
+      // Save or update the visiting card data inside planData for the current planId
+      storedData.planData = {
+        ...storedData.planData,
+        visitingCard: {
+          ...storedData.planData?.visitingCard,
+          [planId]: {
+            ...formData,
+            selectedCountry, // Save selected country
+          },
         },
       };
-
+  
       // Store the updated plan data in localStorage
       localStorage.setItem("planData", JSON.stringify(storedData));
-
+  
       console.log("Visiting card saved successfully:", storedData);
       goToNext();
     } catch (error) {
@@ -84,7 +87,7 @@ const VisitingCard = ({ goToNext }) => {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="p-4">
       <p className="text-headingColor text-2xl font-bold mb-4">

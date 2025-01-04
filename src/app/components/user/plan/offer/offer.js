@@ -20,28 +20,30 @@ const Offer = ({ goToNext }) => {
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   // Function to handle adding the service
-  const handleAddService = () => {
-    const newService = {
-      name: serviceName,
-      description: serviceDescription,
-    };
-    setService(newService);
-
-    // Retrieve existing plan data from localStorage
-    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
-    const planId = localStorage.getItem("planId");
-
-    if (planId) {
-      // Update the services for the current planId
-      storedData.services = storedData.services || {};
-      storedData.services[planId] = newService;
-
-      // Store the updated plan data in localStorage
-      localStorage.setItem("planData", JSON.stringify(storedData));
-    }
-
-    toggleModal(); // Close the modal after adding the service
+// Function to handle adding the service
+const handleAddService = () => {
+  const newService = {
+    name: serviceName,
+    description: serviceDescription,
   };
+  setService(newService);
+
+  // Retrieve existing plan data from localStorage
+  const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+  const planId = localStorage.getItem("planId");
+
+  if (planId) {
+    // Ensure the services object is a part of planData
+    storedData.planData = storedData.planData || {}; // Ensure planData exists
+    storedData.planData.services = storedData.planData.services || {}; // Ensure services exist under planData
+    storedData.planData.services[planId] = newService; // Add or update service for the current planId
+
+    // Store the updated plan data in localStorage
+    localStorage.setItem("planData", JSON.stringify(storedData));
+  }
+
+  toggleModal(); // Close the modal after adding the service
+};
 
   // Function to handle editing the service
   const handleEditService = () => {

@@ -56,43 +56,61 @@ const Financials = () => {
       },
     },
   });
+
   const [token, setToken] = useState(null);
   const [planData, setPlanData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    // Load planData from localStorage
     const storedData = JSON.parse(localStorage.getItem("planData")) || {};
-    const planId = localStorage.getItem("planId");
+    setPlanData(storedData.planData || {}); // Ensure planData is available
 
-    if (planId && storedData.financials) {
-      setFinancialData(storedData.financials[planId] || financialData);
+    // Load financialData if it exists in stored planData
+    if (
+      storedData.planData &&
+      storedData.planData.financialData &&
+      storedData.planData.financialData.data
+    ) {
+      setFinancialData(storedData.planData.financialData.data); // Set the data correctly
     }
 
     const storedToken = localStorage.getItem("token");
-    const storedPlanData = JSON.parse(localStorage.getItem("planData"));
-
     setToken(storedToken);
-    setPlanData(storedPlanData);
   }, []);
 
   const saveFinancialsToLocalStorage = (newFinancials) => {
     const storedData = JSON.parse(localStorage.getItem("planData")) || {};
-    const planId = localStorage.getItem("planId");
 
-    if (planId) {
-      storedData.financials = storedData.financials || {};
-      storedData.financials[planId] = newFinancials;
+    // If planData doesn't exist, initialize it
+    storedData.planData = storedData.planData || {};
 
-      localStorage.setItem("planData", JSON.stringify(storedData));
-    }
+    // Ensure financialData is nested correctly
+    storedData.planData.financialData = storedData.planData.financialData || {};
+    storedData.planData.financialData.data = newFinancials;
+
+    // Save everything back to localStorage
+    localStorage.setItem("planData", JSON.stringify(storedData));
   };
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    const planId = localStorage.getItem("planId");
-    saveFinancialsToLocalStorage(financialData);
-    const planDataWithFinancials = { ...planData, financials: financialData };
 
+    // Save updated financial data to localStorage
+    saveFinancialsToLocalStorage(financialData);
+
+    const planId = localStorage.getItem("planId");
+
+    // Ensure the correct structure for financialData when sending to the server
+    const updatedPlanData = {
+      ...planData,
+      financialData: {
+        ...planData.financialData,
+        data: financialData, // financial data goes under the `data` field
+      },
+    };
+
+    // Send the updated plan data to the server
     const response = await fetch("/api/generatereport/update-report", {
       method: "POST",
       headers: {
@@ -101,7 +119,7 @@ const Financials = () => {
       },
       body: JSON.stringify({
         planId,
-        planData: planDataWithFinancials,
+        planData: updatedPlanData,
       }),
     });
 
@@ -115,9 +133,12 @@ const Financials = () => {
       console.error("Error updating financials:", data.message);
     }
   };
+
+  // Handle nested input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
+    // Helper to update nested object values
     const setNestedValue = (obj, path, value) => {
       const keys = path.split(".");
       let current = obj;
@@ -134,7 +155,7 @@ const Financials = () => {
 
     setFinancialData((prevData) => {
       const updatedData = { ...prevData };
-      setNestedValue(updatedData, name, value);
+      setNestedValue(updatedData, name, value); // Update the nested value
       return updatedData;
     });
   };
@@ -148,7 +169,7 @@ const Financials = () => {
         <input
           type="number"
           name="Principal"
-          value={financialData.Principal}
+          value={financialData?.Principal}
           onChange={handleInputChange}
           className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
         />
@@ -159,20 +180,18 @@ const Financials = () => {
         <input
           type="number"
           name="Interest"
-          value={financialData.Interest}
+          value={financialData?.Interest}
           onChange={handleInputChange}
           className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
         />
       </div>
-
-      
 
       <div className="my-4">
         <label className="block text-sm mb-1">Start Year</label>
         <input
           type="number"
           name="revenue.period.startYear"
-          value={financialData.revenue.period.startYear}
+          value={financialData?.revenue?.period?.startYear || 0}
           onChange={handleInputChange}
           className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
         />
@@ -183,7 +202,7 @@ const Financials = () => {
         <input
           type="number"
           name="revenue.period.endYear"
-          value={financialData.revenue.period.endYear}
+          value={financialData?.revenue?.period?.endYear || 0}
           onChange={handleInputChange}
           className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
         />
@@ -200,7 +219,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.generalExpenses.cost"
-            value={financialData.expenses.generalExpenses.cost}
+            value={financialData?.expenses?.generalExpenses?.cost || 0}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -212,7 +231,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.generalExpenses.annualGrowthRate"
-            value={financialData.expenses.generalExpenses.annualGrowthRate}
+            value={financialData?.expenses?.generalExpenses?.annualGrowthRate}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -224,7 +243,7 @@ const Financials = () => {
           <input
             type="text"
             name="expenses.generalExpenses.frequency"
-            value={financialData.expenses.generalExpenses.frequency}
+            value={financialData?.expenses?.generalExpenses?.frequency}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -235,7 +254,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.lease.cost"
-            value={financialData.expenses.lease.cost}
+            value={financialData?.expenses?.lease?.cost}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -245,7 +264,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.lease.annualGrowthRate"
-            value={financialData.expenses.lease.annualGrowthRate}
+            value={financialData?.expenses?.lease?.annualGrowthRate}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -255,7 +274,7 @@ const Financials = () => {
           <input
             type="text"
             name="expenses.lease.frequency"
-            value={financialData.expenses.lease.frequency}
+            value={financialData?.expenses?.lease?.frequency}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -266,7 +285,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.productCosts.cost"
-            value={financialData.expenses.productCosts.cost}
+            value={financialData?.expenses?.productCosts?.cost}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -278,7 +297,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.productCosts.annualGrowthRate"
-            value={financialData.expenses.productCosts.annualGrowthRate}
+            value={financialData?.expenses?.productCosts?.annualGrowthRate}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -288,7 +307,7 @@ const Financials = () => {
           <input
             type="text"
             name="expenses.productCosts.frequency"
-            value={financialData.expenses.productCosts.frequency}
+            value={financialData?.expenses?.productCosts?.frequency}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -301,7 +320,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.variableCosts.percentageOfRevenue"
-            value={financialData.expenses.variableCosts.percentageOfRevenue}
+            value={financialData?.expenses?.variableCosts?.percentageOfRevenue}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -312,7 +331,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.financialCharges.cost"
-            value={financialData.expenses.financialCharges.cost}
+            value={financialData?.expenses?.financialCharges?.cost}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -324,7 +343,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.financialCharges.annualGrowthRate"
-            value={financialData.expenses.financialCharges.annualGrowthRate}
+            value={financialData?.expenses?.financialCharges?.annualGrowthRate}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -336,7 +355,7 @@ const Financials = () => {
           <input
             type="text"
             name="expenses.financialCharges.frequency"
-            value={financialData.expenses.financialCharges.frequency}
+            value={financialData?.expenses?.financialCharges?.frequency}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -347,7 +366,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.salaries.cost"
-            value={financialData.expenses.salaries.cost}
+            value={financialData?.expenses?.salaries?.cost}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -359,7 +378,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.salaries.annualGrowthRate"
-            value={financialData.expenses.salaries.annualGrowthRate}
+            value={financialData?.expenses?.salaries?.annualGrowthRate}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -369,7 +388,7 @@ const Financials = () => {
           <input
             type="text"
             name="expenses.salaries.frequency"
-            value={financialData.expenses.salaries.frequency}
+            value={financialData?.expenses?.salaries?.frequency}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -380,7 +399,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.insurance.cost"
-            value={financialData.expenses.insurance.cost}
+            value={financialData?.expenses?.insurance?.cost}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -392,7 +411,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.insurance.annualGrowthRate"
-            value={financialData.expenses.insurance.annualGrowthRate}
+            value={financialData?.expenses?.insurance?.annualGrowthRate}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -402,7 +421,7 @@ const Financials = () => {
           <input
             type="text"
             name="expenses.insurance.frequency"
-            value={financialData.expenses.insurance.frequency}
+            value={financialData?.expenses?.insurance?.frequency}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -413,7 +432,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.marketing.cost"
-            value={financialData.expenses.marketing.cost}
+            value={financialData?.expenses?.marketing?.cost}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -425,7 +444,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.marketing.annualGrowthRate"
-            value={financialData.expenses.marketing.annualGrowthRate}
+            value={financialData?.expenses?.marketing?.annualGrowthRate}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -435,7 +454,7 @@ const Financials = () => {
           <input
             type="text"
             name="expenses.marketing.frequency"
-            value={financialData.expenses.marketing.frequency}
+            value={financialData?.expenses?.marketing?.frequency}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -446,7 +465,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.maintenance.cost"
-            value={financialData.expenses.maintenance.cost}
+            value={financialData?.expenses?.maintenance?.cost}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -458,7 +477,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.maintenance.annualGrowthRate"
-            value={financialData.expenses.maintenance.annualGrowthRate}
+            value={financialData?.expenses?.maintenance?.annualGrowthRate}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -468,7 +487,7 @@ const Financials = () => {
           <input
             type="text"
             name="expenses.maintenance.frequency"
-            value={financialData.expenses.maintenance.frequency}
+            value={financialData?.expenses?.maintenance?.frequency}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -480,7 +499,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.utilities.cost"
-            value={financialData.expenses.utilities.cost}
+            value={financialData?.expenses?.utilities?.cost}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -492,7 +511,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.utilities.annualGrowthRate"
-            value={financialData.expenses.utilities.annualGrowthRate}
+            value={financialData?.expenses?.utilities?.annualGrowthRate}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -502,7 +521,7 @@ const Financials = () => {
           <input
             type="text"
             name="expenses.utilities.frequency"
-            value={financialData.expenses.utilities.frequency}
+            value={financialData?.expenses?.utilities?.frequency}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -516,7 +535,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.professionalServices.cost"
-            value={financialData.expenses.professionalServices.cost}
+            value={financialData?.expenses?.professionalServices?.cost}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -528,7 +547,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.professionalServices.annualGrowthRate"
-            value={financialData.expenses.professionalServices.annualGrowthRate}
+            value={financialData?.expenses?.professionalServices?.annualGrowthRate}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -540,7 +559,7 @@ const Financials = () => {
           <input
             type="text"
             name="expenses.professionalServices.frequency"
-            value={financialData.expenses.professionalServices.frequency}
+            value={financialData?.expenses?.professionalServices?.frequency}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -552,7 +571,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.training.cost"
-            value={financialData.expenses.training.cost}
+            value={financialData?.expenses?.training?.cost}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -564,7 +583,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.training.annualGrowthRate"
-            value={financialData.expenses.training.annualGrowthRate}
+            value={financialData?.expenses?.training?.annualGrowthRate}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -574,7 +593,7 @@ const Financials = () => {
           <input
             type="text"
             name="expenses.training.frequency"
-            value={financialData.expenses.training.frequency}
+            value={financialData?.expenses?.training?.frequency}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -587,7 +606,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.itSoftwareSubscriptions.cost"
-            value={financialData.expenses.itSoftwareSubscriptions.cost}
+            value={financialData?.expenses?.itSoftwareSubscriptions?.cost}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -600,7 +619,7 @@ const Financials = () => {
             type="number"
             name="expenses.itSoftwareSubscriptions.annualGrowthRate"
             value={
-              financialData.expenses.itSoftwareSubscriptions.annualGrowthRate
+              financialData?.expenses?.itSoftwareSubscriptions?.annualGrowthRate
             }
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
@@ -613,7 +632,7 @@ const Financials = () => {
           <input
             type="text"
             name="expenses.itSoftwareSubscriptions.frequency"
-            value={financialData.expenses.itSoftwareSubscriptions.frequency}
+            value={financialData?.expenses?.itSoftwareSubscriptions?.frequency}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -625,7 +644,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.travel.cost"
-            value={financialData.expenses.travel.cost}
+            value={financialData?.expenses?.travel?.cost}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -637,7 +656,7 @@ const Financials = () => {
           <input
             type="number"
             name="expenses.travel.annualGrowthRate"
-            value={financialData.expenses.travel.annualGrowthRate}
+            value={financialData?.expenses?.travel?.annualGrowthRate}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
@@ -647,13 +666,13 @@ const Financials = () => {
           <input
             type="text"
             name="expenses.travel.frequency"
-            value={financialData.expenses.travel.frequency}
+            value={financialData?.expenses?.travel?.frequency}
             onChange={handleInputChange}
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
         </div>
 
-        <div className="p-4">
+        {/* <div className="p-4">
           <p className="text-2xl text-headingColor mb-4 font-bold">
             Financial Results
           </p>
@@ -663,7 +682,7 @@ const Financials = () => {
             <input
               type="number"
               name="financialResults.totalRevenue"
-              value={financialData.financialResults.totalRevenue}
+              value={financialData?.financialResults?.totalRevenue}
               onChange={handleInputChange}
               className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
             />
@@ -674,7 +693,7 @@ const Financials = () => {
             <input
               type="number"
               name="financialResults.totalProductCosts"
-              value={financialData.financialResults.totalProductCosts}
+              value={financialData?.financialResults?.totalProductCosts}
               onChange={handleInputChange}
               className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
             />
@@ -801,7 +820,7 @@ const Financials = () => {
               className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
             />
           </div>
-        </div>
+        </div> */}
       </div>
 
       <button
