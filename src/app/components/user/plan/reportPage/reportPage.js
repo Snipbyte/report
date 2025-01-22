@@ -2,7 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import dynamic from "next/dynamic";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import html2canvas from "html2canvas";
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 const ReportPage = () => {
   const [reportData, setReportData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -45,6 +49,38 @@ const ReportPage = () => {
     fetchReportData();
   }, []);
 
+  const handleDownloadPDF = async () => {
+    const doc = new jsPDF();
+    const container = document.querySelector(".report-container");
+  
+    if (container) {
+      const canvas = await html2canvas(container, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  
+      let position = 0;
+  
+      while (position < imgHeight) {
+        doc.addImage(
+          imgData,
+          "PNG",
+          0,
+          -position,
+          imgWidth,
+          imgHeight
+        );
+        position += pageHeight;
+        if (position < imgHeight) doc.addPage();
+      }
+    }
+  
+    doc.save("report.pdf");
+  };
+  
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-100">
@@ -77,288 +113,445 @@ const ReportPage = () => {
     </div>
   );
 
+  const financialResults = reportData?.financialResults || {};
+  const chartData = {
+    series: [
+      {
+        name: "Revenue",
+        data: [financialResults.totalRevenue || 0],
+      },
+      {
+        name: "Costs",
+        data: [financialResults.totalProductCosts || 0],
+      },
+    ],
+    options: {
+      chart: {
+        type: "bar",
+      },
+      xaxis: {
+        categories: ["Financial Results"],
+      },
+    },
+  };
+
+  const lineChartData = {
+    series: [
+      {
+        name: "Gross Margin",
+        data: [financialResults.grossMargin || 0],
+      },
+      {
+        name: "EBITDA",
+        data: [financialResults.EBITDA || 0],
+      },
+    ],
+    options: {
+      chart: {
+        type: "line",
+      },
+      xaxis: {
+        categories: ["Financial Metrics"],
+      },
+    },
+  };
+
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Detailed Report</h1>
-
-      {/* General Information */}
-      {renderSection(
-  "General Information",
-  <>
-    <div className="bg-white p-6 rounded-lg ">
-      <p className="text-xl font-medium text-gray-800 mb-2">
-        <strong>Project Name:</strong>
-        <span className="text-gray-600"> {reportData.projectName || "N/A"}</span>
-      </p>
-      <p className="text-xl font-medium text-gray-800 mb-2">
-        <strong>Type of Activity:</strong>
-        <span className="text-gray-600"> {reportData.typeOfActivity || "N/A"}</span>
-      </p>
-      <p className="text-xl font-medium text-gray-800 mb-2">
-        <strong>Address:</strong>
-        <span className="text-gray-600"> {reportData.address || "N/A"}</span>
-      </p>
-      <p className="text-xl font-medium text-gray-800 mb-2">
-        <strong>Launch Date:</strong>
-        <span className="text-gray-600">
-          {new Date(reportData.launchDate).toLocaleDateString() || "N/A"}
-        </span>
-      </p>
-    </div>
-  </>
-)}
-
-
-      {/* Presentation */}
-      {reportData.presentation &&
-  renderSection(
-    "Presentation",
-    <>
-      <div className="bg-white p-6 rounded-lg ">
-        {Object.entries(reportData.presentation).map(([key, value]) => (
-          <div key={key} className="mb-4">
-            <p className="text-xl font-medium text-gray-800 mb-2">
-            
-            </p>
-            <div
-              className="text-gray-600"
-              dangerouslySetInnerHTML={{ __html: value }}
-            />
-          </div>
-        ))}
+    <div className="p-6 bg-gray-50 min-h-screen ">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Detailed Report</h1>
+        <button
+          onClick={handleDownloadPDF}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Download PDF
+        </button>
       </div>
-    </>
-  )}
-
-
-      {/* Visiting Cards */}
-      {reportData.visitingCard &&
-        renderSection(
-          "Visiting Cards",
-          Object.values(reportData.visitingCard).map((card, index) => (
-            <div key={index} className="mb-4">
-              <p>
-                <strong>Name:</strong> {`${card.firstName} ${card.lastName}`}
+      <div className="report-container">
+        {/* General Information */}
+        {renderSection(
+          "General Information",
+          <>
+            <div className="bg-white p-6 rounded-lg ">
+              <p className="text-xl font-medium text-gray-800 mb-2">
+                <strong>Project Name:</strong>
+                <span className="text-gray-600">
+                  {" "}
+                  {reportData.projectName || "N/A"}
+                </span>
               </p>
-              <p>
-                <strong>Title:</strong> {card.title}
+              <p className="text-xl font-medium text-gray-800 mb-2">
+                <strong>Type of Activity:</strong>
+                <span className="text-gray-600">
+                  {" "}
+                  {reportData.typeOfActivity || "N/A"}
+                </span>
               </p>
-              <p>
-                <strong>Contact:</strong> {card.contact}
+              <p className="text-xl font-medium text-gray-800 mb-2">
+                <strong>Address:</strong>
+                <span className="text-gray-600">
+                  {" "}
+                  {reportData.address || "N/A"}
+                </span>
               </p>
-              <p>
-                <strong>Email:</strong> {card.email}
-              </p>
-              <p>
-                <strong>Country:</strong> {card.selectedCountry?.name || "N/A"}
+              <p className="text-xl font-medium text-gray-800 mb-2">
+                <strong>Launch Date:</strong>
+                <span className="text-gray-600">
+                  {new Date(reportData.launchDate).toLocaleDateString() ||
+                    "N/A"}
+                </span>
               </p>
             </div>
-          ))
+          </>
         )}
 
-      {/* Carrier Information */}
-      {reportData.carrier &&
-        renderSection(
-          "Carrier Information",
-          Object.entries(reportData.carrier).map(([key, data]) => (
-            <div key={key}>
-              <p>
-                <strong>Business Leader:</strong> {data.businessLeader}
-              </p>
-              <p>
-                <strong>Industry Experience:</strong> {data.industryExperience}
-              </p>
-              <p>
-                <strong>Family Situation:</strong> {data.familySituation}
-              </p>
-              <div
-                dangerouslySetInnerHTML={{ __html: data.editorContent }}
-              />
-            </div>
-          ))
-        )}
-
-      {/* Services */}
-      {reportData.services &&
-        renderSection(
-          "Services",
-          Object.entries(reportData.services).map(([key, service]) => (
-            <div key={key}>
-              <p>
-                <strong>Name:</strong> {service.name}
-              </p>
-              <div
-                dangerouslySetInnerHTML={{ __html: service.description }}
-              />
-            </div>
-          ))
-        )}
-
-      {/* Market Analysis */}
-      {reportData.market &&
-  renderSection(
-    "Market Analysis",
-    Object.entries(reportData.market).map(([key, market]) => (
-      <div key={key} className="mb-6">
-        <div className="mb-4">
-          <strong className="text-xl font-medium text-gray-800">Market Description:</strong>
-          <div
-            dangerouslySetInnerHTML={{ __html: market.marketDescription }}
-            className="text-lg text-gray-700 mt-2"
-          />
-        </div>
-
-        <div>
-          <strong className="text-xl font-medium text-gray-800">Responses:</strong>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-            {Object.entries(market.responses).map(([responseKey, responseValue], index) => (
-              <div key={index} className="bg-gray-100 p-4 rounded-lg shadow-md">
-                <strong className="text-gray-800">{responseKey}:</strong>
-                <div className="text-gray-700">{responseValue}</div>
+        {/* Presentation */}
+        {reportData.presentation &&
+          renderSection(
+            "Presentation",
+            <>
+              <div className="bg-white p-6 rounded-lg ">
+                {Object.entries(reportData.presentation).map(([key, value]) => (
+                  <div key={key} className="mb-4">
+                    <p className="text-xl font-medium text-gray-800 mb-2"></p>
+                    <div
+                      className="text-gray-600"
+                      dangerouslySetInnerHTML={{ __html: value }}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    ))
-  )}
+            </>
+          )}
 
-      {/* Competitors */}
-      {reportData.competitors &&
-        renderSection(
-          "Competitors",
-          Object.values(reportData.competitors).flatMap(
-            (competitorList, index) =>
-              competitorList.map((competitor, subIndex) => (
-                <div key={`${index}-${subIndex}`} className="mb-4">
+        {/* Visiting Cards */}
+        {reportData.visitingCard &&
+          renderSection(
+            "Visiting Cards",
+            Object.values(reportData.visitingCard).map((card, index) => (
+              <div key={index} className="mb-4">
+                <p>
+                  <strong>Name:</strong> {`${card.firstName} ${card.lastName}`}
+                </p>
+                <p>
+                  <strong>Title:</strong> {card.title}
+                </p>
+                <p>
+                  <strong>Contact:</strong> {card.contact}
+                </p>
+                <p>
+                  <strong>Email:</strong> {card.email}
+                </p>
+                <p>
+                  <strong>Country:</strong>{" "}
+                  {card.selectedCountry?.name || "N/A"}
+                </p>
+              </div>
+            ))
+          )}
+
+        {/* Carrier Information */}
+        {reportData.carrier &&
+          renderSection(
+            "Carrier Information",
+            Object.entries(reportData.carrier).map(([key, data]) => (
+              <div key={key}>
+                <p>
+                  <strong>Business Leader:</strong> {data.businessLeader}
+                </p>
+                <p>
+                  <strong>Industry Experience:</strong>{" "}
+                  {data.industryExperience}
+                </p>
+                <p>
+                  <strong>Family Situation:</strong> {data.familySituation}
+                </p>
+                <div dangerouslySetInnerHTML={{ __html: data.editorContent }} />
+              </div>
+            ))
+          )}
+
+        {/* Services */}
+        {reportData.services &&
+          renderSection(
+            "Services",
+            Object.entries(reportData.services).map(([key, service]) => (
+              <div key={key}>
+                <p>
+                  <strong>Name:</strong> {service.name}
+                </p>
+                <div
+                  dangerouslySetInnerHTML={{ __html: service.description }}
+                />
+              </div>
+            ))
+          )}
+
+        {/* Market Analysis */}
+        {reportData.market &&
+          renderSection(
+            "Market Analysis",
+            Object.entries(reportData.market).map(([key, market]) => (
+              <div key={key} className="mb-6">
+                <div className="mb-4">
+                  <strong className="text-xl font-medium text-gray-800">
+                    Market Description:
+                  </strong>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: market.marketDescription,
+                    }}
+                    className="text-lg text-gray-700 mt-2"
+                  />
+                </div>
+
+                <div>
+                  <strong className="text-xl font-medium text-gray-800">
+                    Responses:
+                  </strong>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                    {Object.entries(market.responses).map(
+                      ([responseKey, responseValue], index) => (
+                        <div
+                          key={index}
+                          className="bg-gray-100 p-4 rounded-lg shadow-md"
+                        >
+                          <strong className="text-gray-800">
+                            {responseKey}:
+                          </strong>
+                          <div className="text-gray-700">{responseValue}</div>
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+
+        {/* Competitors */}
+        {reportData.competitors &&
+          renderSection(
+            "Competitors",
+            Object.values(reportData.competitors).flatMap(
+              (competitorList, index) =>
+                competitorList.map((competitor, subIndex) => (
+                  <div key={`${index}-${subIndex}`} className="mb-4">
+                    <p>
+                      <strong>Name:</strong> {competitor.name}
+                    </p>
+                    <p>
+                      <strong>Price Status:</strong> {competitor.priceStatus}
+                    </p>
+                  </div>
+                ))
+            )
+          )}
+
+        {/* Customers */}
+        {reportData.customers &&
+          renderSection(
+            "Customers",
+            Object.entries(reportData.customers).map(([key, customer]) => (
+              <div key={key} className="mb-4">
+                <p>
+                  <strong>Name:</strong> {customer.name}
+                </p>
+                <p>
+                  <strong>Type:</strong> {customer.type}
+                </p>
+                <p>
+                  <strong>Description:</strong>{" "}
+                  <div
+                    dangerouslySetInnerHTML={{ __html: customer.description }}
+                  />
+                </p>
+              </div>
+            ))
+          )}
+
+        {/* Sales Pitches */}
+        {reportData.salesPitches &&
+          renderSection(
+            "Sales Pitches",
+            Object.entries(reportData.salesPitches).map(([key, pitch]) => (
+              <div key={key}>
+                <div dangerouslySetInnerHTML={{ __html: pitch }} />
+              </div>
+            ))
+          )}
+
+        {/* Customer Acquisition Actions */}
+        {reportData.customerAcquisitionActions &&
+          renderSection(
+            "Customer Acquisition Actions",
+            Object.values(reportData.customerAcquisitionActions).map(
+              (action, index) => (
+                <div key={index} className="mb-4">
                   <p>
-                    <strong>Name:</strong> {competitor.name}
+                    <strong>Name:</strong> {action.name}
+                  </p>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: action.description }}
+                  />
+                </div>
+              )
+            )
+          )}
+
+        {/* Financial Results */}
+        {reportData.financialResults && (
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-700 mb-2">
+              Financial Results
+            </h2>
+            <div className="bg-white shadow-md p-6 rounded-lg">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="flex flex-col">
+                  <strong className="text-lg font-medium text-gray-800">
+                    Total Revenue:
+                  </strong>
+                  <span className="text-xl text-gray-700">
+                    {reportData.financialResults.totalRevenue.toFixed(2) ||
+                      "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <strong className="text-lg font-medium text-gray-800">
+                    Total Product Costs:
+                  </strong>
+                  <span className="text-xl text-gray-700">
+                    {reportData.financialResults.totalProductCosts.toFixed(2) ||
+                      "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <strong className="text-lg font-medium text-gray-800">
+                    Gross Margin:
+                  </strong>
+                  <span className="text-xl text-gray-700">
+                    {reportData.financialResults.grossMargin.toFixed(2) ||
+                      "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <strong className="text-lg font-medium text-gray-800">
+                    Total Charges:
+                  </strong>
+                  <span className="text-xl text-gray-700">
+                    {reportData.financialResults.totalCharges.toFixed(2) ||
+                      "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <strong className="text-lg font-medium text-gray-800">
+                    Added Value:
+                  </strong>
+                  <span className="text-xl text-gray-700">
+                    {reportData.financialResults.addedValue.toFixed(2) || "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <strong className="text-lg font-medium text-gray-800">
+                    Total Salaries:
+                  </strong>
+                  <span className="text-xl text-gray-700">
+                    {reportData.financialResults.totalSalaries.toFixed(2) ||
+                      "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <strong className="text-lg font-medium text-gray-800">
+                    EBITDA:
+                  </strong>
+                  <span className="text-xl text-gray-700">
+                    {reportData.financialResults.EBITDA.toFixed(2) || "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <strong className="text-lg font-medium text-gray-800">
+                    Profitability:
+                  </strong>
+                  <div className="text-xl text-gray-700">
+                    {reportData.financialResults.profitability.isProfitable
+                      ? "Profitable"
+                      : "Not Profitable"}
+                  </div>
+                </div>
+                {reportData.financialResults.profitability.EBITDAMargin && (
+                  <div className="flex flex-col">
+                    <strong className="text-lg font-medium text-gray-800">
+                      EBITDA Margin:
+                    </strong>
+                    <span className="text-xl text-gray-700">
+                      {reportData.financialResults.profitability.EBITDAMargin ||
+                        "N/A"}
+                    </span>
+                  </div>
+                )}
+                {reportData.financialResults.profitability
+                  .debtCoverageRatio && (
+                  <div className="flex flex-col">
+                    <strong className="text-lg font-medium text-gray-800">
+                      Debt Coverage Ratio:
+                    </strong>
+                    <span className="text-xl text-gray-700">
+                      {reportData.financialResults.profitability
+                        .debtCoverageRatio || "N/A"}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Scoring */}
+              <div className="mt-6">
+                <strong className="text-lg font-medium text-gray-800">
+                  Scoring:
+                </strong>
+                <div className="text-xl text-gray-700 mt-2">
+                  <p>
+                    <strong>Market Potential Index:</strong>{" "}
+                    {reportData.financialResults.scoring.marketPotentialIndex}
                   </p>
                   <p>
-                    <strong>Price Status:</strong> {competitor.priceStatus}
+                    <strong>Recommendation:</strong>{" "}
+                    {reportData.financialResults.scoring.recommendation}
                   </p>
                 </div>
-              ))
-          )
-        )}
-
-      {/* Customers */}
-      {reportData.customers &&
-        renderSection(
-          "Customers",
-          Object.entries(reportData.customers).map(([key, customer]) => (
-            <div key={key} className="mb-4">
-              <p>
-                <strong>Name:</strong> {customer.name}
-              </p>
-              <p>
-                <strong>Type:</strong> {customer.type}
-              </p>
-              <p>
-                <strong>Description:</strong>{" "}
-                <div
-                  dangerouslySetInnerHTML={{ __html: customer.description }}
-                />
-              </p>
+              </div>
             </div>
-          ))
-        )}
-
-      {/* Sales Pitches */}
-      {reportData.salesPitches &&
-        renderSection(
-          "Sales Pitches",
-          Object.entries(reportData.salesPitches).map(([key, pitch]) => (
-            <div key={key}>
-              <div
-                dangerouslySetInnerHTML={{ __html: pitch }}
-              />
-            </div>
-          ))
-        )}
-
-      {/* Customer Acquisition Actions */}
-      {reportData.customerAcquisitionActions &&
-        renderSection(
-          "Customer Acquisition Actions",
-          Object.values(reportData.customerAcquisitionActions).map((action, index) => (
-            <div key={index} className="mb-4">
-              <p>
-                <strong>Name:</strong> {action.name}
-              </p>
-              <div
-                dangerouslySetInnerHTML={{ __html: action.description }}
-              />
-            </div>
-          ))
-        )}
-
-      {/* Financial Results */}
-      {reportData.financialResults && (
-  <div className="mb-6">
-    <h2 className="text-xl font-semibold text-gray-700 mb-2">Financial Results</h2>
-    <div className="bg-white shadow-md p-6 rounded-lg">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div className="flex flex-col">
-          <strong className="text-lg font-medium text-gray-800">Total Revenue:</strong>
-          <span className="text-xl text-gray-700">{reportData.financialResults.totalRevenue.toFixed(2) || "N/A"}</span>
-        </div>
-        <div className="flex flex-col">
-          <strong className="text-lg font-medium text-gray-800">Total Product Costs:</strong>
-          <span className="text-xl text-gray-700">{reportData.financialResults.totalProductCosts.toFixed(2) || "N/A"}</span>
-        </div>
-        <div className="flex flex-col">
-          <strong className="text-lg font-medium text-gray-800">Gross Margin:</strong>
-          <span className="text-xl text-gray-700">{reportData.financialResults.grossMargin.toFixed(2) || "N/A"}</span>
-        </div>
-        <div className="flex flex-col">
-          <strong className="text-lg font-medium text-gray-800">Total Charges:</strong>
-          <span className="text-xl text-gray-700">{reportData.financialResults.totalCharges.toFixed(2) || "N/A"}</span>
-        </div>
-        <div className="flex flex-col">
-          <strong className="text-lg font-medium text-gray-800">Added Value:</strong>
-          <span className="text-xl text-gray-700">{reportData.financialResults.addedValue.toFixed(2) || "N/A"}</span>
-        </div>
-        <div className="flex flex-col">
-          <strong className="text-lg font-medium text-gray-800">Total Salaries:</strong>
-          <span className="text-xl text-gray-700">{reportData.financialResults.totalSalaries.toFixed(2) || "N/A"}</span>
-        </div>
-        <div className="flex flex-col">
-          <strong className="text-lg font-medium text-gray-800">EBITDA:</strong>
-          <span className="text-xl text-gray-700">{reportData.financialResults.EBITDA.toFixed(2) || "N/A"}</span>
-        </div>
-        <div className="flex flex-col">
-          <strong className="text-lg font-medium text-gray-800">Profitability:</strong>
-          <div className="text-xl text-gray-700">
-            {reportData.financialResults.profitability.isProfitable ? "Profitable" : "Not Profitable"}
-          </div>
-        </div>
-        {reportData.financialResults.profitability.EBITDAMargin && (
-          <div className="flex flex-col">
-            <strong className="text-lg font-medium text-gray-800">EBITDA Margin:</strong>
-            <span className="text-xl text-gray-700">{reportData.financialResults.profitability.EBITDAMargin || "N/A"}</span>
           </div>
         )}
-        {reportData.financialResults.profitability.debtCoverageRatio && (
-          <div className="flex flex-col">
-            <strong className="text-lg font-medium text-gray-800">Debt Coverage Ratio:</strong>
-            <span className="text-xl text-gray-700">{reportData.financialResults.profitability.debtCoverageRatio || "N/A"}</span>
+        {/* Financial Results - Bar Chart */}
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-gray-700 mb-2">
+            Financial Results - Bar Chart
+          </h2>
+          <div className="bg-white shadow-md p-4 rounded-lg">
+            <Chart
+              options={chartData.options}
+              series={chartData.series}
+              type="bar"
+              height={350}
+            />
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* Scoring */}
-      <div className="mt-6">
-        <strong className="text-lg font-medium text-gray-800">Scoring:</strong>
-        <div className="text-xl text-gray-700 mt-2">
-          <p><strong>Market Potential Index:</strong> {reportData.financialResults.scoring.marketPotentialIndex}</p>
-          <p><strong>Recommendation:</strong> {reportData.financialResults.scoring.recommendation}</p>
+        {/* Financial Results - Line Chart */}
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-gray-700 mb-2">
+            Financial Results - Line Chart
+          </h2>
+          <div className="bg-white shadow-md p-4 rounded-lg">
+            <Chart
+              options={lineChartData.options}
+              series={lineChartData.series}
+              type="line"
+              height={350}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-)}
-
     </div>
   );
 };
