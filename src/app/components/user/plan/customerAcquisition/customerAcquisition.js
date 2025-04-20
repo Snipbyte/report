@@ -157,7 +157,11 @@ const CustomerAcquisition = ({ goToNext }) => {
             >
               <div>
                 <h3 className="text-lg font-bold">{action.name}</h3>
-                <p className="text-sm text-paraColor">{action.description}</p>
+                <div
+  dangerouslySetInnerHTML={{
+    __html: `<p class="text-sm text-paraColor">${action.description}</p>`,
+  }}
+/>
               </div>
               <div className="flex items-center gap-2">
                 <FaEdit

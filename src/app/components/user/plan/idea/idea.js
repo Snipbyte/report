@@ -9,7 +9,7 @@ import CustomModal from "../customModal/customModal";
 const Idea = ({ goToNext }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSubcategory, setSelectedSubcategory] =
-    useState("Street trading"); // Default value
+    useState("Street trading");
   const [loading, setLoading] = useState(false);
 
   const {
@@ -18,34 +18,50 @@ const Idea = ({ goToNext }) => {
     setValue,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      typeOfActivity: "Street trading",
+      projectName: "",
+      address: "",
+      launchDate: "",
+    },
+  });
 
   useEffect(() => {
-    // Get the idea from localStorage, if it exists
-    const storedData = JSON.parse(localStorage.getItem("planData")) || {};
-    const idea = storedData.idea;
+    // Load data from localStorage
+    const loadStoredData = () => {
+      try {
+        const storedData = JSON.parse(localStorage.getItem("planData")) || {};
+        const idea = storedData.planData?.idea; // Access nested idea
 
-    if (idea) {
-      const { typeOfActivity, projectName, address, launchDate } = idea;
+        if (idea) {
+          const { typeOfActivity, projectName, address, launchDate } = idea;
 
-      // Set form values from localStorage data
-      reset({
-        typeOfActivity,
-        projectName,
-        address,
-        launchDate: launchDate ? launchDate.split("T")[0] : "",
-      });
+          // Update form values
+          reset({
+            typeOfActivity: typeOfActivity || "Street trading",
+            projectName: projectName || "",
+            address: address || "",
+            launchDate: launchDate ? launchDate.split("T")[0] : "",
+          });
 
-      // Set selected subcategory based on type of activity
-      setSelectedSubcategory(typeOfActivity || "Street trading");
-    }
+          // Update selected subcategory
+          setSelectedSubcategory(typeOfActivity || "Street trading");
+        }
+      } catch (error) {
+        console.error("Error loading data from localStorage:", error);
+      }
+    };
+
+    loadStoredData();
   }, [reset]);
 
   const onSubmit = (data) => {
     try {
+      setLoading(true);
       const storedData = JSON.parse(localStorage.getItem("planData")) || {};
 
-      // Append the idea data inside the planData
+      // Update planData with idea
       storedData.planData = {
         ...storedData.planData,
         idea: {
@@ -54,15 +70,16 @@ const Idea = ({ goToNext }) => {
         },
       };
 
-      // Store the updated plan data in localStorage
+      // Save to localStorage
       localStorage.setItem("planData", JSON.stringify(storedData));
-
       console.log("Idea saved in localStorage:", storedData);
 
-      // Proceed to the next step
+      // Proceed to next step
       goToNext();
     } catch (error) {
       console.error("Failed to save idea in localStorage:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -184,7 +201,11 @@ const Idea = ({ goToNext }) => {
         {isModalOpen && (
           <CustomModal
             onClose={handleCloseModal}
-            onSelectSubcategory={setSelectedSubcategory}
+            onSelectSubcategory={(value) => {
+              setSelectedSubcategory(value);
+              setValue("typeOfActivity", value); // Update form value
+              handleCloseModal();
+            }}
           />
         )}
 
