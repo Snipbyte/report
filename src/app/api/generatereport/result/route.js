@@ -3,14 +3,30 @@ import connectDb from "../../../../../backend/middleware/db";
 import Plan from "../../../../../backend/models/Plan";
 import Finance from "../../../../../backend/models/finanicialModel";
 import User from "../../../../../backend/models/user";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
 const getPlanData = async (req) => {
   try {
-    const { planId, userId } = await req.json();
+    const { planId, token } = await req.json();
 
     if (!planId) {
       return NextResponse.json({ message: "planId is required" }, { status: 400 });
     }
+
+    if (!token) {
+      return NextResponse.json({ message: "Token is required" }, { status: 401 });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET);
+    } catch (error) {
+      return NextResponse.json({ message: "Unauthorized: Invalid token" }, { status: 401 });
+    }
+
+    const userId = decoded.id; // Extract userId from token
 
     const project = await Plan.findById(planId);
     if (!project) {
@@ -22,21 +38,22 @@ const getPlanData = async (req) => {
     if (!finance) {
       return NextResponse.json({ message: "Finance data not found" }, { status: 404 });
     }
+
     const user = await User.findById(userId);
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
+    // Rest of your code remains unchanged
     const currentDate = new Date();
     const startYear = currentDate.getFullYear();
     const hasCurrentPlan = user && user.currentPlan && Object.keys(user.currentPlan).length > 0;
     console.log("User current plan:", user.currentPlan, "Has current plan:", hasCurrentPlan);
     const numberOfYears = hasCurrentPlan ? 5 : 2;
-    
+
     console.log(`Generating ${numberOfYears}-year financial plan starting from`, startYear);
 
     const yearlyPlan = [];
-
     const productLines = JSON.parse(JSON.stringify(finance.revenue.productLines || []));
     const expensesCategories = JSON.parse(JSON.stringify(finance.expenses || {}));
 
@@ -50,24 +67,24 @@ const getPlanData = async (req) => {
         const unitPrice = Number(product.unitPrice) || 0;
         const volume = Number(product.volume) || 0;
         const growthRate = Number(product.annualGrowthRate) || 0;
-        
+
         const revenueThisYear = unitPrice * volume;
         yearRevenue += revenueThisYear;
-        
+
         product.unitPrice = unitPrice * (1 + growthRate / 100);
       }
 
       for (let category in expensesCategories) {
-        if (expensesCategories[category] && typeof expensesCategories[category] === 'object') {
+        if (expensesCategories[category] && typeof expensesCategories[category] === "object") {
           const expense = expensesCategories[category];
           const cost = Number(expense.cost) || 0;
           const growthRate = Number(expense.annualGrowthRate) || 0;
-          
+
           if (cost > 1e10) {
             console.warn(`Extremely high cost detected in ${category}: ${cost}. Capping at 1e10.`);
             expense.cost = 1e10;
           }
-          
+
           const yearlyCost = cost * 12;
           yearExpenses += yearlyCost;
 
@@ -107,18 +124,18 @@ const getPlanData = async (req) => {
 
     const Principal = Number(finance.Principal) || 0;
     const Interest = Number(finance.Interest) || 0;
-    
+
     const debtService = Principal + Interest;
     const debtCoverageRatio = debtService !== 0 ? cashFlowTotal / debtService : 0;
 
     const marketPotentialScore = 40;
-    let fundingRecommendation = '';
+    let fundingRecommendation = "";
     if (marketPotentialScore > 80) {
-      fundingRecommendation = 'Highly likely to secure funding';
+      fundingRecommendation = "Highly likely to secure funding";
     } else if (marketPotentialScore > 50) {
-      fundingRecommendation = 'Moderately likely to secure funding';
+      fundingRecommendation = "Moderately likely to secure funding";
     } else {
-      fundingRecommendation = 'Unlikely to secure funding';
+      fundingRecommendation = "Unlikely to secure funding";
     }
 
     const EBITDAMargin = totalRevenue !== 0 ? (EBITDA_Total / totalRevenue) * 100 : 0;
@@ -134,7 +151,7 @@ const getPlanData = async (req) => {
       profitability: {
         isProfitable: EBITDA_Total > 0,
         EBITDAMargin: EBITDAMargin,
-        debtCoverageRatio: debtCoverageRatio
+        debtCoverageRatio: debtCoverageRatio,
       },
       scoring: {
         marketPotentialIndex: marketPotentialScore,
@@ -146,7 +163,7 @@ const getPlanData = async (req) => {
       yearlyPlanLength: financialResults.yearlyPlan.length,
       totalRevenue: financialResults.totalRevenue,
       totalCharges: financialResults.totalCharges,
-      EBITDA: financialResults.EBITDA
+      EBITDA: financialResults.EBITDA,
     });
 
     finance.financialResults = financialResults;
@@ -175,10 +192,9 @@ const getPlanData = async (req) => {
         totalSalaries: financialResults.totalSalaries,
         EBITDA: financialResults.EBITDA,
         profitability: financialResults.profitability,
-        scoring: financialResults.scoring
+        scoring: financialResults.scoring,
       },
     }, { status: 200 });
-
   } catch (error) {
     console.error("Detailed error:", error);
     return NextResponse.json({ message: "Failed to fetch plan data", error: error.message }, { status: 500 });
