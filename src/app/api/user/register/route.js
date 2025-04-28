@@ -31,7 +31,7 @@ const registerUserHandler = async (request) => {
     });
     await newUser.save();
 
-    await sendVerificationEmail(email, verificationToken);
+    // await sendVerificationEmail(email, verificationToken);
 
     return NextResponse.json(
       { message: "User registered successfully. Please check your email to verify your account." },

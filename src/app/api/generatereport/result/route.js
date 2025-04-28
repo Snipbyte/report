@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 import connectDb from "../../../../../backend/middleware/db";
 import Plan from "../../../../../backend/models/Plan";
 import Finance from "../../../../../backend/models/finanicialModel";
+import User from "../../../../../backend/models/user";
 
-// Function to fetch plan and finance data
 const getPlanData = async (req) => {
   try {
-    const { planId } = await req.json();
+    const { planId, userId } = await req.json();
 
     if (!planId) {
       return NextResponse.json({ message: "planId is required" }, { status: 400 });
@@ -19,71 +19,99 @@ const getPlanData = async (req) => {
 
     const financialData = project.financialData;
     const finance = await Finance.findById(financialData);
-    console.log(finance.financialResults)
     if (!finance) {
       return NextResponse.json({ message: "Finance data not found" }, { status: 404 });
     }
+    const user = await User.findById(userId);
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
 
-    const period = finance.revenue.period;
+    const currentDate = new Date();
+    const startYear = currentDate.getFullYear();
+    const hasCurrentPlan = user && user.currentPlan && Object.keys(user.currentPlan).length > 0;
+    console.log("User current plan:", user.currentPlan, "Has current plan:", hasCurrentPlan);
+    const numberOfYears = hasCurrentPlan ? 5 : 2;
+    
+    console.log(`Generating ${numberOfYears}-year financial plan starting from`, startYear);
 
-    // Revenue calculation
-    const revenueResults = finance.revenue.productLines.map((product) => {
-      let totalRevenue = 0;
-      let yearlyRevenue = [];
+    const yearlyPlan = [];
 
-      for (let year = period.startYear; year <= period.endYear; year++) {
-        const revenueYear = product.unitPrice * product.volume;
-        yearlyRevenue.push(revenueYear);
-        totalRevenue += revenueYear;
+    const productLines = JSON.parse(JSON.stringify(finance.revenue.productLines || []));
+    const expensesCategories = JSON.parse(JSON.stringify(finance.expenses || {}));
 
-        // Apply annual growth rate to unit price for next year
-        product.unitPrice *= (1 + product.annualGrowthRate / 100);
+    let currentYear = startYear;
+
+    for (let i = 0; i < numberOfYears; i++) {
+      let yearRevenue = 0;
+      let yearExpenses = 0;
+
+      for (let product of productLines) {
+        const unitPrice = Number(product.unitPrice) || 0;
+        const volume = Number(product.volume) || 0;
+        const growthRate = Number(product.annualGrowthRate) || 0;
+        
+        const revenueThisYear = unitPrice * volume;
+        yearRevenue += revenueThisYear;
+        
+        product.unitPrice = unitPrice * (1 + growthRate / 100);
       }
 
-      return { product: product.name, yearlyRevenue, totalRevenue };
-    });
+      for (let category in expensesCategories) {
+        if (expensesCategories[category] && typeof expensesCategories[category] === 'object') {
+          const expense = expensesCategories[category];
+          const cost = Number(expense.cost) || 0;
+          const growthRate = Number(expense.annualGrowthRate) || 0;
+          
+          if (cost > 1e10) {
+            console.warn(`Extremely high cost detected in ${category}: ${cost}. Capping at 1e10.`);
+            expense.cost = 1e10;
+          }
+          
+          const yearlyCost = cost * 12;
+          yearExpenses += yearlyCost;
 
-    // Expenses calculation
-    const expenseResults = Object.keys(finance.expenses).map((category) => {
-      const expenseData = finance.expenses[category];
-      let totalExpense = 0;
-      let yearlyExpense = [];
-
-      for (let year = period.startYear; year <= period.endYear; year++) {
-        const yearlyCost = expenseData.cost * 12 * (1 + expenseData.annualGrowthRate / 100);
-        yearlyExpense.push(yearlyCost);
-        totalExpense += yearlyCost;
-
-        // Apply annual growth rate to cost for next year
-        expenseData.cost *= (1 + expenseData.annualGrowthRate / 100);
+          expense.cost = cost * (1 + growthRate / 100);
+        }
       }
 
-      return { category, yearlyExpense, totalExpense };
-    });
+      const productCosts = Math.min(Number(finance.expenses?.productCosts?.cost || 0) * 12, 1e12);
+      const grossMargin = yearRevenue - productCosts;
+      const salaries = Math.min(Number(finance.expenses?.salaries?.cost || 0) * 12, 1e12);
+      const addedValue = grossMargin - yearExpenses;
+      const EBITDA = addedValue - salaries;
+      const cashFlow = yearRevenue - yearExpenses;
 
-    const totalProductCosts = finance.expenses.productCosts.cost * period.endYear;
+      yearlyPlan.push({
+        year: currentYear,
+        revenue: yearRevenue,
+        expenses: yearExpenses,
+        grossMargin,
+        addedValue,
+        EBITDA,
+        cashFlow,
+      });
 
-    const totalRevenue = revenueResults.reduce((acc, product) => acc + product.totalRevenue, 0);
+      console.log(`Year ${currentYear} calculations: Revenue=${yearRevenue}, Expenses=${yearExpenses}, EBITDA=${EBITDA}`);
+      currentYear++;
+    }
 
-    const grossMargin = totalRevenue - totalProductCosts;
+    console.log(`${numberOfYears}-year plan generated with`, yearlyPlan.length, "entries");
 
-    const totalExpenses = expenseResults.reduce((acc, cat) => acc + (cat.totalExpense || 0), 0);
+    const totalRevenue = yearlyPlan.reduce((sum, y) => sum + y.revenue, 0);
+    const totalExpenses = yearlyPlan.reduce((sum, y) => sum + y.expenses, 0);
+    const grossMarginTotal = yearlyPlan.reduce((sum, y) => sum + y.grossMargin, 0);
+    const addedValueTotal = yearlyPlan.reduce((sum, y) => sum + y.addedValue, 0);
+    const EBITDA_Total = yearlyPlan.reduce((sum, y) => sum + y.EBITDA, 0);
+    const cashFlowTotal = yearlyPlan.reduce((sum, y) => sum + y.cashFlow, 0);
 
-    const totalSalaries = finance.expenses.salaries.cost * (1 + finance.expenses.salaries.annualGrowthRate / 100);
+    const Principal = Number(finance.Principal) || 0;
+    const Interest = Number(finance.Interest) || 0;
+    
+    const debtService = Principal + Interest;
+    const debtCoverageRatio = debtService !== 0 ? cashFlowTotal / debtService : 0;
 
-    const addedValue = grossMargin - totalExpenses;
-
-    const EBITDA = addedValue - totalSalaries;
-
-    const EBITDA_MARGIN = EBITDA / totalRevenue * 100;
-
-    const cashFlow = totalRevenue - totalExpenses;  
-    const Principal = finance.Principal; 
-    const Interest = finance.Interest;  
-    const debtService = Principal - Interest;
-    const debtCoverageRatio = cashFlow / debtService;
-
-    const marketPotentialScore = 40 ; // estimate karo 
+    const marketPotentialScore = 40;
     let fundingRecommendation = '';
     if (marketPotentialScore > 80) {
       fundingRecommendation = 'Highly likely to secure funding';
@@ -92,27 +120,37 @@ const getPlanData = async (req) => {
     } else {
       fundingRecommendation = 'Unlikely to secure funding';
     }
-      
-     finance.financialResults = {
+
+    const EBITDAMargin = totalRevenue !== 0 ? (EBITDA_Total / totalRevenue) * 100 : 0;
+
+    const financialResults = {
+      yearlyPlan,
       totalRevenue,
-      totalProductCosts,
-      grossMargin,
+      grossMargin: grossMarginTotal,
       totalCharges: totalExpenses,
-      addedValue,
-      totalSalaries,
-      EBITDA,
+      addedValue: addedValueTotal,
+      totalSalaries: Number(finance.expenses?.salaries?.cost || 0) * 12,
+      EBITDA: EBITDA_Total,
       profitability: {
-        isProfitable: EBITDA > 0,
-        EBITDAMargin: EBITDA_MARGIN,
-        debtCoverageRatio,
+        isProfitable: EBITDA_Total > 0,
+        EBITDAMargin: EBITDAMargin,
+        debtCoverageRatio: debtCoverageRatio
       },
       scoring: {
         marketPotentialIndex: marketPotentialScore,
         recommendation: fundingRecommendation,
       },
-    }
+    };
 
-    await finance.save(); 
+    console.log("Financial results summary:", {
+      yearlyPlanLength: financialResults.yearlyPlan.length,
+      totalRevenue: financialResults.totalRevenue,
+      totalCharges: financialResults.totalCharges,
+      EBITDA: financialResults.EBITDA
+    });
+
+    finance.financialResults = financialResults;
+    await finance.save();
 
     return NextResponse.json({
       projectName: project.idea?.projectName || "Unknown",
@@ -129,27 +167,21 @@ const getPlanData = async (req) => {
       salesPitches: project.salesPitches || {},
       customerAcquisitionActions: project.customerAcquisitionActions || {},
       financialResults: {
-        totalRevenue,
-        totalProductCosts,
-        grossMargin,
-        totalCharges: totalExpenses,
-        addedValue,
-        totalSalaries,
-        EBITDA,
-        profitability: {
-          isProfitable: EBITDA > 0,
-          EBITDAMargin: EBITDA_MARGIN,
-          debtCoverageRatio,
-        },
-        scoring: {
-          marketPotentialIndex: marketPotentialScore,
-          recommendation: fundingRecommendation,
-        },
+        yearlyPlan: financialResults.yearlyPlan,
+        totalRevenue: financialResults.totalRevenue,
+        grossMargin: financialResults.grossMargin,
+        totalCharges: financialResults.totalCharges,
+        addedValue: financialResults.addedValue,
+        totalSalaries: financialResults.totalSalaries,
+        EBITDA: financialResults.EBITDA,
+        profitability: financialResults.profitability,
+        scoring: financialResults.scoring
       },
     }, { status: 200 });
+
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: "Failed to fetch plan data" }, { status: 500 });
+    console.error("Detailed error:", error);
+    return NextResponse.json({ message: "Failed to fetch plan data", error: error.message }, { status: 500 });
   }
 };
 

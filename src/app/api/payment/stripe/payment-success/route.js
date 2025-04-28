@@ -53,7 +53,7 @@ const assignPlanToUser = async (request) => {
     }
 
     // Assign the plan to the user
-    user.plan = planId;
+    user.currentPlan = planId;
     await user.save();
 
     return NextResponse.json(
