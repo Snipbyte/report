@@ -9,13 +9,23 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
 const getPlanData = async (req) => {
   try {
-    const { planId, userId } = await req.json();
+    const { planId, token } = await req.json(); // Expect token in the request body
 
-    if (!planId && !userId) {
-      return NextResponse.json({ message: "planId OR userId is required" }, { status: 400 });
+    if (!planId || !token) {
+      return NextResponse.json({ message: "planId and token are required" }, { status: 400 });
     }
 
+    // Verify and decode the JWT token
+    let decoded;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET);
+    } catch (error) {
+      return NextResponse.json({ message: "Invalid or expired token" }, { status: 401 });
+    }
 
+    const userId = decoded.id; // Extract userId from the decoded token
+
+    // Fetch plan data
     const project = await Plan.findById(planId);
     if (!project) {
       return NextResponse.json({ message: "Plan not found" }, { status: 404 });
@@ -27,6 +37,7 @@ const getPlanData = async (req) => {
       return NextResponse.json({ message: "Finance data not found" }, { status: 404 });
     }
 
+    // Fetch user data
     const user = await User.findById(userId);
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
@@ -44,6 +55,7 @@ const getPlanData = async (req) => {
     let currentYear = startYear;
 
     for (let i = 0; i < numberOfYears; i++) {
+      // ... (rest of your financial calculations remain unchanged)
       // Calculate Revenue
       let yearRevenue = 0;
       for (let product of productLines) {
@@ -54,14 +66,13 @@ const getPlanData = async (req) => {
         const revenueThisYear = unitPrice * volume;
         yearRevenue += revenueThisYear;
 
-        // Apply growth for next year
         product.unitPrice = unitPrice * (1 + growthRate / 100);
       }
 
       // Calculate Expenses
       let yearExpenses = 0;
-      let intermediateConsumption = 0; // For Value Added calculation
-      let staffCosts = 0; // For EBITDA calculation
+      let intermediateConsumption = 0;
+      let staffCosts = 0;
       
       for (let category in expensesCategories) {
         if (expensesCategories[category] && typeof expensesCategories[category] === "object") {
@@ -77,7 +88,6 @@ const getPlanData = async (req) => {
           const yearlyCost = cost * (expense.frequency === 'yearly' ? 1 : 12);
           yearExpenses += yearlyCost;
 
-          // Track specific expense categories for financial metrics
           if (category === 'salaries') {
             staffCosts = yearlyCost;
           }
@@ -89,24 +99,12 @@ const getPlanData = async (req) => {
         }
       }
 
-      // Calculate Financial Metrics
       const productCosts = Math.min(Number(finance.expenses?.productCosts?.cost || 0) * 
                          (finance.expenses?.productCosts?.frequency === 'yearly' ? 1 : 12), 1e12);
       
-      // 1. Gross Margin = Sales Revenue - Cost of Goods Sold (COGS)
-      // COGS = Purchases of goods + Procurement costs - Inventory variation
-      // Simplified: Using productCosts as COGS
       const grossMargin = yearRevenue - productCosts;
-
-      // 2. Value Added = Gross Margin + Production for the year - Intermediate consumption
-      // Simplified for trading company: Value Added = Sales Revenue - Consumed purchases
       const valueAdded = grossMargin - intermediateConsumption;
-
-      // 3. EBITDA = Value Added + Operating subsidies - Taxes and duties - Staff costs
-      // Simplified: EBITDA = Value Added - Staff costs (assuming no subsidies/taxes in this model)
       const EBITDA = valueAdded - staffCosts;
-
-      // Cash Flow (simplified)
       const cashFlow = yearRevenue - yearExpenses;
 
       yearlyPlan.push({
@@ -125,7 +123,7 @@ const getPlanData = async (req) => {
       currentYear++;
     }
 
-    // Calculate Totals
+    // ... (rest of your calculations for totals, debt, profitability, etc.)
     const totalRevenue = yearlyPlan.reduce((sum, y) => sum + y.revenue, 0);
     const totalExpenses = yearlyPlan.reduce((sum, y) => sum + y.expenses, 0);
     const totalProductCosts = yearlyPlan.reduce((sum, y) => sum + y.productCosts, 0);
@@ -135,18 +133,15 @@ const getPlanData = async (req) => {
     const cashFlowTotal = yearlyPlan.reduce((sum, y) => sum + y.cashFlow, 0);
     const totalStaffCosts = yearlyPlan.reduce((sum, y) => sum + y.staffCosts, 0);
 
-    // Debt Calculations
     const Principal = Number(finance.Principal) || 0;
     const Interest = Number(finance.Interest) || 0;
     const debtService = Principal + Interest;
     const debtCoverageRatio = debtService !== 0 ? EBITDA_Total / debtService : 0;
 
-    // Profitability Metrics
     const EBITDAMargin = totalRevenue !== 0 ? (EBITDA_Total / totalRevenue) * 100 : 0;
     const grossMarginPercentage = totalRevenue !== 0 ? (totalGrossMargin / totalRevenue) * 100 : 0;
     const valueAddedPercentage = totalRevenue !== 0 ? (totalValueAdded / totalRevenue) * 100 : 0;
 
-    // Scoring (simplified example)
     const marketPotentialScore = Math.min(Math.max(
       Math.floor(
         (grossMarginPercentage / 2) + 
@@ -162,8 +157,7 @@ const getPlanData = async (req) => {
     } else {
       fundingRecommendation = "Unlikely to secure funding";
     }
-  
-    // Prepare final financial results
+
     const financialResults = {
       yearlyPlan,
       totalRevenue,
@@ -188,7 +182,6 @@ const getPlanData = async (req) => {
       },
     };
 
-    // Save updated financial results
     finance.financialResults = financialResults;
     await finance.save();
 
