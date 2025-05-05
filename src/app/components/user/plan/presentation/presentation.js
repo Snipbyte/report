@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import dynamic from "next/dynamic";
+import { useTranslation } from "react-i18next";
 
 // Dynamically import ReactQuill to ensure it runs only on the client
 const ReactQuill = dynamic(() => import("react-quill"), {
@@ -12,6 +13,7 @@ const ReactQuill = dynamic(() => import("react-quill"), {
 import "react-quill/dist/quill.snow.css";
 
 const Presentation = ({ goToNext }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -83,26 +85,25 @@ const Presentation = ({ goToNext }) => {
   return (
     <div className="p-4">
       <p className="text-headingColor text-2xl font-bold mb-4">
-        Prepare project presentation here.
+        {t("presentation.title")}
       </p>
       <p className="text-paraColor my-2 text-sm">
-        Write a brief summary here that will serve as a hook when you go to see
-        your future partners (suppliers, banks, etc.)
+        {t("presentation.description")}
       </p>
       {loading ? (
-        <p>Loading...</p>
+        <p>{t("presentation.loading")}</p>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
           <Controller
             name="content"
             control={control}
-            rules={{ required: "Content is required" }}
+            rules={{ required: t("presentation.contentRequired") }}
             render={({ field }) => (
               <ReactQuill
                 {...field}
                 theme="snow"
                 className="w-full mb-4"
-                placeholder="Description"
+                placeholder={t("presentation.contentPlaceholder")}
                 value={field.value || ""}
                 onChange={field.onChange}
               />
@@ -116,7 +117,7 @@ const Presentation = ({ goToNext }) => {
             className="mt-4 px-4 py-2 bg-btnColor text-white rounded hover:bg-btnColor-dark transition"
             disabled={loading}
           >
-            Next
+            {t("presentation.nextButton")}
           </button>
         </form>
       )}

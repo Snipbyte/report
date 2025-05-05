@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useForm, Controller } from "react-hook-form";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 // Dynamically import ReactQuill to ensure it runs only on the client
 const ReactQuill = dynamic(() => import("react-quill"), {
@@ -14,6 +15,7 @@ const ReactQuill = dynamic(() => import("react-quill"), {
 import "react-quill/dist/quill.snow.css";
 
 const Offer = ({ goToNext }) => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [service, setService] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -121,7 +123,7 @@ const Offer = ({ goToNext }) => {
   return (
     <div className="p-4">
       <p className="text-2xl text-headingColor mb-4 font-bold">
-        Add your first product/service
+        {t("offer.title")}
       </p>
 
       {/* Add product/service button */}
@@ -130,7 +132,7 @@ const Offer = ({ goToNext }) => {
         className="mt-4 px-4 py-2 bg-btnColor bg-opacity-20 text-btnColor hover:bg-opacity-100 hover:text-white duration-500 rounded hover:bg-btnColor-dark transition"
         disabled={loading}
       >
-        + Add product/service
+        {t("offer.addButton")}
       </button>
       <br />
 
@@ -138,7 +140,7 @@ const Offer = ({ goToNext }) => {
       {!service && (
         <div className="w-full border my-4">
           <p className="text-paraColor text-center mt-1">
-            No Product/Service Added
+            {t("offer.noServiceMessage")}
           </p>
           <div className="flex items-center justify-end">
             <Image
@@ -146,7 +148,7 @@ const Offer = ({ goToNext }) => {
               width={1000}
               height={1000}
               src="/images/offer.png"
-              alt="idea"
+              alt={t("offer.imageAlt")}
             />
           </div>
         </div>
@@ -155,7 +157,9 @@ const Offer = ({ goToNext }) => {
       {/* Display Service if added */}
       {service && (
         <div className="border p-4 mt-4 rounded-md">
-          <h3 className="text-lg font-bold">{service.name} (Service)</h3>
+          <h3 className="text-lg font-bold">
+            {service.name} ({t("offer.serviceLabel")})
+          </h3>
           <div
             className="service-description"
             dangerouslySetInnerHTML={{ __html: service.description }}
@@ -185,7 +189,7 @@ const Offer = ({ goToNext }) => {
         className="mt-4 px-4 py-2 bg-btnColor text-white rounded hover:bg-btnColor-dark transition"
         disabled={loading}
       >
-        Next
+        {t("offer.nextButton")}
       </button>
 
       {/* Modal */}
@@ -193,7 +197,7 @@ const Offer = ({ goToNext }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg w-full lg:w-[80%]">
             <h2 className="text-xl font-bold text-btnColor mb-4">
-              {isEditing ? "Edit Product/Service" : "Add Product/Service"}
+              {isEditing ? t("offer.editModalTitle") : t("offer.addModalTitle")}
             </h2>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="flex items-center gap-4 my-2">
@@ -205,7 +209,7 @@ const Offer = ({ goToNext }) => {
                     {...register("businessType")}
                     defaultChecked
                   />
-                  <label htmlFor="service">Service</label>
+                  <label htmlFor="service">{t("offer.serviceLabel")}</label>
                 </div>
                 <div className="flex items-center gap-2">
                   <input
@@ -214,7 +218,7 @@ const Offer = ({ goToNext }) => {
                     value="product"
                     {...register("businessType")}
                   />
-                  <label htmlFor="product">Product</label>
+                  <label htmlFor="product">{t("offer.productLabel")}</label>
                 </div>
               </div>
               <div className="my-4">
@@ -222,14 +226,14 @@ const Offer = ({ goToNext }) => {
                   htmlFor="serviceName"
                   className="block text-gray-500 text-sm mb-1"
                 >
-                  Service*
+                  {t("offer.serviceNameLabel")}*
                 </label>
                 <input
                   id="serviceName"
                   type="text"
-                  placeholder="Write the name of your product/service"
+                  placeholder={t("offer.serviceNamePlaceholder")}
                   {...register("serviceName", {
-                    required: "Service name is required",
+                    required: t("offer.serviceNameRequired"),
                   })}
                   className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor ${
                     errors.serviceName ? "border-red-500" : ""
@@ -246,17 +250,17 @@ const Offer = ({ goToNext }) => {
                   htmlFor="serviceDescription"
                   className="block text-gray-500 text-sm mb-1"
                 >
-                  Description*
+                  {t("offer.serviceDescriptionLabel")}*
                 </label>
                 <Controller
                   name="serviceDescription"
                   control={control}
-                  rules={{ required: "Description is required" }}
+                  rules={{ required: t("offer.serviceDescriptionRequired") }}
                   render={({ field }) => (
                     <ReactQuill
                       {...field}
                       theme="snow"
-                      placeholder="Write the description of your product/service"
+                      placeholder={t("offer.serviceDescriptionPlaceholder")}
                       value={field.value || ""}
                       onChange={field.onChange}
                       className={`w-full ${errors.serviceDescription ? "border-red-500" : ""}`}
@@ -275,7 +279,7 @@ const Offer = ({ goToNext }) => {
                   className="px-4 py-2 bg-btnColor text-white rounded hover:bg-btnColor-dark"
                   disabled={loading}
                 >
-                  {isEditing ? "Update Service" : "Save Service"}
+                  {isEditing ? t("offer.updateButton") : t("offer.saveButton")}
                 </button>
                 <button
                   type="button"
@@ -283,7 +287,7 @@ const Offer = ({ goToNext }) => {
                   className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                   disabled={loading}
                 >
-                  Close
+                  {t("offer.closeButton")}
                 </button>
               </div>
             </form>

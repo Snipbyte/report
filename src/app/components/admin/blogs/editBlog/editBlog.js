@@ -161,7 +161,7 @@ const EditBlog = ({ blogData, onSuccess }) => {
             <button
               type="button"
               onClick={handleAddTag}
-              className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-md"
+              className="ml-2 px-4 py-2 bg-btnColor text-white rounded-md"
             >
               Add Tag
             </button>
@@ -186,7 +186,7 @@ const EditBlog = ({ blogData, onSuccess }) => {
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md"
+          className="w-full bg-btnColor text-white py-2 px-4 rounded-md"
         >
           Update Blog
         </button>

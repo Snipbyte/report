@@ -366,7 +366,7 @@ const GenerateReportForm = () => {
         {/* Generate Report Button */}
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white rounded-md py-2 hover:bg-blue-600 focus:outline-none"
+          className="w-full bg-blue-500 text-white rounded-md py-2 hover:bg-btnColor focus:outline-none"
         >
           {t("generateReport")}
         </button>

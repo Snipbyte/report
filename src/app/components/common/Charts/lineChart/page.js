@@ -32,7 +32,7 @@ const LineChart = ({ series, categories }) => {
       align: 'left',
       style: {
         fontSize: "16px",
-        color: '#666'
+        color: '#111827'
       }
     },
     fill: {

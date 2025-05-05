@@ -2,6 +2,7 @@
 import AdminLayout from "@/app/components/layouts/adminLayout/page";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { FaSearch } from "react-icons/fa";
 
 const SubscribedUsers = () => {
   const [subscribers, setSubscribers] = useState([]);
@@ -64,18 +65,19 @@ const SubscribedUsers = () => {
           <div className="text-center text-gray-500">No subscribed users found.</div>
         ) : (
           <div className="overflow-x-auto">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-full">
+            <div className="flex items-center mb-4">
+              <div className="flex items-center w-full border border-gray-300 p-2.5">
+                <FaSearch className="text-paraColor mr-2" />
                 <input
                   type="text"
                   placeholder="Search by name or email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full border border-gray-300 p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full outline-none"
                 />
               </div>
               <button
-                className="w-44 p-2.5 bg-blue-500 hover:bg-blue-600 text-white"
+                className="w-44 p-2.5 bg-btnColor hover:bg-hoverBtnColor duration-300 text-white"
                 onClick={exportToExcel}
               >
                 Export Excel File
@@ -83,7 +85,7 @@ const SubscribedUsers = () => {
             </div>
             <table className="min-w-full bg-white border border-gray-300">
               <thead>
-                <tr className="bg-gray-200 text-gray-700">
+                <tr className="bg-gray-200 text-headingColor">
                   <th className="py-3 px-6 text-left border-b">#</th>
                   <th className="py-3 px-6 text-left border-b">Email</th>
                   <th className="py-3 px-6 text-left border-b">Subscribed On</th>

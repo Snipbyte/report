@@ -7,10 +7,13 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import html2canvas from "html2canvas";
 import { FaDownload, FaLock } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
+import Header from "@/app/components/common/header/page";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const ReportPage = () => {
+  const { t } = useTranslation();
   const [reportData, setReportData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,12 +24,12 @@ const ReportPage = () => {
       const token = localStorage.getItem("token");
 
       if (!planId) {
-        setError("No Plan ID found.");
+        setError(t("noPlanIdFound"));
         setLoading(false);
         return;
       }
       if (!token) {
-        setError("Unauthorized. Please log in first.");
+        setError(t("unauthorizedPleaseLogIn"));
         setLoading(false);
         return;
       }
@@ -38,14 +41,14 @@ const ReportPage = () => {
         });
         setReportData(response.data);
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to fetch report data.");
+        setError(err.response?.data?.message || t("failedToFetchReportData"));
       } finally {
         setLoading(false);
       }
     };
 
     fetchReportData();
-  }, []);
+  }, [t]);
 
   const handleDownloadPDF = async () => {
     const doc = new jsPDF();
@@ -59,33 +62,33 @@ const ReportPage = () => {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(28);
     doc.setFont("helvetica", "bold");
-    doc.text(reportData?.projectName || "Business Report", margin, 50);
+    doc.text(reportData?.projectName || t("businessReport"), margin, 50);
     doc.setFontSize(16);
     doc.setFont("helvetica", "normal");
-    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, margin, 70);
+    
     doc.setFontSize(12);
-    doc.text("Prepared by: Your Company Name", margin, pageHeight - 20);
+    doc.text(t("preparedBy"), margin, pageHeight - 20);
     doc.addPage();
 
     // Financial Table
     if (reportData?.financialResults?.yearlyPlan?.length > 0) {
       doc.setFontSize(16);
       doc.setTextColor(0, 0, 0);
-      doc.text("Yearly Financial Plan", margin, 20);
+      doc.text(t("yearlyFinancialPlan"), margin, 20);
       doc.autoTable({
         startY: 30,
         head: [
           [
-            "Year",
-            "Revenue (€)",
-            "Expenses (€)",
-            "Product Costs (€)",
-            "Gross Margin (€)",
-            "Value Added (€)",
-            "EBITDA (€)",
-            "Cash Flow (€)",
-            "Staff Costs (€)",
-            "Intermediate Consumption (€)",
+            t("year"),
+            t("revenue"),
+            t("expenses"),
+            t("productCosts"),
+            t("grossMargin"),
+            t("valueAdded"),
+            t("ebitda"),
+            t("cashFlow"),
+            t("staffCosts"),
+            t("intermediateConsumption"),
           ],
         ],
         body: reportData.financialResults.yearlyPlan.map((year) => [
@@ -111,25 +114,25 @@ const ReportPage = () => {
     if (reportData?.financialResults) {
       doc.addPage();
       doc.setFontSize(16);
-      doc.text("Financial Summary", margin, 20);
+      doc.text(t("financialResults"), margin, 20);
       doc.autoTable({
         startY: 30,
-        head: [["Metric", "Value"]],
+        head: [[t("metric"), t("value")]],
         body: [
-          ["Total Revenue (€)", reportData.financialResults.totalRevenue?.toFixed(2) || "N/A"],
-          ["Total Product Costs (€)", reportData.financialResults.totalProductCosts?.toFixed(2) || "N/A"],
-          ["Gross Margin (€)", reportData.financialResults.grossMargin?.toFixed(2) || "N/A"],
-          ["Gross Margin (%)", reportData.financialResults.grossMarginPercentage?.toFixed(2) || "N/A"],
-          ["Total Charges (€)", reportData.financialResults.totalCharges?.toFixed(2) || "N/A"],
-          ["Value Added (€)", reportData.financialResults.valueAdded?.toFixed(2) || "N/A"],
-          ["Value Added (%)", reportData.financialResults.valueAddedPercentage?.toFixed(2) || "N/A"],
-          ["Total Salaries (€)", reportData.financialResults.totalSalaries?.toFixed(2) || "N/A"],
-          ["EBITDA (€)", reportData.financialResults.EBITDA?.toFixed(2) || "N/A"],
-          ["Profitability", reportData.financialResults.profitability?.isProfitable ? "Profitable" : "Not Profitable"],
-          ["EBITDA Margin (%)", reportData.financialResults.profitability?.EBITDAMargin?.toFixed(2) || "N/A"],
-          ["Debt Coverage Ratio", reportData.financialResults.profitability?.debtCoverageRatio?.toFixed(2) || "N/A"],
-          ["Market Potential Index", reportData.financialResults.scoring?.marketPotentialIndex || "N/A"],
-          ["Recommendation", reportData.financialResults.scoring?.recommendation || "N/A"],
+          [t("totalRevenueLabel"), reportData.financialResults.totalRevenue?.toFixed(2) || "N/A"],
+          [t("totalProductCostsLabel"), reportData.financialResults.totalProductCosts?.toFixed(2) || "N/A"],
+          [t("grossMarginLabel"), reportData.financialResults.grossMargin?.toFixed(2) || "N/A"],
+          [t("grossMarginPercentageLabel"), reportData.financialResults.grossMarginPercentage?.toFixed(2) || "N/A"],
+          [t("totalChargesLabel"), reportData.financialResults.totalCharges?.toFixed(2) || "N/A"],
+          [t("valueAddedLabel"), reportData.financialResults.valueAdded?.toFixed(2) || "N/A"],
+          [t("valueAddedPercentageLabel"), reportData.financialResults.valueAddedPercentage?.toFixed(2) || "N/A"],
+          [t("totalSalariesLabel"), reportData.financialResults.totalSalaries?.toFixed(2) || "N/A"],
+          [t("ebitdaLabel"), reportData.financialResults.EBITDA?.toFixed(2) || "N/A"],
+          [t("profitabilityLabel"), reportData.financialResults.profitability?.isProfitable ? t("profitabilityProfitable") : t("profitabilityNotProfitable")],
+          [t("ebitdaMarginLabel"), reportData.financialResults.profitability?.EBITDAMargin?.toFixed(2) || "N/A"],
+          [t("debtCoverageRatioLabel"), reportData.financialResults.profitability?.debtCoverageRatio?.toFixed(2) || "N/A"],
+          [t("marketPotentialIndexLabel"), reportData.financialResults.scoring?.marketPotentialIndex || "N/A"],
+          [t("recommendationLabel"), reportData.financialResults.scoring?.recommendation || "N/A"],
         ],
         theme: "striped",
         headStyles: { fillColor: [31, 41, 55], textColor: [255, 255, 255] },
@@ -151,7 +154,7 @@ const ReportPage = () => {
         chartY = 20;
       }
       doc.setFontSize(14);
-      doc.text(chart.dataset.title, margin, chartY);
+      doc.text(t(chart.dataset.title), margin, chartY);
       doc.addImage(imgData, "PNG", margin, chartY + 10, imgWidth, imgHeight);
       chartY += imgHeight + 30;
     }
@@ -159,100 +162,100 @@ const ReportPage = () => {
     // Other Sections
     const sections = [
       {
-        title: "General Information",
+        title: t("generalInformation"),
         data: [
-          ["Project Name", reportData?.projectName || "N/A"],
-          ["Type of Activity", reportData?.typeOfActivity || "N/A"],
-          ["Address", reportData?.address || "N/A"],
-          ["Launch Date", reportData?.launchDate ? new Date(reportData.launchDate).toLocaleDateString() : "N/A"],
+          [t("projectNameLabel"), reportData?.projectName || "N/A"],
+          [t("typeOfActivityLabel"), reportData?.typeOfActivity || "N/A"],
+          [t("addressLabel"), reportData?.address || "N/A"],
+          [t("launchDateLabel"), reportData?.launchDate ? new Date(reportData.launchDate).toLocaleDateString() : "N/A"],
         ],
       },
       {
-        title: "Presentation",
+        title: t("presentation"),
         data: reportData?.presentation
-          ? Object.entries(reportData.presentation).map(([key, value]) => [`Content (${key})`, value.replace(/<[^>]+>/g, "")])
+          ? Object.entries(reportData.presentation).map(([key, value]) => [t("contentKey", { key }), value.replace(/<[^>]+>/g, "")])
           : [],
       },
       {
-        title: "Visiting Card",
+        title: t("visitingCard"),
         data: reportData?.visitingCard
           ? Object.values(reportData.visitingCard).map((card) => [
-              ["ID", card._id || "N/A"],
-              ["Name", `${card.firstName} ${card.lastName}`],
-              ["Title", card.title || "N/A"],
-              ["Contact", card.contact || "N/A"],
-              ["Email", card.email || "N/A"],
-              ["Country", `${card.selectedCountry?.flag || ""} ${card.selectedCountry?.name || "N/A"} (${card.selectedCountry?.code || "N/A"})`],
+              [t("idLabel"), card._id || "N/A"],
+              [t("nameLabel"), `${card.firstName} ${card.lastName}`],
+              [t("titleLabel"), card.title || "N/A"],
+              [t("contactLabel"), card.contact || "N/A"],
+              [t("emailLabel"), card.email || "N/A"],
+              [t("countryLabel"), `${card.selectedCountry?.flag || ""} ${card.selectedCountry?.name || "N/A"} (${card.selectedCountry?.code || "N/A"})`],
             ]).flat()
           : [],
       },
       {
-        title: "Carrier Information",
+        title: t("carrierInformation"),
         data: reportData?.carrier
           ? Object.values(reportData.carrier).map((c) => [
-              ["ID", c._id || "N/A"],
-              ["Business Leader", c.businessLeader || "N/A"],
-              ["Industry Experience", c.industryExperience || "N/A"],
-              ["Family Situation", c.familySituation || "N/A"],
-              ["Details", c.editorContent?.replace(/<[^>]+>/g, "") || "N/A"],
+              [t("idLabel"), c._id || "N/A"],
+              [t("businessLeaderLabel"), c.businessLeader === "yes" ? t("businessLeaderYes") : t("businessLeaderNo")],
+              [t("industryExperienceLabel"), c.industryExperience === "yes" ? t("industryExperienceYes") : t("industryExperienceNo")],
+              [t("familySituationLabel"), c.familySituation === "yes" ? t("familySituationYes") : t("familySituationNo")],
+              [t("detailsLabel"), c.editorContent?.replace(/<[^>]+>/g, "") || "N/A"],
             ]).flat()
           : [],
       },
       {
-        title: "Services",
+        title: t("services"),
         data: reportData?.services
           ? Object.values(reportData.services).map((s) => [
-              ["ID", s._id || "N/A"],
-              ["Name", s.name || "N/A"],
-              ["Description", s.description?.replace(/<[^>]+>/g, "") || "N/A"],
+              [t("idLabel"), s._id || "N/A"],
+              [t("nameLabel"), s.name || "N/A"],
+              [t("descriptionLabel"), s.description?.replace(/<[^>]+>/g, "") || "N/A"],
             ]).flat()
           : [],
       },
       {
-        title: "Market Analysis",
+        title: t("marketAnalysis"),
         data: reportData?.market
           ? Object.values(reportData.market).map((m) => [
-              ["ID", m._id || "N/A"],
-              ["Description", m.marketDescription?.replace(/<[^>]+>/g, "") || "N/A"],
-              ...Object.entries(m.responses || {}).map(([k, v]) => [k.replace("row", "Question "), v || "N/A"]),
+              [t("idLabel"), m._id || "N/A"],
+              [t("descriptionLabel"), m.marketDescription?.replace(/<[^>]+>/g, "") || "N/A"],
+              ...Object.entries(m.responses || {}).map(([k, v]) => [t("question", { number: k.replace("row", "") }), v || "N/A"]),
             ]).flat()
           : [],
       },
       {
-        title: "Competitors",
+        title: t("competitors"),
         data: reportData?.competitors
           ? Object.values(reportData.competitors).flat().map((c) => [
-              ["ID", c._id || "N/A"],
-              ["Name", c.name || "N/A"],
-              ["Price Status", c.priceStatus || "N/A"],
+              [t("idLabel"), c._id || "N/A"],
+              [t("nameLabel"), c.name || "N/A"],
+              [t("priceStatusLabel"), c.priceStatus || "N/A"],
             ]).flat()
           : [],
       },
       {
-        title: "Customers",
+        title: t("customers"),
         data: reportData?.customers
           ? Object.values(reportData.customers).map((c) => [
-              ["ID", c._id || "N/A"],
-              ["Name", c.name || "N/A"],
-              ["Type", c.type || "N/A"],
-              ["Description", c.description?.replace(/<[^>]+>/g, "") || "N/A"],
+              [t("idLabel"), c._id || "N/A"],
+              [t("nameLabel"), c.name || "N/A"],
+              [t("typeLabel"), c.type || "N/A"],
+              [t("descriptionLabel"), c.description?.replace(/<[^>]+>/g, "") || "N/A"],
             ]).flat()
           : [],
       },
       {
-        title: "Sales Pitches",
+        title: t("salesPitches"),
         data: reportData?.salesPitches
-          ? Object.entries(reportData.salesPitches).map(([key, value]) => [`Content (${key})`, value.replace(/<[^>]+>/g, "")])
+          ? Object.entries(reportData.salesPitches).map(([key, value]) => [t("contentKey", { key }), value.replace(/<[^>]+>/g, "")])
           : [],
       },
       {
-        title: "Customer Acquisition Actions",
+        title: t("customerAcquisitionActions"),
         data: reportData?.customerAcquisitionActions
           ? Object.values(reportData.customerAcquisitionActions).flat().map((a) => [
-              ["ID", a._id || "N/A"],
-              ["Action ID", a.id || "N/A"],
-              ["Name", a.name || "N/A"],
-              ["Description", a.description?.replace(/<[^>]+>/g, "") || "N/A"],
+              [t("idLabel"), a._id || "N/A"],
+              [t("actionIdLabel"), a.id || "N/A"],
+              [t("nameLabel"), a.name || "N/A"],
+              [t("descriptionLabel"), a.description?.replace(/<[^>]+>/g, "") || "N/A"],
             ]).flat()
           : [],
       },
@@ -270,7 +273,7 @@ const ReportPage = () => {
         doc.text(section.title, margin, chartY);
         doc.autoTable({
           startY: chartY + 10,
-          head: [["Field", "Value"]],
+          head: [[t("field"), t("value")]],
           body: section.data,
           theme: "striped",
           headStyles: { fillColor: [31, 41, 55], textColor: [255, 255, 255] },
@@ -295,23 +298,23 @@ const ReportPage = () => {
     return (
       <div className="flex items-center justify-center h-screen bg-red-50">
         <div className="max-w-md w-full p-8 bg-white rounded-xl shadow-lg text-center">
-          <h1 className="text-3xl font-bold text-red-600 mb-4">Error</h1>
+          <h1 className="text-3xl font-bold text-red-600 mb-4">{t("error")}</h1>
           <p className="text-gray-700 mb-6">{error}</p>
           <a
             href="/"
-            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+            className="inline-block bg-btnColor text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
           >
-            Go to Home
+            {t("goToHome")}
           </a>
         </div>
       </div>
     );
   }
 
-  const renderSection = (title, content, bgColor = "bg-white") => (
+  const renderSection = (titleKey, content, bgColor = "bg-white") => (
     <div className="mb-8">
       <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b-2 border-blue-600 pb-2">
-        {title}
+        {t(titleKey)}
       </h2>
       <div className={`${bgColor} shadow-lg p-6 rounded-xl`}>{content}</div>
     </div>
@@ -322,18 +325,18 @@ const ReportPage = () => {
 
   const chartData = {
     series: [
-      { name: "Revenue", data: yearlyPlan.map((year) => year.revenue) },
-      { name: "Expenses", data: yearlyPlan.map((year) => year.expenses) },
-      { name: "EBITDA", data: yearlyPlan.map((year) => year.EBITDA) },
-      { name: "Value Added", data: yearlyPlan.map((year) => year.valueAdded) },
+      { name: t("chartRevenue"), data: yearlyPlan.map((year) => year.revenue) },
+      { name: t("chartExpenses"), data: yearlyPlan.map((year) => year.expenses) },
+      { name: t("chartEbitda"), data: yearlyPlan.map((year) => year.EBITDA) },
+      { name: t("chartValueAdded"), data: yearlyPlan.map((year) => year.valueAdded) },
     ],
     options: {
       chart: { type: "bar", height: 400, toolbar: { show: true } },
       plotOptions: { bar: { horizontal: false, columnWidth: "55%" } },
       colors: ["#3b82f6", "#ef4444", "#10b981", "#f59e0b"],
       dataLabels: { enabled: false },
-      xaxis: { categories: yearlyPlan.map((year) => year.year), title: { text: "Year" } },
-      yaxis: { title: { text: "Amount (€)" } },
+      xaxis: { categories: yearlyPlan.map((year) => year.year), title: { text: t("year") } },
+      yaxis: { title: { text: t("amountEur") } },
       tooltip: { y: { formatter: (val) => `€${val.toFixed(2)}` } },
       legend: { position: "top" },
     },
@@ -341,18 +344,18 @@ const ReportPage = () => {
 
   const lineChartData = {
     series: [
-      { name: "Gross Margin", data: yearlyPlan.map((year) => year.grossMargin) },
-      { name: "Cash Flow", data: yearlyPlan.map((year) => year.cashFlow) },
-      { name: "Staff Costs", data: yearlyPlan.map((year) => year.staffCosts) },
-      { name: "Intermediate Consumption", data: yearlyPlan.map((year) => year.intermediateConsumption) },
+      { name: t("chartGrossMargin"), data: yearlyPlan.map((year) => year.grossMargin) },
+      { name: t("chartCashFlow"), data: yearlyPlan.map((year) => year.cashFlow) },
+      { name: t("chartStaffCosts"), data: yearlyPlan.map((year) => year.staffCosts) },
+      { name: t("chartIntermediateConsumption"), data: yearlyPlan.map((year) => year.intermediateConsumption) },
     ],
     options: {
       chart: { type: "line", height: 400, zoom: { enabled: false } },
       colors: ["#8b5cf6", "#f97316", "#ec4899", "#6b7280"],
       dataLabels: { enabled: false },
       stroke: { curve: "smooth", width: 3 },
-      xaxis: { categories: yearlyPlan.map((year) => year.year), title: { text: "Year" } },
-      yaxis: { title: { text: "Amount (€)" } },
+      xaxis: { categories: yearlyPlan.map((year) => year.year), title: { text: t("year") } },
+      yaxis: { title: { text: t("amountEur") } },
       tooltip: { y: { formatter: (val) => `€${val.toFixed(2)}` } },
       legend: { position: "top" },
     },
@@ -360,39 +363,47 @@ const ReportPage = () => {
 
   const isLimitedPlan = yearlyPlan.length === 2;
 
+  // Debugging: Log current language and translations
+  console.log("Current language:", t("language"));
+  console.log("Translations:", {
+    report: t("report"),
+    downloadPdf: t("downloadPdf"),
+  });
+
   return (
     <div className="p-8 bg-gradient-to-br from-gray-100 to-gray-300 min-h-screen">
+      <Header />
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-extrabold text-gray-900">
-            {reportData?.projectName} Report
+            {reportData?.projectName} {t("report")}
           </h1>
           <button
             onClick={handleDownloadPDF}
-            className="flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition shadow-md"
+            className="flex items-center bg-btnColor text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition shadow-md"
           >
-            <FaDownload className="mr-2" /> Download PDF
+            <FaDownload className="mr-2" /> {t("downloadPdf")}
           </button>
         </div>
         <div className="report-container">
           {/* General Information */}
           {renderSection(
-            "General Information",
+            "generalInformation",
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <strong className="text-lg text-gray-700">Project Name:</strong>
+                <strong className="text-lg text-gray-700">{t("projectNameLabel")}</strong>
                 <p className="text-gray-600">{reportData?.projectName || "N/A"}</p>
               </div>
               <div>
-                <strong className="text-lg text-gray-700">Type of Activity:</strong>
+                <strong className="text-lg text-gray-700">{t("typeOfActivityLabel")}</strong>
                 <p className="text-gray-600">{reportData?.typeOfActivity || "N/A"}</p>
               </div>
               <div>
-                <strong className="text-lg text-gray-700">Address:</strong>
+                <strong className="text-lg text-gray-700">{t("addressLabel")}</strong>
                 <p className="text-gray-600">{reportData?.address || "N/A"}</p>
               </div>
               <div>
-                <strong className="text-lg text-gray-700">Launch Date:</strong>
+                <strong className="text-lg text-gray-700">{t("launchDateLabel")}</strong>
                 <p className="text-gray-600">
                   {reportData?.launchDate ? new Date(reportData.launchDate).toLocaleDateString() : "N/A"}
                 </p>
@@ -403,10 +414,10 @@ const ReportPage = () => {
           {/* Presentation */}
           {reportData?.presentation &&
             renderSection(
-              "Presentation",
+              "presentation",
               Object.entries(reportData.presentation).map(([key, value]) => (
                 <div key={key} className="mb-4">
-                  <strong className="text-lg text-gray-700">Content ({key}):</strong>
+                  <strong className="text-lg text-gray-700">{t("contentKey", { key })}</strong>
                   <div className="prose max-w-none mt-2" dangerouslySetInnerHTML={{ __html: value }} />
                 </div>
               ))
@@ -415,15 +426,15 @@ const ReportPage = () => {
           {/* Visiting Card */}
           {reportData?.visitingCard &&
             renderSection(
-              "Visiting Card",
+              "visitingCard",
               Object.values(reportData.visitingCard).map((card) => (
                 <div key={card._id} className="border-l-4 border-blue-600 pl-4 mb-4">
-                  <p><strong>ID:</strong> {card._id || "N/A"}</p>
-                  <p><strong>Name:</strong> {`${card.firstName} ${card.lastName}`}</p>
-                  <p><strong>Title:</strong> {card.title || "N/A"}</p>
-                  <p><strong>Contact:</strong> {card.contact || "N/A"}</p>
-                  <p><strong>Email:</strong> {card.email || "N/A"}</p>
-                  <p><strong>Country:</strong> {`${card.selectedCountry?.flag || ""} ${card.selectedCountry?.name || "N/A"} (${card.selectedCountry?.code || "N/A"})`}</p>
+                  <p><strong>{t("idLabel")}</strong> {card._id || "N/A"}</p>
+                  <p><strong>{t("nameLabel")}</strong> {`${card.firstName} ${card.lastName}`}</p>
+                  <p><strong>{t("titleLabel")}</strong> {card.title || "N/A"}</p>
+                  <p><strong>{t("contactLabel")}</strong> {card.contact || "N/A"}</p>
+                  <p><strong>{t("emailLabel")}</strong> {card.email || "N/A"}</p>
+                  <p><strong>{t("countryLabel")}</strong> {`${card.selectedCountry?.flag || ""} ${card.selectedCountry?.name || "N/A"} (${card.selectedCountry?.code || "N/A"})`}</p>
                 </div>
               ))
             )}
@@ -431,13 +442,13 @@ const ReportPage = () => {
           {/* Carrier Information */}
           {reportData?.carrier &&
             renderSection(
-              "Carrier Information",
+              "carrierInformation",
               Object.values(reportData.carrier).map((data) => (
                 <div key={data._id} className="mb-4">
-                  <p><strong>ID:</strong> {data._id || "N/A"}</p>
-                  <p><strong>Business Leader:</strong> {data.businessLeader === "yes" ? "Yes" : "No"}</p>
-                  <p><strong>Industry Experience:</strong> {data.industryExperience === "yes" ? "Yes" : "No"}</p>
-                  <p><strong>Family Situation:</strong> {data.familySituation === "yes" ? "Yes" : "No"}</p>
+                  <p><strong>{t("idLabel")}</strong> {data._id || "N/A"}</p>
+                  <p><strong>{t("businessLeaderLabel")}</strong> {data.businessLeader === "yes" ? t("businessLeaderYes") : t("businessLeaderNo")}</p>
+                  <p><strong>{t("industryExperienceLabel")}</strong> {data.industryExperience === "yes" ? t("industryExperienceYes") : t("industryExperienceNo")}</p>
+                  <p><strong>{t("familySituationLabel")}</strong> {data.familySituation === "yes" ? t("familySituationYes") : t("familySituationNo")}</p>
                   <div className="prose max-w-none mt-2" dangerouslySetInnerHTML={{ __html: data.editorContent || "<p>N/A</p>" }} />
                 </div>
               ))
@@ -446,10 +457,10 @@ const ReportPage = () => {
           {/* Services */}
           {reportData?.services &&
             renderSection(
-              "Services",
+              "services",
               Object.values(reportData.services).map((service) => (
                 <div key={service._id} className="mb-4">
-                  <p><strong>ID:</strong> {service._id || "N/A"}</p>
+                  <p><strong>{t("idLabel")}</strong> {service._id || "N/A"}</p>
                   <p className="text-lg font-semibold">{service.name || "N/A"}</p>
                   <div className="prose max-w-none mt-2" dangerouslySetInnerHTML={{ __html: service.description || "<p>N/A</p>" }} />
                 </div>
@@ -459,16 +470,16 @@ const ReportPage = () => {
           {/* Market Analysis */}
           {reportData?.market &&
             renderSection(
-              "Market Analysis",
+              "marketAnalysis",
               Object.values(reportData.market).map((market) => (
                 <div key={market._id}>
-                  <p><strong>ID:</strong> {market._id || "N/A"}</p>
+                  <p><strong>{t("idLabel")}</strong> {market._id || "N/A"}</p>
                   <div className="mb-4">
-                    <strong className="text-lg">Market Description:</strong>
+                    <strong className="text-lg">{t("marketDescriptionLabel")}</strong>
                     <div className="prose max-w-none mt-2" dangerouslySetInnerHTML={{ __html: market.marketDescription || "<p>N/A</p>" }} />
                   </div>
                   <div>
-                    <strong className="text-lg">Market Responses:</strong>
+                    <strong className="text-lg">{t("marketResponsesLabel")}</strong>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                       {Object.entries(market.responses || {}).map(([key, value]) => (
                         <div
@@ -477,7 +488,7 @@ const ReportPage = () => {
                             value === "Positive" ? "bg-green-100" : value === "Negative" ? "bg-red-100" : "bg-gray-100"
                           }`}
                         >
-                          <strong>{key.replace("row", "Question ")}:</strong> {value || "N/A"}
+                          <strong>{t("question", { number: key.replace("row", "") })}:</strong> {value || "N/A"}
                         </div>
                       ))}
                     </div>
@@ -489,13 +500,13 @@ const ReportPage = () => {
           {/* Competitors */}
           {reportData?.competitors &&
             renderSection(
-              "Competitors",
+              "competitors",
               Object.values(reportData.competitors).flat().map((competitor) => (
                 <div key={competitor._id} className="flex items-center mb-4">
                   <div className="flex-1">
-                    <p><strong>ID:</strong> {competitor._id || "N/A"}</p>
-                    <p><strong>Name:</strong> {competitor.name || "N/A"}</p>
-                    <p><strong>Price Status:</strong> {competitor.priceStatus || "N/A"}</p>
+                    <p><strong>{t("idLabel")}</strong> {competitor._id || "N/A"}</p>
+                    <p><strong>{t("nameLabel")}</strong> {competitor.name || "N/A"}</p>
+                    <p><strong>{t("priceStatusLabel")}</strong> {competitor.priceStatus || "N/A"}</p>
                   </div>
                 </div>
               ))
@@ -504,12 +515,12 @@ const ReportPage = () => {
           {/* Customers */}
           {reportData?.customers &&
             renderSection(
-              "Customers",
+              "customers",
               Object.values(reportData.customers).map((customer) => (
                 <div key={customer._id} className="mb-4">
-                  <p><strong>ID:</strong> {customer._id || "N/A"}</p>
+                  <p><strong>{t("idLabel")}</strong> {customer._id || "N/A"}</p>
                   <p className="text-lg font-semibold">{customer.name || "N/A"}</p>
-                  <p><strong>Type:</strong> {customer.type || "N/A"}</p>
+                  <p><strong>{t("typeLabel")}</strong> {customer.type || "N/A"}</p>
                   <div className="prose max-w-none mt-2" dangerouslySetInnerHTML={{ __html: customer.description || "<p>N/A</p>" }} />
                 </div>
               ))
@@ -518,10 +529,10 @@ const ReportPage = () => {
           {/* Sales Pitches */}
           {reportData?.salesPitches &&
             renderSection(
-              "Sales Pitches",
+              "salesPitches",
               Object.entries(reportData.salesPitches).map(([key, value]) => (
                 <div key={key} className="mb-4">
-                  <strong className="text-lg">Content ({key}):</strong>
+                  <strong className="text-lg">{t("contentKey", { key })}</strong>
                   <div className="prose max-w-none mt-2" dangerouslySetInnerHTML={{ __html: value || "<p>N/A</p>" }} />
                 </div>
               ))
@@ -530,11 +541,11 @@ const ReportPage = () => {
           {/* Customer Acquisition Actions */}
           {reportData?.customerAcquisitionActions &&
             renderSection(
-              "Customer Acquisition Actions",
+              "customerAcquisitionActions",
               Object.values(reportData.customerAcquisitionActions).flat().map((action) => (
                 <div key={action._id} className="mb-4">
-                  <p><strong>ID:</strong> {action._id || "N/A"}</p>
-                  <p><strong>Action ID:</strong> {action.id || "N/A"}</p>
+                  <p><strong>{t("idLabel")}</strong> {action._id || "N/A"}</p>
+                  <p><strong>{t("actionIdLabel")}</strong> {action.id || "N/A"}</p>
                   <p className="text-lg font-semibold">{action.name || "N/A"}</p>
                   <div className="prose max-w-none mt-2" dangerouslySetInnerHTML={{ __html: action.description || "<p>N/A</p>" }} />
                 </div>
@@ -544,65 +555,65 @@ const ReportPage = () => {
           {/* Financial Results */}
           {financialResults && (
             renderSection(
-              "Financial Results",
+              "financialResults",
               <div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                   <div>
-                    <strong className="text-lg">Total Revenue:</strong>
+                    <strong className="text-lg">{t("totalRevenueLabel")}</strong>
                     <p className="text-xl font-semibold text-blue-600">
                       €{financialResults.totalRevenue?.toFixed(2) || "N/A"}
                     </p>
                   </div>
                   <div>
-                    <strong className="text-lg">Total Product Costs:</strong>
+                    <strong className="text-lg">{t("totalProductCostsLabel")}</strong>
                     <p className="text-xl font-semibold text-blue-600">
                       €{financialResults.totalProductCosts?.toFixed(2) || "N/A"}
                     </p>
                   </div>
                   <div>
-                    <strong className="text-lg">Gross Margin:</strong>
+                    <strong className="text-lg">{t("grossMarginLabel")}</strong>
                     <p className="text-xl font-semibold text-blue-600">
                       €{financialResults.grossMargin?.toFixed(2) || "N/A"}
                     </p>
                   </div>
                   <div>
-                    <strong className="text-lg">Gross Margin (%):</strong>
+                    <strong className="text-lg">{t("grossMarginPercentageLabel")}</strong>
                     <p className="text-xl font-semibold text-blue-600">
                       {financialResults.grossMarginPercentage?.toFixed(2) || "N/A"}%
                     </p>
                   </div>
                   <div>
-                    <strong className="text-lg">Total Charges:</strong>
+                    <strong className="text-lg">{t("totalChargesLabel")}</strong>
                     <p className="text-xl font-semibold text-blue-600">
                       €{financialResults.totalCharges?.toFixed(2) || "N/A"}
                     </p>
                   </div>
                   <div>
-                    <strong className="text-lg">Value Added:</strong>
+                    <strong className="text-lg">{t("valueAddedLabel")}</strong>
                     <p className="text-xl font-semibold text-blue-600">
                       €{financialResults.valueAdded?.toFixed(2) || "N/A"}
                     </p>
                   </div>
                   <div>
-                    <strong className="text-lg">Value Added (%):</strong>
+                    <strong className="text-lg">{t("valueAddedPercentageLabel")}</strong>
                     <p className="text-xl font-semibold text-blue-600">
                       {financialResults.valueAddedPercentage?.toFixed(2) || "N/A"}%
                     </p>
                   </div>
                   <div>
-                    <strong className="text-lg">Total Salaries:</strong>
+                    <strong className="text-lg">{t("totalSalariesLabel")}</strong>
                     <p className="text-xl font-semibold text-blue-600">
                       €{financialResults.totalSalaries?.toFixed(2) || "N/A"}
                     </p>
                   </div>
                   <div>
-                    <strong className="text-lg">EBITDA:</strong>
+                    <strong className="text-lg">{t("ebitdaLabel")}</strong>
                     <p className="text-xl font-semibold text-blue-600">
                       €{financialResults.EBITDA?.toFixed(2) || "N/A"}
                     </p>
                   </div>
                   <div>
-                    <strong className="text-lg">Profitability:</strong>
+                    <strong className="text-lg">{t("profitabilityLabel")}</strong>
                     <p
                       className={`text-xl font-semibold ${
                         financialResults.profitability?.isProfitable
@@ -610,29 +621,29 @@ const ReportPage = () => {
                           : "text-red-600"
                       }`}
                     >
-                      {financialResults.profitability?.isProfitable ? "Profitable" : "Not Profitable"}
+                      {financialResults.profitability?.isProfitable ? t("profitabilityProfitable") : t("profitabilityNotProfitable")}
                     </p>
                   </div>
                   <div>
-                    <strong className="text-lg">EBITDA Margin:</strong>
+                    <strong className="text-lg">{t("ebitdaMarginLabel")}</strong>
                     <p className="text-xl font-semibold text-blue-600">
                       {financialResults.profitability?.EBITDAMargin?.toFixed(2) || "N/A"}%
                     </p>
                   </div>
                   <div>
-                    <strong className="text-lg">Debt Coverage Ratio:</strong>
+                    <strong className="text-lg">{t("debtCoverageRatioLabel")}</strong>
                     <p className="text-xl font-semibold text-blue-600">
                       {financialResults.profitability?.debtCoverageRatio?.toFixed(2) || "N/A"}
                     </p>
                   </div>
                   <div>
-                    <strong className="text-lg">Market Potential Index:</strong>
+                    <strong className="text-lg">{t("marketPotentialIndexLabel")}</strong>
                     <p className="text-xl font-semibold text-blue-600">
                       {financialResults.scoring?.marketPotentialIndex || "N/A"}
                     </p>
                   </div>
                   <div>
-                    <strong className="text-lg">Recommendation:</strong>
+                    <strong className="text-lg">{t("recommendationLabel")}</strong>
                     <p className="text-xl font-semibold text-blue-600">
                       {financialResults.scoring?.recommendation || "N/A"}
                     </p>
@@ -646,22 +657,22 @@ const ReportPage = () => {
           {/* Yearly Financial Plan */}
           {yearlyPlan.length > 0 &&
             renderSection(
-              "Yearly Financial Plan",
+              "yearlyFinancialPlan",
               <div>
                 <div className="overflow-x-auto">
                   <table className="min-w-full bg-white border border-gray-200">
                     <thead>
-                      <tr className="bg-blue-600 text-white">
-                        <th className="py-3 px-4 text-left">Year</th>
-                        <th className="py-3 px-4 text-left">Revenue (€)</th>
-                        <th className="py-3 px-4 text-left">Expenses (€)</th>
-                        <th className="py-3 px-4 text-left">Product Costs (€)</th>
-                        <th className="py-3 px-4 text-left">Gross Margin (€)</th>
-                        <th className="py-3 px-4 text-left">Value Added (€)</th>
-                        <th className="py-3 px-4 text-left">EBITDA (€)</th>
-                        <th className="py-3 px-4 text-left">Cash Flow (€)</th>
-                        <th className="py-3 px-4 text-left">Staff Costs (€)</th>
-                        <th className="py-3 px-4 text-left">Intermediate Consumption (€)</th>
+                      <tr className="bg-btnColor text-white">
+                        <th className="py-3 px-4 text-left">{t("year")}</th>
+                        <th className="py-3 px-4 text-left">{t("revenue")}</th>
+                        <th className="py-3 px-4 text-left">{t("expenses")}</th>
+                        <th className="py-3 px-4 text-left">{t("productCosts")}</th>
+                        <th className="py-3 px-4 text-left">{t("grossMargin")}</th>
+                        <th className="py-3 px-4 text-left">{t("valueAdded")}</th>
+                        <th className="py-3 px-4 text-left">{t("ebitda")}</th>
+                        <th className="py-3 px-4 text-left">{t("cashFlow")}</th>
+                        <th className="py-3 px-4 text-left">{t("staffCosts")}</th>
+                        <th className="py-3 px-4 text-left">{t("intermediateConsumption")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -692,15 +703,15 @@ const ReportPage = () => {
                     <div className="flex items-center">
                       <FaLock className="text-3xl mr-4" />
                       <div>
-                        <h3 className="text-xl font-bold">Unlock Full 5-Year Financial Report</h3>
+                        <h3 className="text-xl font-bold">{t("unlockFull5YearFinancialReport")}</h3>
                         <p className="mt-2">
-                          Your current plan shows data for {yearlyPlan.length} years. Upgrade to our Premium Plan to access the complete 5-year financial projections and gain deeper insights into your business potential.
+                          {t("upgradeBannerMessage", { years: yearlyPlan.length })}
                         </p>
                         <a
                           href="/pricingplan"
                           className="mt-4 inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
                         >
-                          Upgrade Now
+                          {t("upgradeNow")}
                         </a>
                       </div>
                     </div>
@@ -713,8 +724,8 @@ const ReportPage = () => {
           {yearlyPlan.length > 0 && (
             <>
               {renderSection(
-                "Financial Results - Bar Chart",
-                <div className="chart-container" data-title="Financial Results - Bar Chart">
+                "financialResultsBarChart",
+                <div className="chart-container" data-title="financialResultsBarChart">
                   <Chart
                     options={chartData.options}
                     series={chartData.series}
@@ -723,14 +734,14 @@ const ReportPage = () => {
                   />
                   {isLimitedPlan && (
                     <p className="mt-2 text-sm text-gray-600">
-                      Showing data for {yearlyPlan.length} years. Upgrade to view 5-year projections.
+                      {t("showingDataForYears", { years: yearlyPlan.length })}
                     </p>
                   )}
                 </div>
               )}
               {renderSection(
-                "Financial Results - Line Chart",
-                <div className="chart-container" data-title="Financial Results - Line Chart">
+                "financialResultsLineChart",
+                <div className="chart-container" data-title="financialResultsLineChart">
                   <Chart
                     options={lineChartData.options}
                     series={lineChartData.series}
@@ -739,7 +750,7 @@ const ReportPage = () => {
                   />
                   {isLimitedPlan && (
                     <p className="mt-2 text-sm text-gray-600">
-                      Showing data for {yearlyPlan.length} years. Upgrade to view 5-year projections.
+                      {t("showingDataForYears", { years: yearlyPlan.length })}
                     </p>
                   )}
                 </div>

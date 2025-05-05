@@ -73,7 +73,7 @@ const Footer = () => {
               />
               <button
                 type="submit"
-                className="ml-2 text-white bg-blue-600 p-2 rounded"
+                className="ml-2 text-white bg-btnColor p-2 rounded"
                 disabled={loading}
               >
                 <FaArrowRight />

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { useTranslation } from "react-i18next";
 
 // Dynamically import ReactQuill to ensure it runs only on the client
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -9,6 +10,7 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 
 const Carrier = ({ goToNext }) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     businessLeader: "",
     industryExperience: "",
@@ -55,26 +57,25 @@ const Carrier = ({ goToNext }) => {
   return (
     <div className="p-4">
       <p className="text-headingColor font-bold text-2xl">
-        Plan your career goals here.
+        {t("carrier.title")}
       </p>
 
-      <div className="flex my-6">
+      <div className="md:flex my-6">
         {[
           {
             id: "businessLeader",
-            label: "Business leader",
-            description: "I am confident in my skills to run a business",
+            label: t("carrier.businessLeaderLabel"),
+            description: t("carrier.businessLeaderDescription"),
           },
           {
             id: "industryExperience",
-            label: "Industry experience",
-            description: "I have experience in the profession and contacts",
+            label: t("carrier.industryExperienceLabel"),
+            description: t("carrier.industryExperienceDescription"),
           },
           {
             id: "familySituation",
-            label: "Family situation",
-            description:
-              "I have the time, energy, and support of those close to me to cope mentally and financially with failure.",
+            label: t("carrier.familySituationLabel"),
+            description: t("carrier.familySituationDescription"),
           },
         ].map(({ id, label, description }) => (
           <div key={id} className="w-full lg:w-[32%] p-1">
@@ -91,7 +92,9 @@ const Carrier = ({ goToNext }) => {
                     checked={formData[id] === option}
                     onChange={(e) => handleRadioChange(id, e.target.value)}
                   />
-                  <label htmlFor={`${id}-${option}`}>{option}</label>
+                  <label htmlFor={`${id}-${option}`}>
+                    {t(`carrier.radioOptions.${option}`)}
+                  </label>
                 </div>
               ))}
             </div>
@@ -100,21 +103,21 @@ const Carrier = ({ goToNext }) => {
       </div>
 
       <p className="text-paraColor my-2 text-sm">
-        Introduce yourself, your team, your key skills, your training
+        {t("carrier.editorDescription")}
       </p>
       <ReactQuill
         theme="snow"
         className="w-full mb-4"
         value={formData.editorContent}
         onChange={handleEditorChange}
-        placeholder="Description"
+        placeholder={t("carrier.editorPlaceholder")}
       />
 
       <button
         onClick={goToNext}
         className="mt-4 px-4 py-2 bg-btnColor text-white rounded hover:bg-btnColor-dark transition"
       >
-        Next
+        {t("carrier.nextButton")}
       </button>
     </div>
   );

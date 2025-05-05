@@ -11,9 +11,9 @@ const Payment = () => {
     <UserLayout>
       <div className="p-3">
         <div className="my-4">
-          <p className="md:text-3xl text-xl font-bold">{t("payment.title")}</p>
+          <p className="md:text-3xl text-xl font-bold">{t("payments.title")}</p>
           <p className="text-paraColor text-sm my-1">
-            {t("payment.description")}
+            {t("payments.description")}
           </p>
         </div>
         <PaymentCard />

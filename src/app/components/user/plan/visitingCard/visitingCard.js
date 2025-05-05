@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { FaChevronDown } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 const countryCodes = [
   { code: "+33", flag: "🇫🇷", name: "France" },
@@ -12,6 +13,7 @@ const countryCodes = [
 ];
 
 const VisitingCard = ({ goToNext }) => {
+  const { t } = useTranslation();
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -35,6 +37,7 @@ const VisitingCard = ({ goToNext }) => {
 
   const [selectedCountry, setSelectedCountry] = useState(countryCodes[0]);
   const formData = watch();
+
   useEffect(() => {
     // Load data from localStorage
     const loadStoredData = () => {
@@ -110,13 +113,13 @@ const VisitingCard = ({ goToNext }) => {
   return (
     <div className="p-4">
       <p className="text-headingColor text-2xl font-bold mb-4">
-        Design your visiting card here.
+        {t("visitingCard.title")}
       </p>
       {loading ? (
-        <p>Loading...</p>
+        <p>{t("visitingCard.loading")}</p>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex gap-4">
+          <div className="md:flex gap-4">
             {/* Input Section */}
             <div className="w-full lg:w-[40%] p-2">
               <div className="mb-4">
@@ -124,14 +127,14 @@ const VisitingCard = ({ goToNext }) => {
                   htmlFor="firstName"
                   className="block text-gray-500 text-sm mb-1"
                 >
-                  First Name*
+                  {t("visitingCard.firstNameLabel")}*
                 </label>
                 <input
                   id="firstName"
                   type="text"
-                  placeholder="John"
+                  placeholder={t("visitingCard.firstNamePlaceholder")}
                   {...register("firstName", {
-                    required: "First name is required",
+                    required: t("visitingCard.firstNameRequired"),
                   })}
                   className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor ${
                     errors.firstName ? "border-red-500" : ""
@@ -148,14 +151,14 @@ const VisitingCard = ({ goToNext }) => {
                   htmlFor="lastName"
                   className="block text-gray-500 text-sm mb-1"
                 >
-                  Last Name*
+                  {t("visitingCard.lastNameLabel")}*
                 </label>
                 <input
                   id="lastName"
                   type="text"
-                  placeholder="Doe"
+                  placeholder={t("visitingCard.lastNamePlaceholder")}
                   {...register("lastName", {
-                    required: "Last name is required",
+                    required: t("visitingCard.lastNameRequired"),
                   })}
                   className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor ${
                     errors.lastName ? "border-red-500" : ""
@@ -172,13 +175,15 @@ const VisitingCard = ({ goToNext }) => {
                   htmlFor="title"
                   className="block text-gray-500 text-sm mb-1"
                 >
-                  Title*
+                  {t("visitingCard.titleLabel")}*
                 </label>
                 <input
                   id="title"
                   type="text"
-                  placeholder="Title"
-                  {...register("title", { required: "Title is required" })}
+                  placeholder={t("visitingCard.titlePlaceholder")}
+                  {...register("title", {
+                    required: t("visitingCard.titleRequired"),
+                  })}
                   className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor ${
                     errors.title ? "border-red-500" : ""
                   }`}
@@ -192,13 +197,13 @@ const VisitingCard = ({ goToNext }) => {
                   htmlFor="contact"
                   className="block text-gray-500 text-sm mb-1"
                 >
-                  Contact Number*
+                  {t("visitingCard.contactLabel")}*
                 </label>
                 <div className="flex items-center border border-gray-300 rounded-md w-full max-w-sm relative">
                   <Controller
                     name="selectedCountry"
                     control={control}
-                    rules={{ required: "Country code is required" }}
+                    rules={{ required: t("visitingCard.countryCodeRequired") }}
                     render={({ field }) => (
                       <div className="relative">
                         <div
@@ -212,7 +217,7 @@ const VisitingCard = ({ goToNext }) => {
                           <FaChevronDown className="ml-2 text-gray-500" />
                         </div>
                         {showDropdown && (
-                          <div className="absolute top-full left-0 w-40 bg-white border border-gray Karina is typing...300 rounded-md shadow-lg mt-1 z-10">
+                          <div className="absolute top-full left-0 w-40 bg-white border border-gray-300 rounded-md shadow-lg mt-1 z-10">
                             {countryCodes.map((country, index) => (
                               <div
                                 key={index}
@@ -231,9 +236,9 @@ const VisitingCard = ({ goToNext }) => {
                   <input
                     id="contact"
                     type="tel"
-                    placeholder="Enter your contact number"
+                    placeholder={t("visitingCard.contactPlaceholder")}
                     {...register("contact", {
-                      required: "Contact number is required",
+                      required: t("visitingCard.contactRequired"),
                     })}
                     className={`w-full px-3 py-2 focus:outline-none rounded-r-md ${
                       errors.contact ? "border-red-500" : ""
@@ -256,17 +261,17 @@ const VisitingCard = ({ goToNext }) => {
                   htmlFor="email"
                   className="block text-gray-500 text-sm mb-1"
                 >
-                  Email Address*
+                  {t("visitingCard.emailLabel")}*
                 </label>
                 <input
                   id="email"
                   type="email"
-                  placeholder="johndoe@gmail.com"
+                  placeholder={t("visitingCard.emailPlaceholder")}
                   {...register("email", {
-                    required: "Email is required",
+                    required: t("visitingCard.emailRequired"),
                     pattern: {
                       value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                      message: "Invalid email address",
+                      message: t("visitingCard.emailInvalid"),
                     },
                   })}
                   className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor ${
@@ -281,17 +286,18 @@ const VisitingCard = ({ goToNext }) => {
             <div className="w-full lg:w-[60%] p-2 border shadow-md rounded-lg flex items-center justify-center">
               <div className="text-center">
                 <h2 className="text-3xl font-bold text-gray-700">
-                  {formData.firstName || "First Name"}{" "}
-                  {formData.lastName || "Last Name"}
+                  {formData.firstName || t("visitingCard.firstNamePlaceholder")}{" "}
+                  {formData.lastName || t("visitingCard.lastNamePlaceholder")}
                 </h2>
                 <p className="text-lg text-gray-600">
-                  {formData.title || "Title"}
+                  {formData.title || t("visitingCard.titlePlaceholder")}
                 </p>
                 <p className="text-lg text-gray-500">
-                  {selectedCountry.code} {formData.contact || "Contact"}
+                  {selectedCountry.code}{" "}
+                  {formData.contact || t("visitingCard.contactPlaceholder")}
                 </p>
                 <p className="text-lg text-gray-500">
-                  {formData.email || "Email"}
+                  {formData.email || t("visitingCard.emailPlaceholder")}
                 </p>
               </div>
             </div>
@@ -301,7 +307,7 @@ const VisitingCard = ({ goToNext }) => {
             className="mt-4 px-4 py-2 bg-btnColor text-white rounded hover:bg-btnColor-dark transition"
             disabled={loading}
           >
-            Save & Next
+            {t("visitingCard.submitButton")}
           </button>
         </form>
       )}

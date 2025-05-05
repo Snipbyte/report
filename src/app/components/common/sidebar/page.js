@@ -1,9 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { FiActivity, FiAlertCircle, FiHome } from "react-icons/fi";
+import { FiActivity, } from "react-icons/fi";
+import { GrPlan, GrUserAdmin } from "react-icons/gr";
 import Link from "next/link";
 import { useTranslation } from "react-i18next"; // Import useTranslation
+import { MdHistory, MdOutlineContentPasteGo, MdOutlineDashboard, MdOutlinePayment, MdOutlinePayments, MdOutlineSettingsSuggest } from "react-icons/md";
+import { TbLogs, TbUsersGroup } from "react-icons/tb";
+import { PiUserCircleCheckLight } from "react-icons/pi";
 
 const CustomSidebar = ({ userRole, toggle, pathname }) => {
   const [activeItem, setActiveItem] = useState(null);
@@ -29,13 +33,14 @@ const CustomSidebar = ({ userRole, toggle, pathname }) => {
           <Menu
             menuItemStyles={{
               button: ({ level, active }) => ({
-                color: active ? "#03a580" : "#4b5563",
-                fontWeight: active ? "500" : "300",
+                color: active ? "#6366f1" : "#111827",
+                fontWeight: active ? "700" : "300",
+                backgroundColor: active ? "#e0e7ff" : "transparent", 
               }),
             }}
           >
             <MenuItem
-              icon={<FiHome />}
+              icon={<MdOutlineDashboard />}
               active={activeItem === "/user/dashboard"}
               onClick={() => handleMenuItemClick("/user/dashboard")}
               component={<Link href="/user/dashboard" />}
@@ -46,47 +51,48 @@ const CustomSidebar = ({ userRole, toggle, pathname }) => {
               icon={<FiActivity />}
               active={activeItem === "/generate-report"}
               onClick={() => handleMenuItemClick("/generate-report")}
-              component={<Link href="/generate-report" />}
+              component={<Link href="/user/plan" />}
             >
               {t("generateReport")}
             </MenuItem>
             <MenuItem
-              icon={<FiAlertCircle />}
+              icon={<MdOutlinePayments />}
               active={activeItem === "/user/payment"}
               onClick={() => handleMenuItemClick("/user/payment")}
               component={<Link href="/user/payment" />}
             >
               {t("payment")}
             </MenuItem>
-            <MenuItem
-              icon={<FiHome />}
+            {/* <MenuItem
+              icon={<MdHistory />}
               active={activeItem === "/user/report-history"}
               onClick={() => handleMenuItemClick("/user/report-history")}
               component={<Link href="/user/report-history" />}
             >
               {t("history")}
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem
-              icon={<FiAlertCircle />}
+              icon={<MdOutlineSettingsSuggest />}
               active={activeItem === "/user/update-password"}
               onClick={() => handleMenuItemClick("/user/update-password")}
               component={<Link href="/user/update-password" />}
             >
-              {t("update-password")}
+              {t("updatePassword")}
             </MenuItem>
           </Menu>
         )}
         {userRole === "admin" && (
-          <Menu
-            menuItemStyles={{
-              button: ({ level, active }) => ({
-                color: active ? "#03a580" : "#4b5563",
-                fontWeight: active ? "500" : "300",
-              }),
-            }}
-          >
+         <Menu
+         menuItemStyles={{
+           button: ({ level, active }) => ({
+             color: active ? "#6366f1" : "#111827",
+             fontWeight: active ? "700" : "300",
+             backgroundColor: active ? "#e0e7ff" : "transparent", 
+           }),
+         }}
+       >       
             <MenuItem
-              icon={<FiHome />}
+              icon={<MdOutlineDashboard />}
               active={activeItem === "/admin/dashboard"}
               onClick={() => handleMenuItemClick("/admin/dashboard")}
               component={<Link href="/admin/dashboard" />}
@@ -94,7 +100,7 @@ const CustomSidebar = ({ userRole, toggle, pathname }) => {
               {t("dashboard")}
             </MenuItem>
             <MenuItem
-              icon={<FiAlertCircle />}
+              icon={<TbUsersGroup />}
               active={activeItem === "/admin/users"}
               onClick={() => handleMenuItemClick("/admin/users")}
               component={<Link href="/admin/users" />}
@@ -102,7 +108,7 @@ const CustomSidebar = ({ userRole, toggle, pathname }) => {
               {t("users")}
             </MenuItem>
             <MenuItem
-              icon={<FiHome />}
+              icon={<TbLogs />}
               active={activeItem === "/admin/blogs"}
               onClick={() => handleMenuItemClick("/admin/blogs")}
               component={<Link href="/admin/blogs" />}
@@ -110,7 +116,7 @@ const CustomSidebar = ({ userRole, toggle, pathname }) => {
               {t("blogs")}
             </MenuItem>
             <MenuItem
-              icon={<FiHome />}
+              icon={<GrUserAdmin />}
               active={activeItem === "/admin/admins"}
               onClick={() => handleMenuItemClick("/admin/admins")}
               component={<Link href="/admin/admins" />}
@@ -118,7 +124,7 @@ const CustomSidebar = ({ userRole, toggle, pathname }) => {
               {t("admins")}
             </MenuItem>
             <MenuItem
-              icon={<FiAlertCircle />}
+              icon={<PiUserCircleCheckLight />}
               active={activeItem === "/admin/subscribed-users"}
               onClick={() => handleMenuItemClick("/admin/subscribed-users")}
               component={<Link href="/admin/subscribed-users" />}
@@ -126,7 +132,7 @@ const CustomSidebar = ({ userRole, toggle, pathname }) => {
               {t("subscribed")}
             </MenuItem>
             <MenuItem
-              icon={<FiAlertCircle />}
+              icon={<MdOutlineContentPasteGo />}
               active={activeItem === "/admin/content-management"}
               onClick={() => handleMenuItemClick("/admin/content-management")}
               component={<Link href="/admin/content-management" />}
@@ -134,12 +140,12 @@ const CustomSidebar = ({ userRole, toggle, pathname }) => {
               {t("contentManage")}
             </MenuItem>
             <MenuItem
-              icon={<FiAlertCircle />}
+              icon={<GrPlan />}
               active={activeItem === "/admin/plans"}
               onClick={() => handleMenuItemClick("/admin/plans")}
               component={<Link href="/admin/plans" />}
             >
-              Plans
+              {t("plans")}
             </MenuItem>
           </Menu>
         )}

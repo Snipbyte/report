@@ -70,7 +70,7 @@ const PlanSchema = new mongoose.Schema({
     of: new mongoose.Schema({
       name: { type: String, required: true },
       description: { type: String, required: true },
-      type: { type: String, enum: ['Private - BtoC','Proffesional - BtoB'], required: true },
+      type: { type: String, required: true },
     }),
   },
   salesPitches: {

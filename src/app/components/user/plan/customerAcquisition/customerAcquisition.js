@@ -1,16 +1,21 @@
+"use client";
+
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { FaHandPointDown, FaEdit, FaTrash } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
+import { useRouter } from "next/navigation";
+
 // Dynamically import ReactQuill to ensure it runs only on the client
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
 });
 
 import "react-quill/dist/quill.snow.css";
-import { useRouter } from "next/navigation";
 
 const CustomerAcquisition = ({ goToNext }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actions, setActions] = useState([]);
@@ -19,11 +24,10 @@ const CustomerAcquisition = ({ goToNext }) => {
     name: "",
     description: "",
   });
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // State for popup
-  const [token, setToken] = useState(null); // Token state
-  const [planData, setPlanData] = useState(null); // Plan data state
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [token, setToken] = useState(null);
+  const [planData, setPlanData] = useState(null);
 
-  // Load saved actions from localStorage if they exist
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("planData")) || {};
     const planId = localStorage.getItem("planId");
@@ -32,7 +36,6 @@ const CustomerAcquisition = ({ goToNext }) => {
       setActions(storedData.planData.customerAcquisitionActions[planId] || []);
     }
 
-    // Retrieve token and plan data from localStorage
     const storedToken = localStorage.getItem("token");
     const storedPlanData = JSON.parse(localStorage.getItem("planData"));
 
@@ -40,23 +43,15 @@ const CustomerAcquisition = ({ goToNext }) => {
     setPlanData(storedPlanData);
   }, []);
 
-  // Function to save actions to localStorage inside planData
   const saveActionsToLocalStorage = (newActions) => {
     const storedData = JSON.parse(localStorage.getItem("planData")) || {};
     const planId = localStorage.getItem("planId");
 
     if (planId) {
-      // Ensure planData exists inside the storedData
       storedData.planData = storedData.planData || {};
-
-      // Ensure customerAcquisitionActions exists inside planData
       storedData.planData.customerAcquisitionActions =
         storedData.planData.customerAcquisitionActions || {};
-
-      // Save the new actions inside planData.customerAcquisitionActions[planId]
       storedData.planData.customerAcquisitionActions[planId] = newActions;
-
-      // Save the updated storedData back to localStorage
       localStorage.setItem("planData", JSON.stringify(storedData));
     }
   };
@@ -71,20 +66,22 @@ const CustomerAcquisition = ({ goToNext }) => {
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleSaveAction = () => {
+    if (!currentAction.name || !currentAction.description) {
+      alert(t("customerAcquisition.requiredFieldsAlert"));
+      return;
+    }
     let updatedActions = [];
 
     if (currentAction.id) {
-      // Update existing action
       updatedActions = actions.map((action) =>
         action.id === currentAction.id ? currentAction : action
       );
     } else {
-      // Add new action
       updatedActions = [...actions, { ...currentAction, id: Date.now() }];
     }
 
     setActions(updatedActions);
-    saveActionsToLocalStorage(updatedActions); // Save to localStorage inside planData
+    saveActionsToLocalStorage(updatedActions);
     setIsModalOpen(false);
     setCurrentAction({ id: null, name: "", description: "" });
   };
@@ -92,17 +89,15 @@ const CustomerAcquisition = ({ goToNext }) => {
   const handleRemoveAction = (id) => {
     const updatedActions = actions.filter((action) => action.id !== id);
     setActions(updatedActions);
-    saveActionsToLocalStorage(updatedActions); // Save to localStorage inside planData
+    saveActionsToLocalStorage(updatedActions);
   };
 
   const handleSubmit = async () => {
-    // Show the popup when Submit is clicked
     setIsPopupOpen(true);
     goToNext();
   };
 
   const handleClosePopup = () => {
-    // Close the popup
     setIsPopupOpen(false);
   };
 
@@ -120,17 +115,16 @@ const CustomerAcquisition = ({ goToNext }) => {
   return (
     <div className="p-4">
       <p className="text-2xl text-headingColor mb-4 font-bold">
-        Customer Acquisition
+        {t("customerAcquisition.title")}
       </p>
-      {/* Add product/customer button */}
       <button
         className="px-4 py-2 bg-btnColor bg-opacity-20 text-btnColor hover:bg-opacity-100 hover:text-white duration-500 rounded hover:bg-btnColor-dark transition"
         onClick={() => handleOpenModal()}
       >
-        + Add an action
+        {t("customerAcquisition.addButton")}
       </button>
       <div className="flex items-center gap-1 my-2">
-        <p className="text-paraColor">or select a suggestion:</p>
+        <p className="text-paraColor">{t("customerAcquisition.suggestionPrompt")}</p>
         <FaHandPointDown className="text-yellow-500" />
       </div>
       <div className="flex flex-wrap gap-3">
@@ -139,15 +133,14 @@ const CustomerAcquisition = ({ goToNext }) => {
             key={suggestion}
             className="cursor-pointer text-btnColor bg-btnColor bg-opacity-15 w-auto px-3 py-1 rounded-full"
             onClick={() =>
-              handleOpenModal({ id: null, name: suggestion, description: "" })
+              handleOpenModal({ id: null, name: t(`customerAcquisition.suggestions.${suggestion.replace(/ /g, "_")}`), description: "" })
             }
           >
-            {suggestion} +
+            {t(`customerAcquisition.suggestions.${suggestion.replace(/ /g, "_")}`)} +
           </p>
         ))}
       </div>
 
-      {/* Actions list */}
       {actions.length > 0 ? (
         <div className="w-full border my-4">
           {actions.map((action) => (
@@ -158,10 +151,10 @@ const CustomerAcquisition = ({ goToNext }) => {
               <div>
                 <h3 className="text-lg font-bold">{action.name}</h3>
                 <div
-  dangerouslySetInnerHTML={{
-    __html: `<p class="text-sm text-paraColor">${action.description}</p>`,
-  }}
-/>
+                  dangerouslySetInnerHTML={{
+                    __html: `<p class="text-sm text-paraColor">${action.description}</p>`,
+                  }}
+                />
               </div>
               <div className="flex items-center gap-2">
                 <FaEdit
@@ -178,32 +171,33 @@ const CustomerAcquisition = ({ goToNext }) => {
         </div>
       ) : (
         <div className="w-full border my-4">
-          <p className="text-paraColor text-center mt-1">No Action Added</p>
+          <p className="text-paraColor text-center mt-1">
+            {t("customerAcquisition.noActionsMessage")}
+          </p>
           <div className="flex items-center justify-end">
             <Image
               className="w-96 mr-10"
               width={1000}
               height={1000}
               src="/images/customeracquisition.png"
-              alt="idea"
+              alt={t("customerAcquisition.imageAlt")}
             />
           </div>
         </div>
       )}
 
-      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-full lg:w-[80%] p-6">
             <h2 className="text-xl font-bold mb-4">
-              Customer Acquisition Action
+              {t("customerAcquisition.modalTitle")}
             </h2>
             <div className="my-4">
               <label
                 htmlFor="actionname"
                 className="block text-gray-500 text-sm mb-1"
               >
-                Action Name*
+                {t("customerAcquisition.nameLabel")}*
               </label>
               <input
                 id="actionname"
@@ -212,7 +206,7 @@ const CustomerAcquisition = ({ goToNext }) => {
                 onChange={(e) =>
                   setCurrentAction({ ...currentAction, name: e.target.value })
                 }
-                placeholder="Write the name of the action"
+                placeholder={t("customerAcquisition.namePlaceholder")}
                 className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
               />
             </div>
@@ -221,7 +215,7 @@ const CustomerAcquisition = ({ goToNext }) => {
                 htmlFor="description"
                 className="block text-gray-500 text-sm mb-1"
               >
-                Description*
+                {t("customerAcquisition.descriptionLabel")}*
               </label>
               <ReactQuill
                 value={currentAction.description}
@@ -229,6 +223,7 @@ const CustomerAcquisition = ({ goToNext }) => {
                   setCurrentAction({ ...currentAction, description: value })
                 }
                 className="rounded-md"
+                placeholder={t("customerAcquisition.descriptionPlaceholder")}
               />
             </div>
             <div className="flex justify-end gap-2">
@@ -236,34 +231,34 @@ const CustomerAcquisition = ({ goToNext }) => {
                 onClick={handleCloseModal}
                 className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
               >
-                Cancel
+                {t("customerAcquisition.cancelButton")}
               </button>
               <button
                 onClick={handleSaveAction}
                 className="px-4 py-2 bg-btnColor text-white rounded hover:bg-btnColor-dark"
               >
-                Save
+                {t("customerAcquisition.saveButton")}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Popup */}
       {isPopupOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-96 p-6">
-            <h2 className="text-xl font-bold mb-4">Action Submitted!</h2>
+            <h2 className="text-xl font-bold mb-4">
+              {t("customerAcquisition.popupTitle")}
+            </h2>
             <p className="text-gray-700">
-              Your customer acquisition actions have been successfully
-              submitted.
+              {t("customerAcquisition.popupMessage")}
             </p>
             <div className="flex justify-end gap-2 mt-4">
               <button
                 onClick={handleClosePopup}
                 className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
               >
-                Close
+                {t("customerAcquisition.closeButton")}
               </button>
             </div>
           </div>
@@ -274,7 +269,7 @@ const CustomerAcquisition = ({ goToNext }) => {
         className="mt-4 px-4 py-2 bg-btnColor text-white rounded hover:bg-btnColor-dark transition"
         onClick={handleSubmit}
       >
-        Next
+        {t("customerAcquisition.nextButton")}
       </button>
     </div>
   );

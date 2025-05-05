@@ -29,13 +29,13 @@ const ContactSection = () => {
             <div className='flex gap-2 mb-4'>
                 <button
                     onClick={() => setLanguage('English')}
-                    className={`p-2 rounded-md ${language === 'English' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+                    className={`p-2 rounded-md ${language === 'English' ? 'bg-btnColor text-white' : 'bg-blue-500 text-white hover:bg-btnColor'}`}
                 >
                     English
                 </button>
                 <button
                     onClick={() => setLanguage('French')}
-                    className={`p-2 rounded-md ${language === 'French' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+                    className={`p-2 rounded-md ${language === 'French' ? 'bg-btnColor text-white' : 'bg-blue-500 text-white hover:bg-btnColor'}`}
                 >
                     French
                 </button>

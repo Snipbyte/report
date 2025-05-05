@@ -5,8 +5,10 @@ import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { FaEdit } from "react-icons/fa";
 import CustomModal from "../customModal/customModal";
+import { useTranslation } from "react-i18next";
 
 const Idea = ({ goToNext }) => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSubcategory, setSelectedSubcategory] =
     useState("Street trading");
@@ -89,10 +91,10 @@ const Idea = ({ goToNext }) => {
   return (
     <div className="p-4">
       <p className="text-headingColor mb-4 font-bold text-2xl">
-        Describe your idea here.
+        {t("idea.title")}
       </p>
 
-      {loading && <p>Loading...</p>}
+      {loading && <p>{t("idea.loading")}</p>}
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex items-center justify-center">
@@ -101,7 +103,7 @@ const Idea = ({ goToNext }) => {
             <div className="border rounded-md p-2 mb-4 flex items-center justify-between">
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Type of activity
+                  {t("idea.typeOfActivityLabel")}
                 </label>
                 <span className="text-btnColor font-semibold">
                   {selectedSubcategory}
@@ -121,14 +123,14 @@ const Idea = ({ goToNext }) => {
                 htmlFor="projectName"
                 className="block text-gray-500 text-sm mb-1"
               >
-                Project Name / Brand*
+                {t("idea.projectNameLabel")}
               </label>
               <input
                 id="projectName"
                 type="text"
-                placeholder="Enter Name"
+                placeholder={t("idea.projectNamePlaceholder")}
                 {...register("projectName", {
-                  required: "Project name is required",
+                  required: t("idea.projectNameRequired"),
                 })}
                 className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor ${
                   errors.projectName ? "border-red-500" : ""
@@ -147,13 +149,13 @@ const Idea = ({ goToNext }) => {
                 htmlFor="address"
                 className="block text-gray-500 text-sm mb-1"
               >
-                Address of the premises*
+                {t("idea.addressLabel")}
               </label>
               <input
                 id="address"
                 type="text"
-                placeholder="Enter Address"
-                {...register("address", { required: "Address is required" })}
+                placeholder={t("idea.addressPlaceholder")}
+                {...register("address", { required: t("idea.addressRequired") })}
                 className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor ${
                   errors.address ? "border-red-500" : ""
                 }`}
@@ -166,12 +168,12 @@ const Idea = ({ goToNext }) => {
             {/* Launch Date */}
             <div className="mb-4">
               <label className="block text-gray-500 text-sm mb-1">
-                Launch date*
+                {t("idea.launchDateLabel")}
               </label>
               <input
                 type="date"
                 {...register("launchDate", {
-                  required: "Launch date is required",
+                  required: t("idea.launchDateRequired"),
                 })}
                 className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor ${
                   errors.launchDate ? "border-red-500" : ""
@@ -186,13 +188,13 @@ const Idea = ({ goToNext }) => {
           </div>
 
           {/* Image */}
-          <div className="w-full lg:w-[50%] p-2">
+          <div className="w-full hidden md:block lg:w-[50%] p-2">
             <Image
               className="w-96 mx-auto my-4"
               width={1000}
               height={1000}
               src="/images/idea.png"
-              alt="idea"
+              alt={t("idea.imageAlt")}
             />
           </div>
         </div>
@@ -215,7 +217,7 @@ const Idea = ({ goToNext }) => {
           className="mt-4 px-4 py-2 bg-btnColor text-white rounded hover:bg-btnHover"
           disabled={loading}
         >
-          Next
+          {t("idea.nextButton")}
         </button>
       </form>
     </div>

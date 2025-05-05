@@ -136,8 +136,8 @@ const HeroSection = () => {
             onClick={() => setLanguage(lang)}
             className={`px-4 py-2 rounded-md ${
               language === lang
-                ? "bg-blue-600 text-white"
-                : "bg-blue-300 text-black hover:bg-blue-500"
+                  ? "bg-btnColor text-white"
+                : "bg-blue-300 text-black hover:bg-hoverBtnColor hover:text-white duration-300"
             }`}
           >
             {lang}
@@ -200,7 +200,7 @@ const HeroSection = () => {
 
       <button
         type="submit"
-        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500"
+        className="px-4 py-2 bg-btnColor text-white rounded-md hover:bg-hoverBtnColor"
       >
         {sectionId ? "Update Section" : "Create Section"}
       </button>

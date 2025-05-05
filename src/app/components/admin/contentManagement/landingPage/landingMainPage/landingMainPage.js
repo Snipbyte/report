@@ -19,7 +19,7 @@ const LandingMainPage = () => {
       <ChooseCard />
       <AmbitionCard />
       <Testimonials />
-      <button className="p-2 bg-blue-500 rounded text-white hover:rounded-lg">submit</button>
+      <button className="p-2 bg-btnColor hover:bg-hoverBtnColor duration-300 rounded text-white hover:rounded-lg">submit</button>
     </div>
   );
 };

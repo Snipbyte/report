@@ -2,8 +2,11 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "@/app/components/layouts/adminLayout/page";
 import axios from "axios";
+import { FaSearch } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 const Users = () => {
+  const { t } = useTranslation(); // Use 'common' namespace
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,14 +27,14 @@ const Users = () => {
         const response = await axios.post("/api/admin/fetchusers");
         setUsers(response.data.users);
       } catch (error) {
-        setError("Error fetching users");
+        setError(t("errorFetchingUsers"));
       } finally {
         setLoading(false);
       }
     };
 
     fetchUsers();
-  }, []);
+  }, [t]);
 
   // Function to delete a user
   const deleteUser = async (userId) => {
@@ -40,7 +43,7 @@ const Users = () => {
       await axios.post("/api/admin/deleteuser", { id: userId });
       setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId));
     } catch (error) {
-      setError("Error deleting user");
+      setError(t("errorDeletingUser"));
     } finally {
       setDeletingUserId(null);
     }
@@ -60,7 +63,7 @@ const Users = () => {
       );
       setEditingUser(null);
     } catch (error) {
-      setError("Error editing user");
+      setError(t("errorEditingUser"));
     }
   };
 
@@ -80,39 +83,33 @@ const Users = () => {
       user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
-  // for export button
+  // For export button
   const exportToExcel = () => {
-    // Create a CSV string from table data
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Name,Email,Plan\n"; // Add headers
+    csvContent += `${t("csvName")},${t("csvEmail")},${t("csvPlan")}\n`; // Add headers
 
-    // Add user data to the CSV
     users.forEach((user) => {
-      const row = `${user.firstname} ${user.lastname},${user.email},${user.currentPlan || "None"}`;
+      const row = `${user.firstname} ${user.lastname},${user.email},${user.currentPlan || t("planNone")}`;
       csvContent += row + "\n";
     });
 
-    // Create a download link
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", "users_data.csv");
-    document.body.appendChild(link); // Required for Firefox
-
-    // Trigger the download
+    document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link); // Clean up
+    document.body.removeChild(link);
   };
 
 
   return (
     <AdminLayout>
       <div className="container mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-6 text-center">Users</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center">{t("users")}</h1>
 
         {loading && (
-          <p className="text-center text-blue-500 font-semibold">Loading...</p>
+          <p className="text-center text-blue-500 font-semibold">{t("loading")}</p>
         )}
 
         {error && (
@@ -122,23 +119,23 @@ const Users = () => {
         {!loading && !error && (
           <div>
             {/* Search Bar */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-full">
+            <div className="flex items-center mb-4">
+              <div className="flex items-center w-full border border-gray-300 p-2.5">
+                <FaSearch className="text-paraColor mr-2" />
                 <input
                   type="text"
-                  placeholder="Search by name or email..."
+                  placeholder={t("searchByNameOrEmail")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full border border-gray-300 p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full outline-none"
                 />
               </div>
               <button
-                className="w-44 p-2.5 bg-blue-500 hover:bg-blue-600 text-white"
+                className="w-44 p-2.5 bg-btnColor hover:bg-hoverBtnColor duration-300 text-white"
                 onClick={exportToExcel}
               >
-                Export Excel File
+                {t("exportExcelFile")}
               </button>
-
             </div>
             {/* Users Table */}
             <div className="overflow-x-auto">
@@ -146,16 +143,16 @@ const Users = () => {
                 <thead>
                   <tr className="bg-gray-100">
                     <th className="border border-gray-300 px-4 py-2 text-left">
-                      Name
+                      {t("name")}
                     </th>
                     <th className="border border-gray-300 px-4 py-2 text-left">
-                      Email
+                      {t("email")}
                     </th>
                     <th className="border border-gray-300 px-4 py-2 text-left">
-                      Plan
+                      {t("plan")}
                     </th>
                     <th className="border border-gray-300 px-4 py-2 text-center">
-                      Actions
+                      {t("actions")}
                     </th>
                   </tr>
                 </thead>
@@ -169,7 +166,7 @@ const Users = () => {
                         {user.email}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
-                        {user.currentPlan || "None"}
+                        {user.currentPlan || t("planNone")}
                       </td>
                       <td className="border border-gray-300 px-4 py-2 text-center">
                         <button
@@ -177,10 +174,10 @@ const Users = () => {
                           className={`py-1 px-2 rounded ${deletingUserId === user._id
                             ? "bg-gray-400 cursor-not-allowed"
                             : "bg-red-500 hover:bg-red-600"
-                            } text-white`}
+                          } text-white`}
                           disabled={deletingUserId === user._id}
                         >
-                          {deletingUserId === user._id ? "Deleting..." : "Delete"}
+                          {deletingUserId === user._id ? t("deleting") : t("delete")}
                         </button>
                         <button
                           onClick={() => {
@@ -192,9 +189,9 @@ const Users = () => {
                               currentPlan: user.currentPlan || "",
                             });
                           }}
-                          className="ml-2 py-1 px-2 rounded bg-blue-500 hover:bg-blue-600 text-white"
+                          className="ml-2 py-1 px-2 rounded bg-btnColor hover:bg-hoverBtnColor duration-300 text-white"
                         >
-                          Edit
+                          {t("edit")}
                         </button>
                       </td>
                     </tr>
@@ -209,27 +206,27 @@ const Users = () => {
         {editingUser && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-8 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Edit User</h2>
+              <h2 className="text-xl font-semibold mb-4">{t("editUser")}</h2>
               <input
                 name="firstname"
                 value={editFormData.firstname}
                 onChange={handleInputChange}
                 className="border p-2 w-full mb-4"
-                placeholder="First Name"
+                placeholder={t("firstName")}
               />
               <input
                 name="lastname"
                 value={editFormData.lastname}
                 onChange={handleInputChange}
                 className="border p-2 w-full mb-4"
-                placeholder="Last Name"
+                placeholder={t("lastName")}
               />
               <input
                 name="email"
                 value={editFormData.email}
                 onChange={handleInputChange}
                 className="border p-2 w-full mb-4"
-                placeholder="Email"
+                placeholder={t("emailPlaceholder")}
               />
               <select
                 name="currentPlan"
@@ -237,24 +234,24 @@ const Users = () => {
                 onChange={handleInputChange}
                 className="border p-2 w-full mb-4"
               >
-                <option value="none">None</option>
-                <option value="intro">Intro</option>
-                <option value="base">Base</option>
-                <option value="popular">Popular</option>
-                <option value="enterprise">Enterprise</option>
+                <option value="none">{t("planNone")}</option>
+                <option value="intro">{t("planIntro")}</option>
+                <option value="base">{t("planBase")}</option>
+                <option value="popular">{t("planPopular")}</option>
+                <option value="enterprise">{t("planEnterprise")}</option>
               </select>
               <div className="flex justify-end">
                 <button
                   onClick={handleEditUser}
                   className="py-2 px-4 rounded bg-green-500 hover:bg-green-600 text-white"
                 >
-                  Save Changes
+                  {t("saveChanges")}
                 </button>
                 <button
                   onClick={() => setEditingUser(null)}
                   className="ml-4 py-2 px-4 rounded bg-gray-500 hover:bg-gray-600 text-white"
                 >
-                  Cancel
+                  {t("cancel")}
                 </button>
               </div>
             </div>

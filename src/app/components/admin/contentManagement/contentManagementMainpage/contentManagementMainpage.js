@@ -18,9 +18,6 @@ const ContentManagementMainpage = () => {
                 return <HomeMainPage />;
             case 'About':
                 return <AboutMainPage/>;
-         
-           
-           
             default:
                 return <LandingMainPage />;
         }

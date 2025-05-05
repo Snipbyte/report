@@ -1,8 +1,11 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 const Financials = () => {
+  const { t } = useTranslation();
   const router = useRouter();
   const initialFinancialData = {
     Principal: 0,
@@ -70,7 +73,6 @@ const Financials = () => {
       storedData.planData.financialData &&
       storedData.planData.financialData.data
     ) {
-      // Updated: Merge stored data with initial state to preserve structure
       setFinancialData((prevData) => ({
         ...prevData,
         ...storedData.planData.financialData.data,
@@ -222,9 +224,9 @@ const Financials = () => {
     });
   };
 
-  const renderExpenseFields = (category, label) => (
+  const renderExpenseFields = (category, labelKey) => (
     <div className="my-4">
-      <label className="block text-sm mb-1">{label} Cost (€)</label>
+      <label className="block text-sm mb-1">{t(`financials.expenses.${labelKey}.costLabel`)} (€)</label>
       <input
         type="number"
         name={`expenses.${category}.cost`}
@@ -233,7 +235,7 @@ const Financials = () => {
         className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
       />
       <label className="block text-sm mb-1 mt-2">
-        {label} Annual Growth Rate (%)
+        {t(`financials.expenses.${labelKey}.growthRateLabel`)} (%)
       </label>
       <input
         type="number"
@@ -242,24 +244,24 @@ const Financials = () => {
         onChange={handleInputChange}
         className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
       />
-      <label className="block text-sm mb-1 mt-2">{label} Frequency</label>
+      <label className="block text-sm mb-1 mt-2">{t(`financials.expenses.${labelKey}.frequencyLabel`)}</label>
       <select
         name={`expenses.${category}.frequency`}
         value={financialData.expenses[category]?.frequency || "monthly"}
         onChange={handleInputChange}
         className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
       >
-        <option value="monthly">Monthly</option>
-        <option value="yearly">Yearly</option>
+        <option value="monthly">{t("financials.frequencies.monthly")}</option>
+        <option value="yearly">{t("financials.frequencies.yearly")}</option>
       </select>
     </div>
   );
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl text-headingColor mb-6 font-bold">Financials</h1>
+      <h1 className="text-3xl text-headingColor mb-6 font-bold">{t("financials.title")}</h1>
       <div className="my-4">
-        <label className="block text-sm mb-1">Principal (€)</label>
+        <label className="block text-sm mb-1">{t("financials.principalLabel")} (€)</label>
         <input
           type="number"
           name="Principal"
@@ -269,7 +271,7 @@ const Financials = () => {
         />
       </div>
       <div className="my-4">
-        <label className="block text-sm mb-1">Interest (€)</label>
+        <label className="block text-sm mb-1">{t("financials.interestLabel")} (€)</label>
         <input
           type="number"
           name="Interest"
@@ -279,9 +281,9 @@ const Financials = () => {
         />
       </div>
       <div className="my-4">
-        <h2 className="text-xl text-headingColor mb-2 font-bold">Revenue Period</h2>
+        <h2 className="text-xl text-headingColor mb-2 font-bold">{t("financials.revenuePeriodTitle")}</h2>
         <div className="my-4">
-          <label className="block text-sm mb-1">Start Year</label>
+          <label className="block text-sm mb-1">{t("financials.startYearLabel")}</label>
           <input
             type="number"
             name="revenue.period.startYear"
@@ -291,7 +293,7 @@ const Financials = () => {
           />
         </div>
         <div className="my-4">
-          <label className="block text-sm mb-1">End Year</label>
+          <label className="block text-sm mb-1">{t("financials.endYearLabel")}</label>
           <input
             type="number"
             name="revenue.period.endYear"
@@ -302,12 +304,11 @@ const Financials = () => {
         </div>
       </div>
       <div className="my-4">
-        <h2 className="text-xl text-headingColor mb-2 font-bold">Product Lines</h2>
-        {/* Updated: Add fallback for undefined revenue or productLines */}
+        <h2 className="text-xl text-headingColor mb-2 font-bold">{t("financials.productLinesTitle")}</h2>
         {(financialData.revenue?.productLines || []).map((product, index) => (
           <div key={index} className="border p-4 mb-4 rounded-md">
             <div className="my-2">
-              <label className="block text-sm mb-1">Product Name</label>
+              <label className="block text-sm mb-1">{t("financials.productNameLabel")}</label>
               <input
                 type="text"
                 value={product.name || ""}
@@ -318,7 +319,7 @@ const Financials = () => {
               />
             </div>
             <div className="my-2">
-              <label className="block text-sm mb-1">Unit Price (€)</label>
+              <label className="block text-sm mb-1">{t("financials.unitPriceLabel")} (€)</label>
               <input
                 type="number"
                 value={product.unitPrice || 0}
@@ -329,7 +330,7 @@ const Financials = () => {
               />
             </div>
             <div className="my-2">
-              <label className="block text-sm mb-1">Volume (Units)</label>
+              <label className="block text-sm mb-1">{t("financials.volumeLabel")} ({t("financials.units")})</label>
               <input
                 type="number"
                 value={product.volume || 0}
@@ -340,7 +341,7 @@ const Financials = () => {
               />
             </div>
             <div className="my-2">
-              <label className="block text-sm mb-1">Annual Growth Rate (%)</label>
+              <label className="block text-sm mb-1">{t("financials.annualGrowthRateLabel")} (%)</label>
               <input
                 type="number"
                 value={product.annualGrowthRate || 0}
@@ -354,7 +355,7 @@ const Financials = () => {
               onClick={() => removeProductLine(index)}
               className="mt-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
             >
-              Remove
+              {t("financials.removeButton")}
             </button>
           </div>
         ))}
@@ -362,18 +363,18 @@ const Financials = () => {
           onClick={addProductLine}
           className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
         >
-          Add Product Line
+          {t("financials.addProductLineButton")}
         </button>
       </div>
       <div className="my-4">
-        <h2 className="text-xl text-headingColor mb-2 font-bold">Expenses</h2>
-        {renderExpenseFields("generalExpenses", "General Expenses")}
-        {renderExpenseFields("lease", "Lease")}
-        {renderExpenseFields("productCosts", "Product Costs")}
-        {renderExpenseFields("financialCharges", "Financial Charges")}
-        {renderExpenseFields("salaries", "Salaries")}
+        <h2 className="text-xl text-headingColor mb-2 font-bold">{t("financials.expensesTitle")}</h2>
+        {renderExpenseFields("generalExpenses", "generalExpenses")}
+        {renderExpenseFields("lease", "lease")}
+        {renderExpenseFields("productCosts", "productCosts")}
+        {renderExpenseFields("financialCharges", "financialCharges")}
+        {renderExpenseFields("salaries", "salaries")}
         <div className="my-4">
-          <label className="block text-sm mb-1">Variable Costs (% of Revenue)</label>
+          <label className="block text-sm mb-1">{t("financials.expenses.variableCosts.percentageLabel")} (%)</label>
           <input
             type="number"
             name="expenses.variableCosts.percentageOfRevenue"
@@ -384,21 +385,21 @@ const Financials = () => {
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-btnColor"
           />
         </div>
-        {renderExpenseFields("insurance", "Insurance")}
-        {renderExpenseFields("marketing", "Marketing")}
-        {renderExpenseFields("maintenance", "Maintenance")}
-        {renderExpenseFields("utilities", "Utilities")}
-        {renderExpenseFields("professionalServices", "Professional Services")}
-        {renderExpenseFields("training", "Training")}
-        {renderExpenseFields("itSoftwareSubscriptions", "IT/Software Subscriptions")}
-        {renderExpenseFields("travel", "Travel")}
+        {renderExpenseFields("insurance", "insurance")}
+        {renderExpenseFields("marketing", "marketing")}
+        {renderExpenseFields("maintenance", "maintenance")}
+        {renderExpenseFields("utilities", "utilities")}
+        {renderExpenseFields("professionalServices", "professionalServices")}
+        {renderExpenseFields("training", "training")}
+        {renderExpenseFields("itSoftwareSubscriptions", "itSoftwareSubscriptions")}
+        {renderExpenseFields("travel", "travel")}
       </div>
       <button
         onClick={handleSubmit}
         className="mt-6 px-6 py-3 bg-btnColor text-white rounded hover:bg-btnColor-dark"
         disabled={isLoading}
       >
-        {isLoading ? "Please wait..." : "Submit"}
+        {isLoading ? t("financials.loadingButton") : t("financials.submitButton")}
       </button>
     </div>
   );

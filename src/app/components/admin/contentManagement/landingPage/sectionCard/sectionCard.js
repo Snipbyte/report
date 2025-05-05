@@ -136,7 +136,7 @@ const SectionCard = () => {
             type="button"
             onClick={() => handleLanguageSwitch(lang)}
             className={`px-4 py-2 rounded-md ${
-              language === lang ? "bg-blue-600 text-white" : "bg-blue-300 text-black hover:bg-blue-500"
+              language === lang ? "bg-btnColor text-white" : "bg-blue-300 text-black hover:bg-hoverBtnColor"
             }`}
           >
             {lang}
@@ -189,7 +189,7 @@ const SectionCard = () => {
         className={`px-4 py-2 rounded-md ${
           buttonDisabled
             ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-600 text-white hover:bg-blue-500"
+            : "bg-btnColor text-white hover:bg-hoverBtnColor"
         }`}
       >
         {buttonDisabled

@@ -5,8 +5,12 @@ import AdminLayout from "@/app/components/layouts/adminLayout/page";
 import UploadBlog from "@/app/components/admin/blogs/uploadBlog/uploadBlog";
 import EditBlog from "@/app/components/admin/blogs/editBlog/editBlog";
 import Link from "next/link";
+import { FaSearch } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
+import Header from "@/app/components/common/header/page";
 
 const Blogs = () => {
+  const { t} = useTranslation(); // Use 'common' namespace
   const [blogs, setBlogs] = useState([]);
   const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -24,7 +28,7 @@ const Blogs = () => {
       setFilteredBlogs(response.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
-      setMessage("Failed to fetch blogs");
+      setMessage(t("failedToFetchBlogs"));
       setIsError(true);
     }
   };
@@ -50,12 +54,12 @@ const Blogs = () => {
   const handleDelete = async (slug) => {
     try {
       await axios.post("/api/blogs/deleteblog", { slug });
-      setMessage("Blog deleted successfully.");
+      setMessage(t("blogDeletedSuccessfully"));
       setIsError(false);
       fetchBlogs();
     } catch (error) {
       console.error("Error deleting blog:", error);
-      setMessage("Failed to delete blog");
+      setMessage(t("failedToDeleteBlog"));
       setIsError(true);
     }
   };
@@ -66,43 +70,43 @@ const Blogs = () => {
     setShowEditModal(true);
   };
 
+  
   return (
     <AdminLayout>
+      <Header/>
       {message && (
         <div
-          className={`p-4 mb-4 text-sm rounded ${
-            isError ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
-          }`}
+          className={`p-4 mb-4 text-sm rounded ${isError ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}
         >
           {message}
         </div>
       )}
 
       <div className="container mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-4">Blogs</h1>
-
         {/* Search Bar */}
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearch}
-          placeholder="Search blogs by title or description..."
-          className="border p-2 w-full mb-4"
-        />
-
+        <div className="flex items-center w-full border border-gray-300 p-2.5 mb-4">
+          <FaSearch className="text-paraColor mr-2" />
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearch}
+            placeholder={t("searchBlogsByTitleOrDescription")}
+            className="w-full outline-none"
+          />
+        </div>
         {/* Blogs Table */}
         <div className="overflow-x-auto">
           <table className="table-auto w-full border-collapse border border-gray-200">
             <thead>
               <tr className="bg-gray-100">
                 <th className="border border-gray-300 px-4 py-2 text-left">
-                  Title
+                  {t("title")}
                 </th>
                 <th className="border border-gray-300 px-4 py-2 text-left">
-                  Description
+                  {t("description")}
                 </th>
                 <th className="border border-gray-300 px-4 py-2 text-left">
-                  Actions
+                  {t("actions")}
                 </th>
               </tr>
             </thead>
@@ -112,29 +116,28 @@ const Blogs = () => {
                   <td className="border border-gray-300 px-4 py-2">
                     <Link
                       href={`/blog-detail/${blog.slug}`}
-                      className="text-blue-500 hover:underline"
+                      className="text-btnColor hover:underline"
                     >
                       {blog.title}
                     </Link>
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-  {blog.description.length > 200
-    ? `${blog.description.slice(0, 200)}...`
-    : blog.description}
-</td>
-
+                    {blog.description.length > 200
+                      ? `${blog.description.slice(0, 200)}...`
+                      : blog.description}
+                  </td>
                   <td className="border border-gray-300 px-4 py-2">
                     <button
                       onClick={() => handleDelete(blog.slug)}
                       className="bg-red-500 my-2 text-white py-1 px-3 rounded-md mr-2"
                     >
-                      Delete
+                      {t("delete")}
                     </button>
                     <button
                       onClick={() => handleEdit(blog)}
-                      className="bg-blue-500 text-white py-1 px-3 rounded-md"
+                      className="bg-btnColor text-white py-1 px-3 rounded-md"
                     >
-                      Edit
+                      {t("edit")}
                     </button>
                   </td>
                 </tr>
@@ -147,9 +150,9 @@ const Blogs = () => {
         <div className="mt-6">
           <button
             onClick={() => setShowModal(true)}
-            className="bg-blue-600 text-white py-2 px-4 rounded-md"
+            className="bg-btnColor hover:bg-hoverBtnColor duration-300 text-white py-2 px-4 rounded-md"
           >
-            Add New Blog
+            {t("addNewBlog")}
           </button>
         </div>
 
@@ -161,13 +164,13 @@ const Blogs = () => {
                 onClick={() => setShowModal(false)}
                 className="absolute top-2 right-2 text-gray-500"
               >
-                &times;
+                {t("closeModal")}
               </button>
               <UploadBlog
                 onSuccess={() => {
                   setShowModal(false);
                   fetchBlogs();
-                  setMessage("Blog added successfully.");
+                  setMessage(t("blogAddedSuccessfully"));
                   setIsError(false);
                 }}
               />
@@ -183,14 +186,14 @@ const Blogs = () => {
                 onClick={() => setShowEditModal(false)}
                 className="absolute top-2 right-2 text-gray-500"
               >
-                &times;
+                {t("closeModal")}
               </button>
               <EditBlog
                 blogData={editBlogData}
                 onSuccess={() => {
                   setShowEditModal(false);
                   fetchBlogs();
-                  setMessage("Blog edited successfully.");
+                  setMessage(t("blogEditedSuccessfully"));
                   setIsError(false);
                 }}
               />

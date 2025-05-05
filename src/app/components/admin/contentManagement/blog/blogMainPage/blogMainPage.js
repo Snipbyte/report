@@ -150,8 +150,8 @@ const BlogMainPage = () => {
           onClick={() => toggleLanguage("English")}
           className={`p-2 rounded-md ${
             language === "English"
-              ? "bg-blue-600 text-white"
-              : "bg-blue-500 text-white hover:bg-blue-600"
+              ? "bg-btnColor text-white"
+              : "bg-blue-500 text-white hover:bg-btnColor"
           }`}
         >
           English
@@ -160,8 +160,8 @@ const BlogMainPage = () => {
           onClick={() => toggleLanguage("French")}
           className={`p-2 rounded-md ${
             language === "French"
-              ? "bg-blue-600 text-white"
-              : "bg-blue-500 text-white hover:bg-blue-600"
+              ? "bg-btnColor text-white"
+              : "bg-blue-500 text-white hover:bg-btnColor"
           }`}
         >
           French
@@ -270,7 +270,7 @@ const BlogMainPage = () => {
         className={`px-4 py-2 rounded-md ${
           buttonDisabled
             ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-600 text-white hover:bg-blue-500"
+            : "bg-btnColor text-white hover:bg-hoverBtnColor"
         }`}
       >
         {sectionId ? "Update Section" : "Create Section"}

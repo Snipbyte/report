@@ -1,10 +1,12 @@
 "use client";
-
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import PlanMainPage from "@/app/components/user/plan/planMainPage/planMainPage";
+import Header from "@/app/components/common/header/page";
+import { useTranslation } from "react-i18next";
 
 const Plan = () => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const searchParams = useSearchParams();
@@ -73,7 +75,7 @@ const Plan = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-100">
-        <div className="text-xl text-gray-700">Initializing plan...</div>
+        <div className="text-xl text-gray-700">{t("initializingPlan")}</div>
       </div>
     );
   }
@@ -82,13 +84,13 @@ const Plan = () => {
     return (
       <div className="flex items-center justify-center h-screen bg-red-100 text-red-800">
         <div className="max-w-md w-full p-6 rounded-lg shadow-md text-center">
-          <h1 className="text-2xl font-bold mb-4">Initialization Failed</h1>
+          <h1 className="text-2xl font-bold mb-4">{t("initializationFailed")}</h1>
           <p className="mb-4">{error}</p>
           <a
             href="/"
             className="mt-4 inline-block text-blue-600 hover:underline"
           >
-            Go to Home
+            {t("goToHome")}
           </a>
         </div>
       </div>
@@ -97,16 +99,18 @@ const Plan = () => {
 
   return (
     <div>
-      <PlanMainPage />
+      <Header/>
+      <PlanMainPage t={t} />
     </div>
   );
 };
 
 const PlanWithSuspense = () => (
+  
   <Suspense
     fallback={
       <div className="flex items-center justify-center h-screen bg-gray-100">
-        <div className="text-xl text-gray-700">Loading...</div>
+        <div className="text-xl text-gray-700">...</div>
       </div>
     }
   >

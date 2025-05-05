@@ -52,7 +52,7 @@ export default function RootLayout({ children }) {
         {/* Scroll-to-top button */}
         {showScroll && (
           <button
-            className="fixed bottom-10 right-10 p-3 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300 shadow-lg"
+            className="fixed bottom-10 right-10 p-3 rounded-full bg-blue-500 text-white hover:bg-btnColor transition-all duration-300 shadow-lg"
             onClick={scrollToTop}
           >
             <FaArrowUp size={20} />

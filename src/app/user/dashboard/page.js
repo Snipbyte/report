@@ -5,6 +5,8 @@ import UserLayout from "@/app/components/layouts/userLayout/page";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { FaUser } from "react-icons/fa";
+import { TbUserHexagon } from "react-icons/tb";
 
 const Dashboard = () => {
   const { t } = useTranslation();
@@ -89,36 +91,46 @@ const Dashboard = () => {
 
         {/* User Information */}
         {user && (
-          <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-            <h2 className="text-2xl font-semibold text-gray-700">
+          <div className="bg-white p-6 rounded-xl border mb-6 transition-all duration-300 hover:shadow-md">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <span className="text-btnColor">
+                <TbUserHexagon className="w-6 h-6" />
+              </span>
               {t("userInformation")}
             </h2>
-            <p className="mt-2">
-              <strong>{t("firstName")}:</strong> {user.firstname}
-            </p>
-            <p>
-              <strong>{t("lastName")}:</strong> {user.lastname}
-            </p>
-            <p>
-              <strong>{t("E-mail")}:</strong> {user.email}
-            </p>
-            <p>
-              <strong>{t("currentPlan")}:</strong>{" "}
-              {user.currentPlan || t("none")}
-            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm font-medium text-paraColor">{t("firstName")}</p>
+                <p className="mt-1 text-lg text-headingColor">{user.firstname}</p>
+              </div>
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm font-medium text-paraColor">{t("lastName")}</p>
+                <p className="mt-1 text-lg text-headingColor">{user.lastname}</p>
+              </div>
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm font-medium text-paraColor">{t("E-mail")}</p>
+                <p className="mt-1 text-lg text-headingColor">{user.email}</p>
+              </div>
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm font-medium text-paraColor">{t("currentPlan")}</p>
+                <p className="mt-1 text-lg text-headingColor">
+                  {user.currentPlan || t("none")}
+                </p>
+              </div>
+            </div>
           </div>
         )}
 
         {/* Line Chart */}
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+        <h2 className="text-2xl font-semibold text-headingColor mb-4">
           {t("businessPlanTrends")}
         </h2>
-        <div className="bg-white rounded-lg shadow-lg p-4 mb-6">
+        <div className="bg-white rounded-xl border transition-all duration-300 hover:shadow-md p-4 mb-6">
           <LineChart series={chartSeries} categories={chartCategories} />
         </div>
 
         {/* User Business Plans */}
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+        <h2 className="text-2xl font-semibold text-headingColor mb-4">
           {t("businessPlans")}
         </h2>
         {businessPlans.length > 0 ? (
@@ -128,7 +140,7 @@ const Dashboard = () => {
                 {businessPlans.slice(-2).map((plan) => (
                   <div
                     key={plan._id}
-                    className="bg-white p-4 rounded-lg shadow hover:shadow-xl transition-shadow duration-200"
+                    className="bg-white p-4 border rounded-xl shadow transition-all duration-300 hover:shadow-md"
                   >
                     <h3 className="font-bold text-lg">{plan.companyName}</h3>
                     <p className="mt-2">
@@ -175,7 +187,7 @@ const Dashboard = () => {
                 <div className="flex justify-center">
                   <Link
                     href="/user/report-history"
-                    className="mt-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded shadow hover:bg-blue-600 transition duration-200"
+                    className="mt-4 bg-btnColor text-white font-semibold py-2 px-4 rounded shadow hover:bg-hoverBtnColor transition duration-300"
                   >
                     {t("viewAll")}
                   </Link>

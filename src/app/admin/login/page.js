@@ -104,7 +104,7 @@ const Login = () => {
               type="submit"
               disabled={loading} // Disable button if loading
               className={`w-full px-4 py-2 font-bold text-white rounded focus:outline-none focus:ring focus:ring-blue-300 ${
-                loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-500"
+                loading ? "bg-gray-400" : "bg-btnColor hover:bg-hoverBtnColor"
               }`}
             >
               {loading ? "Please wait..." : t("login")}

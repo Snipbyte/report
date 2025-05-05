@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useForm, Controller } from "react-hook-form";
 import { FaTrashAlt } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 // Dynamically import ReactQuill to ensure it runs only on the client
 const ReactQuill = dynamic(() => import("react-quill"), {
@@ -12,7 +13,10 @@ const ReactQuill = dynamic(() => import("react-quill"), {
 
 import "react-quill/dist/quill.snow.css";
 
-const Walk = ({ goToNext }) => {
+const Walk =
+
+ ({ goToNext }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -125,20 +129,20 @@ const Walk = ({ goToNext }) => {
   return (
     <div className="p-4">
       <h1 className="text-2xl text-headingColor mb-4 font-bold">
-        What is the trend in your market?
+        {t("market.title")}
       </h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex items-end w-full mt-4 mb-8">
           <div className="w-full lg:w-[60%] space-y-4">
-            <p>Is the economic demand for this product increasing?</p>
-            <p>How do societal developments impact your sales?</p>
-            <p>How does technology impact your offering?</p>
-            <p>What is the impact of your industry on the environment?</p>
-            <p>How do regulations impact your project?</p>
+            <p>{t("market.question1")}</p>
+            <p>{t("market.question2")}</p>
+            <p>{t("market.question3")}</p>
+            <p>{t("market.question4")}</p>
+            <p>{t("market.question5")}</p>
           </div>
           <div className="flex items-center justify-around w-full lg:w-[40%]">
             <div className="text-center space-y-5">
-              <p className="text-headingColor">Negative</p>
+              <p className="text-headingColor">{t("market.negativeLabel")}</p>
               <input
                 type="radio"
                 value="Negative"
@@ -171,7 +175,7 @@ const Walk = ({ goToNext }) => {
               <br />
             </div>
             <div className="text-center space-y-5">
-              <p className="text-headingColor">Neutral</p>
+              <p className="text-headingColor">{t("market.neutralLabel")}</p>
               <input
                 type="radio"
                 value="Neutral"
@@ -204,7 +208,7 @@ const Walk = ({ goToNext }) => {
               <br />
             </div>
             <div className="text-center space-y-5">
-              <p className="text-headingColor">Positive</p>
+              <p className="text-headingColor">{t("market.positiveLabel")}</p>
               <input
                 type="radio"
                 value="Positive"
@@ -240,19 +244,18 @@ const Walk = ({ goToNext }) => {
         </div>
 
         <p className="text-paraColor my-2">
-          Write below the information you know about the market you are targeting
-          (size, trends, important laws, market studies)
+          {t("market.descriptionPrompt")}
         </p>
         <Controller
           name="marketDescription"
           control={control}
-          rules={{ required: "Market description is required" }}
+          rules={{ required: t("market.descriptionRequired") }}
           render={({ field }) => (
             <ReactQuill
               {...field}
               theme="snow"
               className={`w-full mb-4 ${errors.marketDescription ? "border-red-500" : ""}`}
-              placeholder="Description"
+              placeholder={t("market.descriptionPlaceholder")}
               value={field.value || ""}
               onChange={field.onChange}
             />
@@ -268,7 +271,7 @@ const Walk = ({ goToNext }) => {
             className="px-4 py-2 bg-btnColor text-white rounded hover:bg-btnColor-dark transition"
             disabled={loading}
           >
-            Save & Next
+            {t("market.submitButton")}
           </button>
           <button
             type="button"
@@ -276,7 +279,7 @@ const Walk = ({ goToNext }) => {
             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 flex items-center gap-2"
             disabled={loading}
           >
-            <FaTrashAlt /> Delete
+            <FaTrashAlt /> {t("market.deleteButton")}
           </button>
         </div>
       </form>

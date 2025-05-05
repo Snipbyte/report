@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { AiFillDelete } from "react-icons/ai"; // Import delete icon
 import { MdAdd } from "react-icons/md"; // Import add icon
 import AdminLayout from "@/app/components/layouts/adminLayout/page";
+import { FaSearch } from "react-icons/fa";
 
 const Admins = () => {
   const [admins, setAdmins] = useState([]);
@@ -123,7 +124,7 @@ const Admins = () => {
 
   return (
     <AdminLayout>
-      <div className="max-w-3xl mx-auto p-4">
+      <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Admins</h1>
 
         {loading ? (
@@ -131,16 +132,19 @@ const Admins = () => {
         ) : (
           <>
             {/* Search Bar */}
-            <div className="flex items-center justify-between mb-4">
-              <input
-                type="text"
-                placeholder="Search by name or email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full border border-gray-300 p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+            <div className="flex items-center mb-4">
+              <div className="flex items-center w-full border border-gray-300 p-2.5">
+                <FaSearch className="text-paraColor mr-2" />
+                <input
+                  type="search"
+                  placeholder="Search by name or email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full outline-none"
+                />
+              </div>
               <button
-                className="w-44 p-2.5 bg-blue-500 hover:bg-blue-600 text-white"
+                className="w-44 p-2.5 bg-btnColor hover:bg-hoverBtnColor duration-300 text-white"
                 onClick={exportToExcel}
               >
                 Export Excel File
@@ -229,7 +233,7 @@ const Admins = () => {
                   />
                   <button
                     type="submit"
-                    className="bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+                    className="bg-btnColor text-white font-semibold py-2 rounded-lg hover:bg-hoverBtnColor transition duration-300"
                   >
                     Add Admin
                   </button>
