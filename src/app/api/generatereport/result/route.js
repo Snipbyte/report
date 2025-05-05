@@ -206,5 +206,4 @@ const getPlanData = async (req) => {
     return NextResponse.json({ message: "Failed to fetch plan data", error: error.message }, { status: 500 });
   }
 };
-
 export const POST = connectDb(getPlanData);
