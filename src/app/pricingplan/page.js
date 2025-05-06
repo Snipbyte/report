@@ -30,7 +30,7 @@ const PricingPlan = () => {
   return (
     <div>
       <Header />
-      <div className="flex flex-wrap justify-center items-center">
+      <div className="flex flex-wrap justify-center items-start">
         {isLoading ? (
           <p>Loading plans...</p>
         ) : error ? (

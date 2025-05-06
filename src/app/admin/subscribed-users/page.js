@@ -3,8 +3,10 @@ import AdminLayout from "@/app/components/layouts/adminLayout/page";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaSearch } from "react-icons/fa";
+import { useTranslation } from "react-i18next"; // Import useTranslation hook
 
 const SubscribedUsers = () => {
+  const { t } = useTranslation(); // Initialize t function
   const [subscribers, setSubscribers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState("");
@@ -16,19 +18,19 @@ const SubscribedUsers = () => {
       setSubscribers(response.data.subscribers);
     } catch (error) {
       console.error("Error fetching subscribers:", error);
-      setError("Failed to fetch subscribed users.");
+      setError(t("subscribedUsers.error"));
     }
   };
 
   const exportToExcel = () => {
     if (subscribers.length === 0) {
-      alert("No data available to export!");
+      alert(t("subscribedUsers.no_data_alert"));
       return;
     }
 
     // Prepare CSV content
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "No,Email,Subscribed On\n"; // Header row
+    csvContent += `${t("subscribedUsers.table_headers.number")},${t("subscribedUsers.table_headers.email")},${t("subscribedUsers.table_headers.subscribed_on")}\n`; // Header row
 
     subscribers.forEach((subscriber, index) => {
       const row = `${index + 1},${subscriber.email},${new Date(subscriber.subscribedAt).toLocaleDateString()}`;
@@ -57,12 +59,13 @@ const SubscribedUsers = () => {
   return (
     <AdminLayout>
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-center mb-6">Subscribed Users</h1>
+        <h1 className="text-3xl font-bold text-center mb-6">{t("subscribedUsers.title")}</h1>
+        <p className="text-center mb-4">{t("subscribedUsers.description")}</p>
 
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
         {subscribers.length === 0 && !error ? (
-          <div className="text-center text-gray-500">No subscribed users found.</div>
+          <div className="text-center text-gray-500">{t("subscribedUsers.no_data")}</div>
         ) : (
           <div className="overflow-x-auto">
             <div className="flex items-center mb-4">
@@ -70,25 +73,25 @@ const SubscribedUsers = () => {
                 <FaSearch className="text-paraColor mr-2" />
                 <input
                   type="text"
-                  placeholder="Search by name or email..."
+                  placeholder={t("subscribedUsers.search_placeholder")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full outline-none"
                 />
               </div>
               <button
-                className="w-44 p-2.5 bg-btnColor hover:bg-hoverBtnColor duration-300 text-white"
+                className="w-52 p-2.5 bg-btnColor hover:bg-hoverBtnColor duration-300 text-white"
                 onClick={exportToExcel}
               >
-                Export Excel File
+                {t("subscribedUsers.export_button")}
               </button>
             </div>
             <table className="min-w-full bg-white border border-gray-300">
               <thead>
                 <tr className="bg-gray-200 text-headingColor">
-                  <th className="py-3 px-6 text-left border-b">#</th>
-                  <th className="py-3 px-6 text-left border-b">Email</th>
-                  <th className="py-3 px-6 text-left border-b">Subscribed On</th>
+                  <th className="py-3 px-6 text-left border-b">{t("subscribedUsers.table_headers.number")}</th>
+                  <th className="py-3 px-6 text-left border-b">{t("subscribedUsers.table_headers.email")}</th>
+                  <th className="py-3 px-6 text-left border-b">{t("subscribedUsers.table_headers.subscribed_on")}</th>
                 </tr>
               </thead>
               <tbody>

@@ -4,8 +4,10 @@ import { AiFillDelete } from "react-icons/ai"; // Import delete icon
 import { MdAdd } from "react-icons/md"; // Import add icon
 import AdminLayout from "@/app/components/layouts/adminLayout/page";
 import { FaSearch } from "react-icons/fa";
+import { useTranslation } from "react-i18next"; // Import useTranslation hook
 
 const Admins = () => {
+  const { t } = useTranslation(); // Initialize t function
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newAdmin, setNewAdmin] = useState({
@@ -102,7 +104,7 @@ const Admins = () => {
   const exportToExcel = () => {
     // Create a CSV string from table data
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Name,Email\n"; // Add headers
+    csvContent += `${t("admins.table_headers.name")},${t("admins.table_headers.email")}\n`; // Add headers
 
     // Add admin data to the CSV
     admins.forEach((admin) => {
@@ -125,10 +127,11 @@ const Admins = () => {
   return (
     <AdminLayout>
       <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Admins</h1>
+        <h1 className="text-2xl font-bold mb-4">{t("admins.title")}</h1>
+        <p className="mb-4">{t("admins.description")}</p>
 
         {loading ? (
-          <p className="text-center text-gray-500">Loading...</p>
+          <p className="text-center text-gray-500">{t("admins.loading")}</p>
         ) : (
           <>
             {/* Search Bar */}
@@ -137,17 +140,17 @@ const Admins = () => {
                 <FaSearch className="text-paraColor mr-2" />
                 <input
                   type="search"
-                  placeholder="Search by name or email..."
+                  placeholder={t("admins.search_placeholder")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full outline-none"
                 />
               </div>
               <button
-                className="w-44 p-2.5 bg-btnColor hover:bg-hoverBtnColor duration-300 text-white"
+                className="w-52 p-2.5 bg-btnColor hover:bg-hoverBtnColor duration-300 text-white"
                 onClick={exportToExcel}
               >
-                Export Excel File
+                {t("admins.export_button")}
               </button>
             </div>
 
@@ -155,9 +158,15 @@ const Admins = () => {
             <table className="min-w-full border-collapse border border-gray-300 mb-4">
               <thead>
                 <tr className="bg-gray-100">
-                  <th className="border border-gray-300 px-4 py-2 text-left">Name</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left">Email</th>
-                  <th className="border border-gray-300 px-4 py-2 text-center">Actions</th>
+                  <th className="border border-gray-300 px-4 py-2 text-left">
+                    {t("admins.table_headers.name")}
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left">
+                    {t("admins.table_headers.email")}
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-center">
+                    {t("admins.table_headers.actions")}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -172,7 +181,7 @@ const Admins = () => {
                         onClick={() => handleDeleteAdmin(admin.email)}
                         className="py-1 px-2 rounded bg-red-500 hover:bg-red-600 text-white"
                       >
-                        Delete
+                        {t("admins.delete_button")}
                       </button>
                     </td>
                   </tr>
@@ -185,7 +194,7 @@ const Admins = () => {
               onClick={() => setShowForm((prev) => !prev)} // Toggle form visibility
               className="mt-4 bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition duration-200 flex items-center"
             >
-              <MdAdd className="mr-2" /> Add New Admin
+              <MdAdd className="mr-2" /> {t("admins.add_button")}
             </button>
 
             {/* Add Admin Form */}
@@ -198,7 +207,7 @@ const Admins = () => {
                   <input
                     type="text"
                     name="firstname"
-                    placeholder="First Name"
+                    placeholder={t("admins.form.first_name_placeholder")}
                     value={newAdmin.firstname}
                     onChange={handleInputChange}
                     required
@@ -207,7 +216,7 @@ const Admins = () => {
                   <input
                     type="text"
                     name="lastname"
-                    placeholder="Last Name"
+                    placeholder={t("admins.form.last_name_placeholder")}
                     value={newAdmin.lastname}
                     onChange={handleInputChange}
                     required
@@ -216,7 +225,7 @@ const Admins = () => {
                   <input
                     type="email"
                     name="email"
-                    placeholder="Email"
+                    placeholder={t("admins.form.email_placeholder")}
                     value={newAdmin.email}
                     onChange={handleInputChange}
                     required
@@ -225,7 +234,7 @@ const Admins = () => {
                   <input
                     type="password"
                     name="password"
-                    placeholder="Password"
+                    placeholder={t("admins.form.password_placeholder")}
                     value={newAdmin.password}
                     onChange={handleInputChange}
                     required
@@ -235,7 +244,7 @@ const Admins = () => {
                     type="submit"
                     className="bg-btnColor text-white font-semibold py-2 rounded-lg hover:bg-hoverBtnColor transition duration-300"
                   >
-                    Add Admin
+                    {t("admins.form.submit_button")}
                   </button>
                 </div>
               </form>
