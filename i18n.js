@@ -887,53 +887,66 @@ i18n.use(initReactI18next).init({
           "loading": "Loading..."
         },
         // for subscribed user
-          "subscribedUsers": {
-            "title": "Subscribed Users",
-            "description": "View and manage users who have subscribed to your services.",
-            "search_placeholder": "Search by email...",
-            "export_button": "Export Excel File",
-            "table_headers": {
-              "number": "#",
-              "email": "Email",
-              "subscribed_on": "Subscribed On"
-            },
-            "no_data": "No subscribed users found.",
-            "error": "Failed to fetch subscribed users.",
-            "no_data_alert": "No data available to export!"
+        "subscribedUsers": {
+          "title": "Subscribed Users",
+          "description": "View and manage users who have subscribed to your services.",
+          "search_placeholder": "Search by email...",
+          "export_button": "Export Excel File",
+          "table_headers": {
+            "number": "#",
+            "email": "Email",
+            "subscribed_on": "Subscribed On"
           },
-          // for admin plans
-            "adminPlans": {
-              "title": "Admin Plans",
-              "description": "Manage subscription plans, including adding, editing, or deleting plans.",
-              "search_placeholder": "Search plans by description or points...",
-              "add_button": "Add New Plan",
-              "table_headers": {
-                "price": "Price",
-                "title": "Title",
-                "points": "Points",
-                "actions": "Actions"
-              },
-              "modal": {
-                "add_title": "Add New Plan",
-                "edit_title": "Edit Plan",
-                "price_label": "Price",
-                "title_label": "Title",
-                "points_label": "Plan Features",
-                "points_hint": "Type a feature and press comma to add (e.g., Feature 1,)",
-                "points_add_placeholder": "Add feature, press comma...",
-                "points_edit_placeholder": "Edit feature...",
-                "cancel_button": "Cancel",
-                "save_button": "Save"
-              },
-              "messages": {
-                "fetch_error": "Failed to fetch plans",
-                "delete_success": "Plan deleted successfully",
-                "delete_error": "Failed to delete plan",
-                "add_success": "Plan added successfully",
-                "update_success": "Plan updated successfully",
-                "save_error": "Failed to save plan"
-              }
-            },
+          "no_data": "No subscribed users found.",
+          "error": "Failed to fetch subscribed users.",
+          "no_data_alert": "No data available to export!"
+        },
+        // for admin plans
+        "adminPlans": {
+          "title": "Admin Plans",
+          "description": "Manage subscription plans, including adding, editing, or deleting plans.",
+          "search_placeholder": "Search plans by description or points...",
+          "add_button": "Add New Plan",
+          "table_headers": {
+            "price": "Price",
+            "title": "Title",
+            "points": "Points",
+            "actions": "Actions"
+          },
+          "modal": {
+            "add_title": "Add New Plan",
+            "edit_title": "Edit Plan",
+            "price_label": "Price",
+            "title_label": "Title",
+            "points_label": "Plan Features",
+            "points_hint": "Type a feature and press comma to add (e.g., Feature 1,)",
+            "points_add_placeholder": "Add feature, press comma...",
+            "points_edit_placeholder": "Edit feature...",
+            "cancel_button": "Cancel",
+            "save_button": "Save"
+          },
+          "messages": {
+            "fetch_error": "Failed to fetch plans",
+            "delete_success": "Plan deleted successfully",
+            "delete_error": "Failed to delete plan",
+            "add_success": "Plan added successfully",
+            "update_success": "Plan updated successfully",
+            "save_error": "Failed to save plan"
+          }
+        },
+        // for user all plans
+        allPlans: {
+          title: "All Bssiness Plans",
+          projectName: "Project Name",
+          typeOfActivity: "Type of Activity",
+          address: "Address",
+          launchDate: "Launch Date",
+          actions: "Actions",
+          viewPlan: "View Plan",
+        },
+        "noBusinessPlansFound": "No business plans found",
+        "showMore": "Show More",
+        "showLess": "Show Less"
       },
 
     },
@@ -1816,53 +1829,66 @@ i18n.use(initReactI18next).init({
           "loading": "Chargement..."
         },
         // for subscribed user
-          "subscribedUsers": {
-            "title": "Utilisateurs Abonnés",
-            "description": "Consultez et gérez les utilisateurs abonnés à vos services.",
-            "search_placeholder": "Rechercher par email...",
-            "export_button": "Exporter fichier Excel",
-            "table_headers": {
-              "number": "#",
-              "email": "Email",
-              "subscribed_on": "Abonné le"
-            },
-            "no_data": "Aucun utilisateur abonné trouvé.",
-            "error": "Échec de la récupération des utilisateurs abonnés.",
-            "no_data_alert": "Aucune donnée disponible pour l'exportation !"
+        "subscribedUsers": {
+          "title": "Utilisateurs Abonnés",
+          "description": "Consultez et gérez les utilisateurs abonnés à vos services.",
+          "search_placeholder": "Rechercher par email...",
+          "export_button": "Exporter fichier Excel",
+          "table_headers": {
+            "number": "#",
+            "email": "Email",
+            "subscribed_on": "Abonné le"
           },
-          // for admin plans
-            "adminPlans": {
-              "title": "Plans Administrateurs",
-              "description": "Gérez les plans d'abonnement, y compris l'ajout, la modification ou la suppression de plans.",
-              "search_placeholder": "Rechercher des plans par description ou points...",
-              "add_button": "Ajouter un nouveau plan",
-              "table_headers": {
-                "price": "Prix",
-                "title": "Titre",
-                "points": "Points",
-                "actions": "Actions"
-              },
-              "modal": {
-                "add_title": "Ajouter un nouveau plan",
-                "edit_title": "Modifier le plan",
-                "price_label": "Prix",
-                "title_label": "Titre",
-                "points_label": "Fonctionnalités du plan",
-                "points_hint": "Tapez une fonctionnalité et appuyez sur la virgule pour ajouter (par exemple, Fonctionnalité 1,)",
-                "points_add_placeholder": "Ajouter une fonctionnalité, appuyez sur la virgule...",
-                "points_edit_placeholder": "Modifier la fonctionnalité...",
-                "cancel_button": "Annuler",
-                "save_button": "Enregistrer"
-              },
-              "messages": {
-                "fetch_error": "Échec de la récupération des plans",
-                "delete_success": "Plan supprimé avec succès",
-                "delete_error": "Échec de la suppression du plan",
-                "add_success": "Plan ajouté avec succès",
-                "update_success": "Plan mis à jour avec succès",
-                "save_error": "Échec de l'enregistrement du plan"
-              }
-            },
+          "no_data": "Aucun utilisateur abonné trouvé.",
+          "error": "Échec de la récupération des utilisateurs abonnés.",
+          "no_data_alert": "Aucune donnée disponible pour l'exportation !"
+        },
+        // for admin plans
+        "adminPlans": {
+          "title": "Plans Administrateurs",
+          "description": "Gérez les plans d'abonnement, y compris l'ajout, la modification ou la suppression de plans.",
+          "search_placeholder": "Rechercher des plans par description ou points...",
+          "add_button": "Ajouter un nouveau plan",
+          "table_headers": {
+            "price": "Prix",
+            "title": "Titre",
+            "points": "Points",
+            "actions": "Actions"
+          },
+          "modal": {
+            "add_title": "Ajouter un nouveau plan",
+            "edit_title": "Modifier le plan",
+            "price_label": "Prix",
+            "title_label": "Titre",
+            "points_label": "Fonctionnalités du plan",
+            "points_hint": "Tapez une fonctionnalité et appuyez sur la virgule pour ajouter (par exemple, Fonctionnalité 1,)",
+            "points_add_placeholder": "Ajouter une fonctionnalité, appuyez sur la virgule...",
+            "points_edit_placeholder": "Modifier la fonctionnalité...",
+            "cancel_button": "Annuler",
+            "save_button": "Enregistrer"
+          },
+          "messages": {
+            "fetch_error": "Échec de la récupération des plans",
+            "delete_success": "Plan supprimé avec succès",
+            "delete_error": "Échec de la suppression du plan",
+            "add_success": "Plan ajouté avec succès",
+            "update_success": "Plan mis à jour avec succès",
+            "save_error": "Échec de l'enregistrement du plan"
+          }
+        },
+        // for user all plans
+        allPlans: {
+          title: "Tous les plans d'affaires",
+          projectName: "Nom du projet",
+          typeOfActivity: "Type d'activité",
+          address: "Adresse",
+          launchDate: "Date de lancement",
+          actions: "Actes",
+          viewPlan: "Voir le forfait",
+        },
+        "noBusinessPlansFound": "Aucun plan d'affaires trouvé",
+        "showMore": "Afficher plus",
+        "showLess": "Afficher moins"
       },
     },
   },
