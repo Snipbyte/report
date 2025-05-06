@@ -109,7 +109,7 @@ const Dashboard = () => {
                       />
                     </div>
                     <button
-                      className="w-32 p-2.5 bg-btnColor hover:bg-hoverBtnColor duration-300 text-white"
+                      className="w-52 p-2.5 bg-btnColor hover:bg-hoverBtnColor duration-300 text-white"
                       onClick={exportToExcel}
                     >
                       {t("exportFile")}

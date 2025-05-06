@@ -131,7 +131,7 @@ const Users = () => {
                 />
               </div>
               <button
-                className="w-44 p-2.5 bg-btnColor hover:bg-hoverBtnColor duration-300 text-white"
+                className="w-52 p-2.5 bg-btnColor hover:bg-hoverBtnColor duration-300 text-white"
                 onClick={exportToExcel}
               >
                 {t("exportExcelFile")}

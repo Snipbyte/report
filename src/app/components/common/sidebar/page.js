@@ -121,7 +121,7 @@ const CustomSidebar = ({ userRole, toggle, pathname }) => {
               onClick={() => handleMenuItemClick("/admin/admins")}
               component={<Link href="/admin/admins" />}
             >
-              {t("admins")}
+              {t("admin")}
             </MenuItem>
             <MenuItem
               icon={<PiUserCircleCheckLight />}
