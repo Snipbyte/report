@@ -36,7 +36,6 @@ const AllPlans = () => {
   useEffect(() => {
     fetchAllPlans();
   }, []);
-
   const handleViewPlan = (planId) => {
     localStorage.setItem("planId", planId);
     router.push("/user/report-download");
