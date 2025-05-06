@@ -20,7 +20,7 @@ const ReportHistory = () => {
         throw new Error("Token not found. Please log in.");
       }
 
-      const response = await axios.get("/api/getUserPlans", {
+      const response = await axios.get("/api/user/all-plans", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -10,7 +10,6 @@ import { TbUserHexagon } from "react-icons/tb";
 
 const Dashboard = () => {
   const { t } = useTranslation();
-
   const [user, setUser] = useState(null);
   const [businessPlans, setBusinessPlans] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +19,7 @@ const Dashboard = () => {
     try {
       const response = await fetch(`/api/user/getUser`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Assuming token is stored in localStorage
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       const data = await response.json();
@@ -35,14 +34,16 @@ const Dashboard = () => {
   // Fetch User Plans
   const fetchUserPlans = async () => {
     try {
-      const response = await fetch(`/api/getUserPlans`, {
+      const response = await fetch(`/api/user/all-plans`, {
+        method: "POST",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Assuming token is stored in localStorage
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({ token: localStorage.getItem("token") }),
       });
       const data = await response.json();
-      if (data.message === "Business plans retrieved successfully") {
-        setBusinessPlans(data.businessPlans);
+      if (data.message === "Plans retrieved successfully") {
+        setBusinessPlans(data.plans);
       }
     } catch (error) {
       console.error("Error fetching user plans:", error);
@@ -61,16 +62,15 @@ const Dashboard = () => {
       <div className="flex justify-center items-center h-screen">
         {t("loading")}
       </div>
-    ); // Show loading state
+    );
   }
 
   // Prepare data for the line chart based on business plans
   const chartData = businessPlans.map((plan) => ({
-    date: new Date(plan.dateOfEstablishment).getTime(), // Convert date to timestamp
-    sales: plan.financialRatios.profitabilityRatio || 0, // Example: Using profitability ratio as sales data
+    date: new Date(plan.launchDate || plan.createdAt).getTime(),
+    sales: 0, // Note: This needs financial data which isn't available in the new API response
   }));
 
-  // Sort data by date for the line chart
   chartData.sort((a, b) => a.date - b.date);
 
   const chartSeries = [
@@ -80,7 +80,7 @@ const Dashboard = () => {
     },
   ];
 
-  const chartCategories = chartData.map((item) => item.date); // Ensure dates are in milliseconds for the x-axis
+  const chartCategories = chartData.map((item) => item.date);
 
   return (
     <UserLayout>
@@ -135,67 +135,33 @@ const Dashboard = () => {
         </h2>
         {businessPlans.length > 0 ? (
           <div className="space-y-4">
-            {businessPlans.length > 0 ? (
-              <div className="space-y-4">
-                {businessPlans.slice(-2).map((plan) => (
-                  <div
-                    key={plan._id}
-                    className="bg-white p-4 border rounded-xl shadow transition-all duration-300 hover:shadow-md"
-                  >
-                    <h3 className="font-bold text-lg">{plan.companyName}</h3>
-                    <p className="mt-2">
-                      <strong>{t("industrySector")}:</strong>{" "}
-                      {plan.industrySector}
-                    </p>
-                    <p>
-                      <strong>{t("location")}:</strong> {plan.location}
-                    </p>
-                    <p>
-                      <strong>{t("dateOfEstablishment")}:</strong>{" "}
-                      {new Date(plan.dateOfEstablishment).toLocaleDateString()}
-                    </p>
-                    <h4 className="font-semibold mt-2">
-                      {t("financialRatios")}
-                    </h4>
-                    <p>
-                      <strong>{t("liquidityRatio")}:</strong>{" "}
-                      {plan.financialRatios.liquidityRatio}
-                    </p>
-                    <p>
-                      <strong>{t("profitabilityRatio")}:</strong>{" "}
-                      {plan.financialRatios.profitabilityRatio}
-                    </p>
-                    <p>
-                      <strong>{t("debtRatio")}:</strong>{" "}
-                      {plan.financialRatios.debtRatio}
-                    </p>
-                    <p>
-                      <strong>{t("creditworthinessScore")}:</strong>{" "}
-                      {plan.companyRating.creditworthinessScore}
-                    </p>
-                    <p>
-                      <strong>{t("riskAssessmentScore")}:</strong>{" "}
-                      {plan.companyRating.riskAssessmentScore}
-                    </p>
-                    <p>
-                      <strong>{t("growthPotentialScore")}:</strong>{" "}
-                      {plan.companyRating.growthPotentialScore}
-                    </p>
-                  </div>
-                ))}
-                {/* Button to view all business plans */}
-                <div className="flex justify-center">
-                  <Link
-                    href="/user/report-history"
-                    className="mt-4 bg-btnColor text-white font-semibold py-2 px-4 rounded shadow hover:bg-hoverBtnColor transition duration-300"
-                  >
-                    {t("viewAll")}
-                  </Link>
-                </div>
+            {businessPlans.slice(-2).map((plan) => (
+              <div
+                key={plan._id}
+                className="bg-white p-4 border rounded-xl shadow transition-all duration-300 hover:shadow-md"
+              >
+                <h3 className="font-bold text-lg">{plan.projectName}</h3>
+                <p className="mt-2">
+                  <strong>{t("typeOfActivity")}:</strong>{" "}
+                  {plan.typeOfActivity}
+                </p>
+                <p>
+                  <strong>{t("location")}:</strong> {plan.address}
+                </p>
+                <p>
+                  <strong>{t("launchDate")}:</strong>{" "}
+                  {plan.launchDate ? new Date(plan.launchDate).toLocaleDateString() : "N/A"}
+                </p>
               </div>
-            ) : (
-              <p>{t("noBusinessPlansFound")}</p>
-            )}
+            ))}
+            <div className="flex justify-center">
+              <Link
+                href="/user/all-plans"
+                className="mt-4 bg-btnColor text-white font-semibold py-2 px-4 rounded shadow hover:bg-hoverBtnColor transition duration-300"
+              >
+                {t("viewAll")}
+              </Link>
+            </div>
           </div>
         ) : (
           <p>{t("noBusinessPlansFound")}</p>
